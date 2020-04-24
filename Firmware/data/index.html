@@ -2,40 +2,41 @@
 <html lang="de">
 <head>
     <meta charset="utf-8">
-    <title>Wortuhr INES</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="Wordclock INES">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Raleway:100,300,500" media="all">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <header class="center">
-        <h1>INES</h1>
-        <p>Wortuhr</p>
+    <header>
+        <h1 class="text-center">&mdash; INES &mdash;</h1>
+        <p class="text-center">Wortuhr</p>
     </header>
 
-    <main class="center">
+    <main>
         <form action="index.html" method="post">
             <fieldset>
                 <legend>Farben</legend>
-                <div>
+                <div class="form-group">
                     <label for="foregroundColor">Vordergrundfarbe</label>
-                    <input type="color" id="foregroundColor" name="foregroundColor" value="#ff0000">
+                    <input class="form-control" type="color" id="foregroundColor" name="foregroundColor" value="#ff0000">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="backgroundColor">Vordergrundfarbe</label>
-                    <input type="color" id="backgroundColor" name="backgroundColor" value="#0000ff">
+                    <input class="form-control" type="color" id="backgroundColor" name="backgroundColor" value="#0000ff">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="brightness">Helligkeit</label>
-                    <input type="range" id="brightness" name="brightness" min="0" max="100">
+                    <input class="custom-range" type="range" id="brightness" name="brightness" min="0" max="100">
                 </div>
             </fieldset>
             <fieldset>
                 <legend>Einstellungen</legend>
-                <div>
+                <div class="form-group">
                     <label for="timeZone">Zeitzone</label>
-                    <select id="timeZone">
+                    <select class="form-control" id="timeZone" name="timeZone">
                         <optgroup label="Africa">
                             <option value="0" name="Africa/Abidjan">Abidjan (0h)</option>
                             <option value="0" name="Africa/Accra">Accra (0h)</option>
@@ -480,26 +481,30 @@
                         </optgroup>
                     </select>
                 </div>
-                <div>
-                    <label for="daylightSavingsTime">Sommerzeitregelung</label>
-                    <input type="checkbox" id="daylightSavingsTime" name="daylightSavingsTime" value="true">
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="daylightSavingsTime" name="daylightSavingsTime" value="true">
+                        <label class="custom-control-label" for="daylightSavingsTime">Sommerzeitregelung</label>
+                    </div>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="sleepTime">Ausschaltzeit</label>
-                    <input type="time" id="sleepTime" name="sleepTime" value="01:00">
+                    <input class="form-control" type="time" id="sleepTime" name="sleepTime" value="01:00">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="wakeupTime">Einschaltzeit</label>
-                    <input type="time" id="wakeupTime" name="wakeupTime" value="05:00">
+                    <input class="form-control" type="time" id="wakeupTime" name="wakeupTime" value="05:00">
                 </div>
             </fieldset>
-            <button type="submit">speichern</button>
+            <button type="submit" class="btn btn-primary btn-block">speichern</button>
         </form>
     </main>
 
-    <footer class="center">
-        <p>(C) made with &hearts; by Carsten Walther</p>
+    <footer>
+        <p class="text-center">© 2020 | Made with ♥ by Carsten Walther.</p>
     </footer>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 
     <script src="js/scripts.js"></script>
 </body>

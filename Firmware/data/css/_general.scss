@@ -1,29 +1,32 @@
 body {
-  font-family: Arial, Helvetica, "Helvetica Neue", serif;
+  font-family: Raleway, Helvetica, sans-serif;
   font-size: 14px;
-  background: #333333;
-  color: #ffffff;
+  background: #f7f7f7;
+  color: #565656;
+}
+
+h1 {
+  font-family: inherit;
+  font-size: 2.5em;
+  font-weight: 100;
 }
 
 header {
-  margin: 1em 0;
+  padding: 0;
+  margin: 1em auto 2em auto;
+  max-width: 340px;
 }
 
 main {
-  background: #ffffff;
-  color: #333333;
-  display: block;
-  padding: 1em;
-  margin: auto;
-  max-width: 300px;
+  padding: 0;
+  margin: 1em auto;
+  max-width: 340px;
 }
 
 footer {
-  margin: 1em 0;
+  padding: 0;
+  margin: 2em auto;
+  max-width: 340px;
   font-size: 0.8em;
-  color: #888888;
-}
-
-.center {
-  text-align: center;
+  color: #a7a7a7;
 }
