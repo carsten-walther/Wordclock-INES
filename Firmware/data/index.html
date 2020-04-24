@@ -1,500 +1,505 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="utf-8">
-    <title>Wordclock INES</title>
+    <title>Wortuhr INES</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="description" content="Wordclock INES">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <h1>INES</h1>
-    <p>Wortuhr</p>
+    <header class="center">
+        <h1>INES</h1>
+        <p>Wortuhr</p>
+    </header>
 
-    <form class="" action="index.html" method="post">
+    <main class="center">
+        <form action="index.html" method="post">
+            <fieldset>
+                <legend>Farben</legend>
+                <div>
+                    <label for="foregroundColor">Vordergrundfarbe</label>
+                    <input type="color" id="foregroundColor" name="foregroundColor" value="#ff0000">
+                </div>
+                <div>
+                    <label for="backgroundColor">Vordergrundfarbe</label>
+                    <input type="color" id="backgroundColor" name="backgroundColor" value="#0000ff">
+                </div>
+                <div>
+                    <label for="brightness">Helligkeit</label>
+                    <input type="range" id="brightness" name="brightness" min="0" max="100">
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Einstellungen</legend>
+                <div>
+                    <label for="timeZone">Zeitzone</label>
+                    <select id="timeZone">
+                        <optgroup label="Africa">
+                            <option value="0" name="Africa/Abidjan">Abidjan (0h)</option>
+                            <option value="0" name="Africa/Accra">Accra (0h)</option>
+                            <option value="3" name="Africa/Addis_Ababa">Addis Ababa (+3h)</option>
+                            <option value="1" name="Africa/Algiers">Algiers (+1h)</option>
+                            <option value="3" name="Africa/Asmara">Asmara (+3h)</option>
+                            <option value="0" name="Africa/Bamako">Bamako (0h)</option>
+                            <option value="1" name="Africa/Bangui">Bangui (+1h)</option>
+                            <option value="0" name="Africa/Banjul">Banjul (0h)</option>
+                            <option value="0" name="Africa/Bissau">Bissau (0h)</option>
+                            <option value="2" name="Africa/Blantyre">Blantyre (+2h)</option>
+                            <option value="1" name="Africa/Brazzaville">Brazzaville (+1h)</option>
+                            <option value="2" name="Africa/Bujumbura">Bujumbura (+2h)</option>
+                            <option value="2" name="Africa/Cairo">Cairo (+2h)</option>
+                            <option value="0" name="Africa/Casablanca">Casablanca (0h)</option>
+                            <option value="2" name="Africa/Ceuta">Ceuta (+2h)</option>
+                            <option value="0" name="Africa/Conakry">Conakry (0h)</option>
+                            <option value="0" name="Africa/Dakar">Dakar (0h)</option>
+                            <option value="3" name="Africa/Dar_es_Salaam">Dar es Salaam (+3h)</option>
+                            <option value="3" name="Africa/Djibouti">Djibouti (+3h)</option>
+                            <option value="1" name="Africa/Douala">Douala (+1h)</option>
+                            <option value="0" name="Africa/El_Aaiun">El Aaiun (0h)</option>
+                            <option value="0" name="Africa/Freetown">Freetown (0h)</option>
+                            <option value="2" name="Africa/Gaborone">Gaborone (+2h)</option>
+                            <option value="2" name="Africa/Harare">Harare (+2h)</option>
+                            <option value="2" name="Africa/Johannesburg">Johannesburg (+2h)</option>
+                            <option value="3" name="Africa/Juba">Juba (+3h)</option>
+                            <option value="3" name="Africa/Kampala">Kampala (+3h)</option>
+                            <option value="2" name="Africa/Khartoum">Khartoum (+2h)</option>
+                            <option value="2" name="Africa/Kigali">Kigali (+2h)</option>
+                            <option value="1" name="Africa/Kinshasa">Kinshasa (+1h)</option>
+                            <option value="1" name="Africa/Lagos">Lagos (+1h)</option>
+                            <option value="1" name="Africa/Libreville">Libreville (+1h)</option>
+                            <option value="0" name="Africa/Lome">Lome (0h)</option>
+                            <option value="1" name="Africa/Luanda">Luanda (+1h)</option>
+                            <option value="2" name="Africa/Lubumbashi">Lubumbashi (+2h)</option>
+                            <option value="2" name="Africa/Lusaka">Lusaka (+2h)</option>
+                            <option value="1" name="Africa/Malabo">Malabo (+1h)</option>
+                            <option value="2" name="Africa/Maputo">Maputo (+2h)</option>
+                            <option value="2" name="Africa/Maseru">Maseru (+2h)</option>
+                            <option value="2" name="Africa/Mbabane">Mbabane (+2h)</option>
+                            <option value="3" name="Africa/Mogadishu">Mogadishu (+3h)</option>
+                            <option value="0" name="Africa/Monrovia">Monrovia (0h)</option>
+                            <option value="3" name="Africa/Nairobi">Nairobi (+3h)</option>
+                            <option value="1" name="Africa/Ndjamena">Ndjamena (+1h)</option>
+                            <option value="1" name="Africa/Niamey">Niamey (+1h)</option>
+                            <option value="0" name="Africa/Nouakchott">Nouakchott (0h)</option>
+                            <option value="0" name="Africa/Ouagadougou">Ouagadougou (0h)</option>
+                            <option value="1" name="Africa/Porto-Novo">Porto-Novo (+1h)</option>
+                            <option value="0" name="Africa/Sao_Tome">Sao Tome (0h)</option>
+                            <option value="2" name="Africa/Tripoli">Tripoli (+2h)</option>
+                            <option value="1" name="Africa/Tunis">Tunis (+1h)</option>
+                            <option value="2" name="Africa/Windhoek">Windhoek (+2h)</option>
+                        </optgroup>
+                        <optgroup label="America">
+                            <option value="-9" name="America/Adak">Adak (-9h)</option>
+                            <option value="-8" name="America/Anchorage">Anchorage (-8h)</option>
+                            <option value="-4" name="America/Anguilla">Anguilla (-4h)</option>
+                            <option value="-4" name="America/Antigua">Antigua (-4h)</option>
+                            <option value="-3" name="America/Araguaina">Araguaina (-3h)</option>
+                            <option value="-3" name="America/Argentina/Buenos_Aires">Argentina/Buenos Aires (-3h)</option>
+                            <option value="-3" name="America/Argentina/Catamarca">Argentina/Catamarca (-3h)</option>
+                            <option value="-3" name="America/Argentina/Cordoba">Argentina/Cordoba (-3h)</option>
+                            <option value="-3" name="America/Argentina/Jujuy">Argentina/Jujuy (-3h)</option>
+                            <option value="-3" name="America/Argentina/La_Rioja">Argentina/La Rioja (-3h)</option>
+                            <option value="-3" name="America/Argentina/Mendoza">Argentina/Mendoza (-3h)</option>
+                            <option value="-3" name="America/Argentina/Rio_Gallegos">Argentina/Rio Gallegos (-3h)</option>
+                            <option value="-3" name="America/Argentina/Salta">Argentina/Salta (-3h)</option>
+                            <option value="-3" name="America/Argentina/San_Juan">Argentina/San Juan (-3h)</option>
+                            <option value="-3" name="America/Argentina/San_Luis">Argentina/San Luis (-3h)</option>
+                            <option value="-3" name="America/Argentina/Tucuman">Argentina/Tucuman (-3h)</option>
+                            <option value="-3" name="America/Argentina/Ushuaia">Argentina/Ushuaia (-3h)</option>
+                            <option value="-4" name="America/Aruba">Aruba (-4h)</option>
+                            <option value="-4" name="America/Asuncion">Asuncion (-4h)</option>
+                            <option value="-5" name="America/Atikokan">Atikokan (-5h)</option>
+                            <option value="-3" name="America/Bahia">Bahia (-3h)</option>
+                            <option value="-5" name="America/Bahia_Banderas">Bahia Banderas (-5h)</option>
+                            <option value="-4" name="America/Barbados">Barbados (-4h)</option>
+                            <option value="-3" name="America/Belem">Belem (-3h)</option>
+                            <option value="-6" name="America/Belize">Belize (-6h)</option>
+                            <option value="-4" name="America/Blanc-Sablon">Blanc-Sablon (-4h)</option>
+                            <option value="-4" name="America/Boa_Vista">Boa Vista (-4h)</option>
+                            <option value="-5" name="America/Bogota">Bogota (-5h)</option>
+                            <option value="-6" name="America/Boise">Boise (-6h)</option>
+                            <option value="-6" name="America/Cambridge_Bay">Cambridge Bay (-6h)</option>
+                            <option value="-4" name="America/Campo_Grande">Campo Grande (-4h)</option>
+                            <option value="-5" name="America/Cancun">Cancun (-5h)</option>
+                            <option value="-4" name="America/Caracas">Caracas (-4h)</option>
+                            <option value="-3" name="America/Cayenne">Cayenne (-3h)</option>
+                            <option value="-5" name="America/Cayman">Cayman (-5h)</option>
+                            <option value="-5" name="America/Chicago">Chicago (-5h)</option>
+                            <option value="-6" name="America/Chihuahua">Chihuahua (-6h)</option>
+                            <option value="-6" name="America/Costa_Rica">Costa Rica (-6h)</option>
+                            <option value="-7" name="America/Creston">Creston (-7h)</option>
+                            <option value="-4" name="America/Cuiaba">Cuiaba (-4h)</option>
+                            <option value="-4" name="America/Curacao">Curacao (-4h)</option>
+                            <option value="0" name="America/Danmarkshavn">Danmarkshavn (0h)</option>
+                            <option value="-7" name="America/Dawson">Dawson (-7h)</option>
+                            <option value="-7" name="America/Dawson_Creek">Dawson Creek (-7h)</option>
+                            <option value="-6" name="America/Denver">Denver (-6h)</option>
+                            <option value="-4" name="America/Detroit">Detroit (-4h)</option>
+                            <option value="-4" name="America/Dominica">Dominica (-4h)</option>
+                            <option value="-6" name="America/Edmonton">Edmonton (-6h)</option>
+                            <option value="-5" name="America/Eirunepe">Eirunepe (-5h)</option>
+                            <option value="-6" name="America/El_Salvador">El Salvador (-6h)</option>
+                            <option value="-7" name="America/Fort_Nelson">Fort Nelson (-7h)</option>
+                            <option value="-3" name="America/Fortaleza">Fortaleza (-3h)</option>
+                            <option value="-3" name="America/Glace_Bay">Glace Bay (-3h)</option>
+                            <option value="-2" name="America/Godthab">Godthab (-2h)</option>
+                            <option value="-3" name="America/Goose_Bay">Goose Bay (-3h)</option>
+                            <option value="-4" name="America/Grand_Turk">Grand Turk (-4h)</option>
+                            <option value="-4" name="America/Grenada">Grenada (-4h)</option>
+                            <option value="-4" name="America/Guadeloupe">Guadeloupe (-4h)</option>
+                            <option value="-6" name="America/Guatemala">Guatemala (-6h)</option>
+                            <option value="-5" name="America/Guayaquil">Guayaquil (-5h)</option>
+                            <option value="-4" name="America/Guyana">Guyana (-4h)</option>
+                            <option value="-3" name="America/Halifax">Halifax (-3h)</option>
+                            <option value="-4" name="America/Havana">Havana (-4h)</option>
+                            <option value="-7" name="America/Hermosillo">Hermosillo (-7h)</option>
+                            <option value="-4" name="America/Indiana/Indianapolis">Indiana/Indianapolis (-4h)</option>
+                            <option value="-5" name="America/Indiana/Knox">Indiana/Knox (-5h)</option>
+                            <option value="-4" name="America/Indiana/Marengo">Indiana/Marengo (-4h)</option>
+                            <option value="-4" name="America/Indiana/Petersburg">Indiana/Petersburg (-4h)</option>
+                            <option value="-5" name="America/Indiana/Tell_City">Indiana/Tell City (-5h)</option>
+                            <option value="-4" name="America/Indiana/Vevay">Indiana/Vevay (-4h)</option>
+                            <option value="-4" name="America/Indiana/Vincennes">Indiana/Vincennes (-4h)</option>
+                            <option value="-4" name="America/Indiana/Winamac">Indiana/Winamac (-4h)</option>
+                            <option value="-6" name="America/Inuvik">Inuvik (-6h)</option>
+                            <option value="-4" name="America/Iqaluit">Iqaluit (-4h)</option>
+                            <option value="-5" name="America/Jamaica">Jamaica (-5h)</option>
+                            <option value="-8" name="America/Juneau">Juneau (-8h)</option>
+                            <option value="-4" name="America/Kentucky/Louisville">Kentucky/Louisville (-4h)</option>
+                            <option value="-4" name="America/Kentucky/Monticello">Kentucky/Monticello (-4h)</option>
+                            <option value="-4" name="America/Kralendijk">Kralendijk (-4h)</option>
+                            <option value="-4" name="America/La_Paz">La Paz (-4h)</option>
+                            <option value="-5" name="America/Lima">Lima (-5h)</option>
+                            <option value="-7" name="America/Los_Angeles">Los Angeles (-7h)</option>
+                            <option value="-4" name="America/Lower_Princes">Lower Princes (-4h)</option>
+                            <option value="-3" name="America/Maceio">Maceio (-3h)</option>
+                            <option value="-6" name="America/Managua">Managua (-6h)</option>
+                            <option value="-4" name="America/Manaus">Manaus (-4h)</option>
+                            <option value="-4" name="America/Marigot">Marigot (-4h)</option>
+                            <option value="-4" name="America/Martinique">Martinique (-4h)</option>
+                            <option value="-5" name="America/Matamoros">Matamoros (-5h)</option>
+                            <option value="-6" name="America/Mazatlan">Mazatlan (-6h)</option>
+                            <option value="-5" name="America/Menominee">Menominee (-5h)</option>
+                            <option value="-5" name="America/Merida">Merida (-5h)</option>
+                            <option value="-8" name="America/Metlakatla">Metlakatla (-8h)</option>
+                            <option value="-5" name="America/Mexico_City">Mexico City (-5h)</option>
+                            <option value="-2" name="America/Miquelon">Miquelon (-2h)</option>
+                            <option value="-3" name="America/Moncton">Moncton (-3h)</option>
+                            <option value="-5" name="America/Monterrey">Monterrey (-5h)</option>
+                            <option value="-3" name="America/Montevideo">Montevideo (-3h)</option>
+                            <option value="-4" name="America/Montserrat">Montserrat (-4h)</option>
+                            <option value="-4" name="America/Nassau">Nassau (-4h)</option>
+                            <option value="-4" name="America/New_York">New York (-4h)</option>
+                            <option value="-4" name="America/Nipigon">Nipigon (-4h)</option>
+                            <option value="-8" name="America/Nome">Nome (-8h)</option>
+                            <option value="-2" name="America/Noronha">Noronha (-2h)</option>
+                            <option value="-5" name="America/North_Dakota/Beulah">North Dakota/Beulah (-5h)</option>
+                            <option value="-5" name="America/North_Dakota/Center">North Dakota/Center (-5h)</option>
+                            <option value="-5" name="America/North_Dakota/New_Salem">North Dakota/New Salem (-5h)</option>
+                            <option value="-6" name="America/Ojinaga">Ojinaga (-6h)</option>
+                            <option value="-5" name="America/Panama">Panama (-5h)</option>
+                            <option value="-4" name="America/Pangnirtung">Pangnirtung (-4h)</option>
+                            <option value="-3" name="America/Paramaribo">Paramaribo (-3h)</option>
+                            <option value="-7" name="America/Phoenix">Phoenix (-7h)</option>
+                            <option value="-4" name="America/Port-au-Prince">Port-au-Prince (-4h)</option>
+                            <option value="-4" name="America/Port_of_Spain">Port of Spain (-4h)</option>
+                            <option value="-4" name="America/Porto_Velho">Porto Velho (-4h)</option>
+                            <option value="-4" name="America/Puerto_Rico">Puerto Rico (-4h)</option>
+                            <option value="-3" name="America/Punta_Arenas">Punta Arenas (-3h)</option>
+                            <option value="-5" name="America/Rainy_River">Rainy River (-5h)</option>
+                            <option value="-5" name="America/Rankin_Inlet">Rankin Inlet (-5h)</option>
+                            <option value="-3" name="America/Recife">Recife (-3h)</option>
+                            <option value="-6" name="America/Regina">Regina (-6h)</option>
+                            <option value="-5" name="America/Resolute">Resolute (-5h)</option>
+                            <option value="-5" name="America/Rio_Branco">Rio Branco (-5h)</option>
+                            <option value="-3" name="America/Santarem">Santarem (-3h)</option>
+                            <option value="-4" name="America/Santiago">Santiago (-4h)</option>
+                            <option value="-4" name="America/Santo_Domingo">Santo Domingo (-4h)</option>
+                            <option value="-3" name="America/Sao_Paulo">Sao Paulo (-3h)</option>
+                            <option value="0" name="America/Scoresbysund">Scoresbysund (0h)</option>
+                            <option value="-8" name="America/Sitka">Sitka (-8h)</option>
+                            <option value="-4" name="America/St_Barthelemy">St Barthelemy (-4h)</option>
+                            <option value="-2.5" name="America/St_Johns">St Johns (-2.5h)</option>
+                            <option value="-4" name="America/St_Kitts">St Kitts (-4h)</option>
+                            <option value="-4" name="America/St_Lucia">St Lucia (-4h)</option>
+                            <option value="-4" name="America/St_Thomas">St Thomas (-4h)</option>
+                            <option value="-4" name="America/St_Vincent">St Vincent (-4h)</option>
+                            <option value="-6" name="America/Swift_Current">Swift Current (-6h)</option>
+                            <option value="-6" name="America/Tegucigalpa">Tegucigalpa (-6h)</option>
+                            <option value="-3" name="America/Thule">Thule (-3h)</option>
+                            <option value="-4" name="America/Thunder_Bay">Thunder Bay (-4h)</option>
+                            <option value="-7" name="America/Tijuana">Tijuana (-7h)</option>
+                            <option value="-4" name="America/Toronto">Toronto (-4h)</option>
+                            <option value="-4" name="America/Tortola">Tortola (-4h)</option>
+                            <option value="-7" name="America/Vancouver">Vancouver (-7h)</option>
+                            <option value="-7" name="America/Whitehorse">Whitehorse (-7h)</option>
+                            <option value="-5" name="America/Winnipeg">Winnipeg (-5h)</option>
+                            <option value="-8" name="America/Yakutat">Yakutat (-8h)</option>
+                            <option value="-6" name="America/Yellowknife">Yellowknife (-6h)</option>
+                        </optgroup>
+                        <optgroup label="Antarctica">
+                            <option value="8" name="Antarctica/Casey">Casey (+8h)</option>
+                            <option value="7" name="Antarctica/Davis">Davis (+7h)</option>
+                            <option value="10" name="Antarctica/DumontDUrville">DumontDUrville (+10h)</option>
+                            <option value="11" name="Antarctica/Macquarie">Macquarie (+11h)</option>
+                            <option value="5" name="Antarctica/Mawson">Mawson (+5h)</option>
+                            <option value="12" name="Antarctica/McMurdo">McMurdo (+12h)</option>
+                            <option value="-3" name="Antarctica/Palmer">Palmer (-3h)</option>
+                            <option value="-3" name="Antarctica/Rothera">Rothera (-3h)</option>
+                            <option value="3" name="Antarctica/Syowa">Syowa (+3h)</option>
+                            <option value="2" name="Antarctica/Troll">Troll (+2h)</option>
+                            <option value="6" name="Antarctica/Vostok">Vostok (+6h)</option>
+                        </optgroup>
+                        <optgroup label="Asia">
+                            <option value="3" name="Asia/Aden">Aden (+3h)</option>
+                            <option value="6" name="Asia/Almaty">Almaty (+6h)</option>
+                            <option value="3" name="Asia/Amman">Amman (+3h)</option>
+                            <option value="12" name="Asia/Anadyr">Anadyr (+12h)</option>
+                            <option value="5" name="Asia/Aqtau">Aqtau (+5h)</option>
+                            <option value="5" name="Asia/Aqtobe">Aqtobe (+5h)</option>
+                            <option value="5" name="Asia/Ashgabat">Ashgabat (+5h)</option>
+                            <option value="5" name="Asia/Atyrau">Atyrau (+5h)</option>
+                            <option value="3" name="Asia/Baghdad">Baghdad (+3h)</option>
+                            <option value="3" name="Asia/Bahrain">Bahrain (+3h)</option>
+                            <option value="4" name="Asia/Baku">Baku (+4h)</option>
+                            <option value="7" name="Asia/Bangkok">Bangkok (+7h)</option>
+                            <option value="7" name="Asia/Barnaul">Barnaul (+7h)</option>
+                            <option value="3" name="Asia/Beirut">Beirut (+3h)</option>
+                            <option value="6" name="Asia/Bishkek">Bishkek (+6h)</option>
+                            <option value="8" name="Asia/Brunei">Brunei (+8h)</option>
+                            <option value="9" name="Asia/Chita">Chita (+9h)</option>
+                            <option value="8" name="Asia/Choibalsan">Choibalsan (+8h)</option>
+                            <option value="5.5" name="Asia/Colombo">Colombo (+5.5h)</option>
+                            <option value="3" name="Asia/Damascus">Damascus (+3h)</option>
+                            <option value="6" name="Asia/Dhaka">Dhaka (+6h)</option>
+                            <option value="9" name="Asia/Dili">Dili (+9h)</option>
+                            <option value="4" name="Asia/Dubai">Dubai (+4h)</option>
+                            <option value="5" name="Asia/Dushanbe">Dushanbe (+5h)</option>
+                            <option value="3" name="Asia/Famagusta">Famagusta (+3h)</option>
+                            <option value="3" name="Asia/Gaza">Gaza (+3h)</option>
+                            <option value="3" name="Asia/Hebron">Hebron (+3h)</option>
+                            <option value="7" name="Asia/Ho_Chi_Minh">Ho Chi Minh (+7h)</option>
+                            <option value="8" name="Asia/Hong_Kong">Hong Kong (+8h)</option>
+                            <option value="7" name="Asia/Hovd">Hovd (+7h)</option>
+                            <option value="8" name="Asia/Irkutsk">Irkutsk (+8h)</option>
+                            <option value="7" name="Asia/Jakarta">Jakarta (+7h)</option>
+                            <option value="9" name="Asia/Jayapura">Jayapura (+9h)</option>
+                            <option value="3" name="Asia/Jerusalem">Jerusalem (+3h)</option>
+                            <option value="4.5" name="Asia/Kabul">Kabul (+4.5h)</option>
+                            <option value="12" name="Asia/Kamchatka">Kamchatka (+12h)</option>
+                            <option value="5" name="Asia/Karachi">Karachi (+5h)</option>
+                            <option value="5.75" name="Asia/Kathmandu">Kathmandu (+5.75h)</option>
+                            <option value="9" name="Asia/Khandyga">Khandyga (+9h)</option>
+                            <option value="5.5" name="Asia/Kolkata">Kolkata (+5.5h)</option>
+                            <option value="7" name="Asia/Krasnoyarsk">Krasnoyarsk (+7h)</option>
+                            <option value="8" name="Asia/Kuala_Lumpur">Kuala Lumpur (+8h)</option>
+                            <option value="8" name="Asia/Kuching">Kuching (+8h)</option>
+                            <option value="3" name="Asia/Kuwait">Kuwait (+3h)</option>
+                            <option value="8" name="Asia/Macau">Macau (+8h)</option>
+                            <option value="11" name="Asia/Magadan">Magadan (+11h)</option>
+                            <option value="8" name="Asia/Makassar">Makassar (+8h)</option>
+                            <option value="8" name="Asia/Manila">Manila (+8h)</option>
+                            <option value="4" name="Asia/Muscat">Muscat (+4h)</option>
+                            <option value="3" name="Asia/Nicosia">Nicosia (+3h)</option>
+                            <option value="7" name="Asia/Novokuznetsk">Novokuznetsk (+7h)</option>
+                            <option value="7" name="Asia/Novosibirsk">Novosibirsk (+7h)</option>
+                            <option value="6" name="Asia/Omsk">Omsk (+6h)</option>
+                            <option value="5" name="Asia/Oral">Oral (+5h)</option>
+                            <option value="7" name="Asia/Phnom_Penh">Phnom Penh (+7h)</option>
+                            <option value="7" name="Asia/Pontianak">Pontianak (+7h)</option>
+                            <option value="9" name="Asia/Pyongyang">Pyongyang (+9h)</option>
+                            <option value="3" name="Asia/Qatar">Qatar (+3h)</option>
+                            <option value="6" name="Asia/Qostanay">Qostanay (+6h)</option>
+                            <option value="5" name="Asia/Qyzylorda">Qyzylorda (+5h)</option>
+                            <option value="3" name="Asia/Riyadh">Riyadh (+3h)</option>
+                            <option value="11" name="Asia/Sakhalin">Sakhalin (+11h)</option>
+                            <option value="5" name="Asia/Samarkand">Samarkand (+5h)</option>
+                            <option value="9" name="Asia/Seoul">Seoul (+9h)</option>
+                            <option value="8" name="Asia/Shanghai">Shanghai (+8h)</option>
+                            <option value="8" name="Asia/Singapore">Singapore (+8h)</option>
+                            <option value="11" name="Asia/Srednekolymsk">Srednekolymsk (+11h)</option>
+                            <option value="8" name="Asia/Taipei">Taipei (+8h)</option>
+                            <option value="5" name="Asia/Tashkent">Tashkent (+5h)</option>
+                            <option value="4" name="Asia/Tbilisi">Tbilisi (+4h)</option>
+                            <option value="4.5" name="Asia/Tehran">Tehran (+4.5h)</option>
+                            <option value="6" name="Asia/Thimphu">Thimphu (+6h)</option>
+                            <option value="9" name="Asia/Tokyo">Tokyo (+9h)</option>
+                            <option value="7" name="Asia/Tomsk">Tomsk (+7h)</option>
+                            <option value="8" name="Asia/Ulaanbaatar">Ulaanbaatar (+8h)</option>
+                            <option value="6" name="Asia/Urumqi">Urumqi (+6h)</option>
+                            <option value="10" name="Asia/Ust-Nera">Ust-Nera (+10h)</option>
+                            <option value="7" name="Asia/Vientiane">Vientiane (+7h)</option>
+                            <option value="10" name="Asia/Vladivostok">Vladivostok (+10h)</option>
+                            <option value="9" name="Asia/Yakutsk">Yakutsk (+9h)</option>
+                            <option value="6.5" name="Asia/Yangon">Yangon (+6.5h)</option>
+                            <option value="5" name="Asia/Yekaterinburg">Yekaterinburg (+5h)</option>
+                            <option value="4" name="Asia/Yerevan">Yerevan (+4h)</option>
+                        </optgroup>
+                        <optgroup label="Atlantic">
+                            <option value="0" name="Atlantic/Azores">Azores (0h)</option>
+                            <option value="-3" name="Atlantic/Bermuda">Bermuda (-3h)</option>
+                            <option value="1" name="Atlantic/Canary">Canary (+1h)</option>
+                            <option value="-1" name="Atlantic/Cape_Verde">Cape Verde (-1h)</option>
+                            <option value="1" name="Atlantic/Faroe">Faroe (+1h)</option>
+                            <option value="1" name="Atlantic/Madeira">Madeira (+1h)</option>
+                            <option value="0" name="Atlantic/Reykjavik">Reykjavik (0h)</option>
+                            <option value="-2" name="Atlantic/South_Georgia">South Georgia (-2h)</option>
+                            <option value="0" name="Atlantic/St_Helena">St Helena (0h)</option>
+                            <option value="-3" name="Atlantic/Stanley">Stanley (-3h)</option>
+                        </optgroup>
+                        <optgroup label="Australia">
+                            <option value="9.5" name="Australia/Adelaide">Adelaide (+9.5h)</option>
+                            <option value="10" name="Australia/Brisbane">Brisbane (+10h)</option>
+                            <option value="9.5" name="Australia/Broken_Hill">Broken Hill (+9.5h)</option>
+                            <option value="10" name="Australia/Currie">Currie (+10h)</option>
+                            <option value="9.5" name="Australia/Darwin">Darwin (+9.5h)</option>
+                            <option value="8.75" name="Australia/Eucla">Eucla (+8.75h)</option>
+                            <option value="10" name="Australia/Hobart">Hobart (+10h)</option>
+                            <option value="10" name="Australia/Lindeman">Lindeman (+10h)</option>
+                            <option value="10.5" name="Australia/Lord_Howe">Lord Howe (+10.5h)</option>
+                            <option value="10" name="Australia/Melbourne">Melbourne (+10h)</option>
+                            <option value="8" name="Australia/Perth">Perth (+8h)</option>
+                            <option value="10" name="Australia/Sydney">Sydney (+10h)</option>
+                        </optgroup>
+                        <optgroup label="Europe">
+                            <option value="2" name="Europe/Amsterdam">Amsterdam (+2h)</option>
+                            <option value="2" name="Europe/Andorra">Andorra (+2h)</option>
+                            <option value="4" name="Europe/Astrakhan">Astrakhan (+4h)</option>
+                            <option value="3" name="Europe/Athens">Athens (+3h)</option>
+                            <option value="2" name="Europe/Belgrade">Belgrade (+2h)</option>
+                            <option value="2" name="Europe/Berlin">Berlin (+2h)</option>
+                            <option value="2" name="Europe/Bratislava">Bratislava (+2h)</option>
+                            <option value="2" name="Europe/Brussels">Brussels (+2h)</option>
+                            <option value="3" name="Europe/Bucharest">Bucharest (+3h)</option>
+                            <option value="2" name="Europe/Budapest">Budapest (+2h)</option>
+                            <option value="2" name="Europe/Busingen">Busingen (+2h)</option>
+                            <option value="3" name="Europe/Chisinau">Chisinau (+3h)</option>
+                            <option value="2" name="Europe/Copenhagen">Copenhagen (+2h)</option>
+                            <option value="1" name="Europe/Dublin">Dublin (+1h)</option>
+                            <option value="2" name="Europe/Gibraltar">Gibraltar (+2h)</option>
+                            <option value="1" name="Europe/Guernsey">Guernsey (+1h)</option>
+                            <option value="3" name="Europe/Helsinki">Helsinki (+3h)</option>
+                            <option value="1" name="Europe/Isle_of_Man">Isle of Man (+1h)</option>
+                            <option value="3" name="Europe/Istanbul">Istanbul (+3h)</option>
+                            <option value="1" name="Europe/Jersey">Jersey (+1h)</option>
+                            <option value="2" name="Europe/Kaliningrad">Kaliningrad (+2h)</option>
+                            <option value="3" name="Europe/Kiev">Kiev (+3h)</option>
+                            <option value="3" name="Europe/Kirov">Kirov (+3h)</option>
+                            <option value="1" name="Europe/Lisbon">Lisbon (+1h)</option>
+                            <option value="2" name="Europe/Ljubljana">Ljubljana (+2h)</option>
+                            <option value="1" name="Europe/London">London (+1h)</option>
+                            <option value="2" name="Europe/Luxembourg">Luxembourg (+2h)</option>
+                            <option value="2" name="Europe/Madrid">Madrid (+2h)</option>
+                            <option value="2" name="Europe/Malta">Malta (+2h)</option>
+                            <option value="3" name="Europe/Mariehamn">Mariehamn (+3h)</option>
+                            <option value="3" name="Europe/Minsk">Minsk (+3h)</option>
+                            <option value="2" name="Europe/Monaco">Monaco (+2h)</option>
+                            <option value="3" name="Europe/Moscow">Moscow (+3h)</option>
+                            <option value="2" name="Europe/Oslo">Oslo (+2h)</option>
+                            <option value="2" name="Europe/Paris">Paris (+2h)</option>
+                            <option value="2" name="Europe/Podgorica">Podgorica (+2h)</option>
+                            <option value="2" name="Europe/Prague">Prague (+2h)</option>
+                            <option value="3" name="Europe/Riga">Riga (+3h)</option>
+                            <option value="2" name="Europe/Rome">Rome (+2h)</option>
+                            <option value="4" name="Europe/Samara">Samara (+4h)</option>
+                            <option value="2" name="Europe/San_Marino">San Marino (+2h)</option>
+                            <option value="2" name="Europe/Sarajevo">Sarajevo (+2h)</option>
+                            <option value="4" name="Europe/Saratov">Saratov (+4h)</option>
+                            <option value="3" name="Europe/Simferopol">Simferopol (+3h)</option>
+                            <option value="2" name="Europe/Skopje">Skopje (+2h)</option>
+                            <option value="3" name="Europe/Sofia">Sofia (+3h)</option>
+                            <option value="2" name="Europe/Stockholm">Stockholm (+2h)</option>
+                            <option value="3" name="Europe/Tallinn">Tallinn (+3h)</option>
+                            <option value="2" name="Europe/Tirane">Tirane (+2h)</option>
+                            <option value="4" name="Europe/Ulyanovsk">Ulyanovsk (+4h)</option>
+                            <option value="3" name="Europe/Uzhgorod">Uzhgorod (+3h)</option>
+                            <option value="2" name="Europe/Vaduz">Vaduz (+2h)</option>
+                            <option value="2" name="Europe/Vatican">Vatican (+2h)</option>
+                            <option value="2" name="Europe/Vienna">Vienna (+2h)</option>
+                            <option value="3" name="Europe/Vilnius">Vilnius (+3h)</option>
+                            <option value="4" name="Europe/Volgograd">Volgograd (+4h)</option>
+                            <option value="2" name="Europe/Warsaw">Warsaw (+2h)</option>
+                            <option value="2" name="Europe/Zagreb">Zagreb (+2h)</option>
+                            <option value="3" name="Europe/Zaporozhye">Zaporozhye (+3h)</option>
+                            <option value="2" name="Europe/Zurich">Zurich (+2h)</option>
+                        </optgroup>
+                        <optgroup label="Indian">
+                            <option value="3" name="Indian/Antananarivo">Antananarivo (+3h)</option>
+                            <option value="6" name="Indian/Chagos">Chagos (+6h)</option>
+                            <option value="7" name="Indian/Christmas">Christmas (+7h)</option>
+                            <option value="6.5" name="Indian/Cocos">Cocos (+6.5h)</option>
+                            <option value="3" name="Indian/Comoro">Comoro (+3h)</option>
+                            <option value="5" name="Indian/Kerguelen">Kerguelen (+5h)</option>
+                            <option value="4" name="Indian/Mahe">Mahe (+4h)</option>
+                            <option value="5" name="Indian/Maldives">Maldives (+5h)</option>
+                            <option value="4" name="Indian/Mauritius">Mauritius (+4h)</option>
+                            <option value="3" name="Indian/Mayotte">Mayotte (+3h)</option>
+                            <option value="4" name="Indian/Reunion">Reunion (+4h)</option>
+                        </optgroup>
+                        <optgroup label="Pacific">
+                            <option value="13" name="Pacific/Apia">Apia (+13h)</option>
+                            <option value="12" name="Pacific/Auckland">Auckland (+12h)</option>
+                            <option value="11" name="Pacific/Bougainville">Bougainville (+11h)</option>
+                            <option value="12.75" name="Pacific/Chatham">Chatham (+12.75h)</option>
+                            <option value="10" name="Pacific/Chuuk">Chuuk (+10h)</option>
+                            <option value="-6" name="Pacific/Easter">Easter (-6h)</option>
+                            <option value="11" name="Pacific/Efate">Efate (+11h)</option>
+                            <option value="13" name="Pacific/Enderbury">Enderbury (+13h)</option>
+                            <option value="13" name="Pacific/Fakaofo">Fakaofo (+13h)</option>
+                            <option value="12" name="Pacific/Fiji">Fiji (+12h)</option>
+                            <option value="12" name="Pacific/Funafuti">Funafuti (+12h)</option>
+                            <option value="-6" name="Pacific/Galapagos">Galapagos (-6h)</option>
+                            <option value="-9" name="Pacific/Gambier">Gambier (-9h)</option>
+                            <option value="11" name="Pacific/Guadalcanal">Guadalcanal (+11h)</option>
+                            <option value="10" name="Pacific/Guam">Guam (+10h)</option>
+                            <option value="-10" name="Pacific/Honolulu">Honolulu (-10h)</option>
+                            <option value="14" name="Pacific/Kiritimati">Kiritimati (+14h)</option>
+                            <option value="11" name="Pacific/Kosrae">Kosrae (+11h)</option>
+                            <option value="12" name="Pacific/Kwajalein">Kwajalein (+12h)</option>
+                            <option value="12" name="Pacific/Majuro">Majuro (+12h)</option>
+                            <option value="-9.5" name="Pacific/Marquesas">Marquesas (-9.5h)</option>
+                            <option value="-11" name="Pacific/Midway">Midway (-11h)</option>
+                            <option value="12" name="Pacific/Nauru">Nauru (+12h)</option>
+                            <option value="-11" name="Pacific/Niue">Niue (-11h)</option>
+                            <option value="11" name="Pacific/Norfolk">Norfolk (+11h)</option>
+                            <option value="11" name="Pacific/Noumea">Noumea (+11h)</option>
+                            <option value="-11" name="Pacific/Pago_Pago">Pago Pago (-11h)</option>
+                            <option value="9" name="Pacific/Palau">Palau (+9h)</option>
+                            <option value="-8" name="Pacific/Pitcairn">Pitcairn (-8h)</option>
+                            <option value="11" name="Pacific/Pohnpei">Pohnpei (+11h)</option>
+                            <option value="10" name="Pacific/Port_Moresby">Port Moresby (+10h)</option>
+                            <option value="-10" name="Pacific/Rarotonga">Rarotonga (-10h)</option>
+                            <option value="10" name="Pacific/Saipan">Saipan (+10h)</option>
+                            <option value="-10" name="Pacific/Tahiti">Tahiti (-10h)</option>
+                            <option value="12" name="Pacific/Tarawa">Tarawa (+12h)</option>
+                            <option value="13" name="Pacific/Tongatapu">Tongatapu (+13h)</option>
+                            <option value="12" name="Pacific/Wake">Wake (+12h)</option>
+                            <option value="12" name="Pacific/Wallis">Wallis (+12h)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div>
+                    <label for="daylightSavingsTime">Sommerzeitregelung</label>
+                    <input type="checkbox" id="daylightSavingsTime" name="daylightSavingsTime" value="true">
+                </div>
+                <div>
+                    <label for="sleepTime">Ausschaltzeit</label>
+                    <input type="time" id="sleepTime" name="sleepTime" value="01:00">
+                </div>
+                <div>
+                    <label for="wakeupTime">Einschaltzeit</label>
+                    <input type="time" id="wakeupTime" name="wakeupTime" value="05:00">
+                </div>
+            </fieldset>
+            <button type="submit">speichern</button>
+        </form>
+    </main>
 
-        <fieldset>
-            <legend>Colors</legend>
-            <div>
-                <label for="foregroundColor">Vordergrundfarbe</label>
-                <input type="color" id="foregroundColor" name="foregroundColor" value="#ff0000">
-            </div>
-            <div>
-                <label for="backgroundColor">Vordergrundfarbe</label>
-                <input type="color" id="backgroundColor" name="backgroundColor" value="#0000ff">
-            </div>
-            <div>
-                <label for="brightness">Helligkeit</label>
-                <input type="range" id="brightness" name="brightness" min="0" max="100">
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Settings</legend>
-            <div>
-                <label for="timeZone">Zeitzone</label>
-                <select id="timeZone">
-                    <optgroup label="Africa">
-                        <option value="0" name="Africa/Abidjan">Abidjan - 07:05</option>
-                        <option value="0" name="Africa/Accra">Accra - 07:05</option>
-                        <option value="3" name="Africa/Addis_Ababa">Addis_Ababa - 10:05</option>
-                        <option value="1" name="Africa/Algiers">Algiers - 08:05</option>
-                        <option value="3" name="Africa/Asmara">Asmara - 10:05</option>
-                        <option value="0" name="Africa/Bamako">Bamako - 07:05</option>
-                        <option value="1" name="Africa/Bangui">Bangui - 08:05</option>
-                        <option value="0" name="Africa/Banjul">Banjul - 07:05</option>
-                        <option value="0" name="Africa/Bissau">Bissau - 07:05</option>
-                        <option value="2" name="Africa/Blantyre">Blantyre - 09:05</option>
-                        <option value="1" name="Africa/Brazzaville">Brazzaville - 08:05</option>
-                        <option value="2" name="Africa/Bujumbura">Bujumbura - 09:05</option>
-                        <option value="2" name="Africa/Cairo">Cairo - 09:05</option>
-                        <option value="0" name="Africa/Casablanca">Casablanca - 07:05</option>
-                        <option value="2" name="Africa/Ceuta">Ceuta - 09:05</option>
-                        <option value="0" name="Africa/Conakry">Conakry - 07:05</option>
-                        <option value="0" name="Africa/Dakar">Dakar - 07:05</option>
-                        <option value="3" name="Africa/Dar_es_Salaam">Dar_es_Salaam - 10:05</option>
-                        <option value="3" name="Africa/Djibouti">Djibouti - 10:05</option>
-                        <option value="1" name="Africa/Douala">Douala - 08:05</option>
-                        <option value="0" name="Africa/El_Aaiun">El_Aaiun - 07:05</option>
-                        <option value="0" name="Africa/Freetown">Freetown - 07:05</option>
-                        <option value="2" name="Africa/Gaborone">Gaborone - 09:05</option>
-                        <option value="2" name="Africa/Harare">Harare - 09:05</option>
-                        <option value="2" name="Africa/Johannesburg">Johannesburg - 09:05</option>
-                        <option value="3" name="Africa/Juba">Juba - 10:05</option>
-                        <option value="3" name="Africa/Kampala">Kampala - 10:05</option>
-                        <option value="2" name="Africa/Khartoum">Khartoum - 09:05</option>
-                        <option value="2" name="Africa/Kigali">Kigali - 09:05</option>
-                        <option value="1" name="Africa/Kinshasa">Kinshasa - 08:05</option>
-                        <option value="1" name="Africa/Lagos">Lagos - 08:05</option>
-                        <option value="1" name="Africa/Libreville">Libreville - 08:05</option>
-                        <option value="0" name="Africa/Lome">Lome - 07:05</option>
-                        <option value="1" name="Africa/Luanda">Luanda - 08:05</option>
-                        <option value="2" name="Africa/Lubumbashi">Lubumbashi - 09:05</option>
-                        <option value="2" name="Africa/Lusaka">Lusaka - 09:05</option>
-                        <option value="1" name="Africa/Malabo">Malabo - 08:05</option>
-                        <option value="2" name="Africa/Maputo">Maputo - 09:05</option>
-                        <option value="2" name="Africa/Maseru">Maseru - 09:05</option>
-                        <option value="2" name="Africa/Mbabane">Mbabane - 09:05</option>
-                        <option value="3" name="Africa/Mogadishu">Mogadishu - 10:05</option>
-                        <option value="0" name="Africa/Monrovia">Monrovia - 07:05</option>
-                        <option value="3" name="Africa/Nairobi">Nairobi - 10:05</option>
-                        <option value="1" name="Africa/Ndjamena">Ndjamena - 08:05</option>
-                        <option value="1" name="Africa/Niamey">Niamey - 08:05</option>
-                        <option value="0" name="Africa/Nouakchott">Nouakchott - 07:05</option>
-                        <option value="0" name="Africa/Ouagadougou">Ouagadougou - 07:05</option>
-                        <option value="1" name="Africa/Porto-Novo">Porto-Novo - 08:05</option>
-                        <option value="0" name="Africa/Sao_Tome">Sao_Tome - 07:05</option>
-                        <option value="2" name="Africa/Tripoli">Tripoli - 09:05</option>
-                        <option value="1" name="Africa/Tunis">Tunis - 08:05</option>
-                        <option value="2" name="Africa/Windhoek">Windhoek - 09:05</option>
-                    </optgroup>
-                    <optgroup label="America">
-                        <option value="-9" name="America/Adak">Adak - 22:05 (10:05 pm)</option>
-                        <option value="-8" name="America/Anchorage">Anchorage - 23:05 (11:05 pm)</option>
-                        <option value="-4" name="America/Anguilla">Anguilla - 03:05</option>
-                        <option value="-4" name="America/Antigua">Antigua - 03:05</option>
-                        <option value="-3" name="America/Araguaina">Araguaina - 04:05</option>
-                        <option value="-3" name="America/Argentina/Buenos_Aires">Argentina/Buenos_Aires - 04:05</option>
-                        <option value="-3" name="America/Argentina/Catamarca">Argentina/Catamarca - 04:05</option>
-                        <option value="-3" name="America/Argentina/Cordoba">Argentina/Cordoba - 04:05</option>
-                        <option value="-3" name="America/Argentina/Jujuy">Argentina/Jujuy - 04:05</option>
-                        <option value="-3" name="America/Argentina/La_Rioja">Argentina/La_Rioja - 04:05</option>
-                        <option value="-3" name="America/Argentina/Mendoza">Argentina/Mendoza - 04:05</option>
-                        <option value="-3" name="America/Argentina/Rio_Gallegos">Argentina/Rio_Gallegos - 04:05</option>
-                        <option value="-3" name="America/Argentina/Salta">Argentina/Salta - 04:05</option>
-                        <option value="-3" name="America/Argentina/San_Juan">Argentina/San_Juan - 04:05</option>
-                        <option value="-3" name="America/Argentina/San_Luis">Argentina/San_Luis - 04:05</option>
-                        <option value="-3" name="America/Argentina/Tucuman">Argentina/Tucuman - 04:05</option>
-                        <option value="-3" name="America/Argentina/Ushuaia">Argentina/Ushuaia - 04:05</option>
-                        <option value="-4" name="America/Aruba">Aruba - 03:05</option>
-                        <option value="-4" name="America/Asuncion">Asuncion - 03:05</option>
-                        <option value="-5" name="America/Atikokan">Atikokan - 02:05</option>
-                        <option value="-3" name="America/Bahia">Bahia - 04:05</option>
-                        <option value="-5" name="America/Bahia_Banderas">Bahia_Banderas - 02:05</option>
-                        <option value="-4" name="America/Barbados">Barbados - 03:05</option>
-                        <option value="-3" name="America/Belem">Belem - 04:05</option>
-                        <option value="-6" name="America/Belize">Belize - 01:05</option>
-                        <option value="-4" name="America/Blanc-Sablon">Blanc-Sablon - 03:05</option>
-                        <option value="-4" name="America/Boa_Vista">Boa_Vista - 03:05</option>
-                        <option value="-5" name="America/Bogota">Bogota - 02:05</option>
-                        <option value="-6" name="America/Boise">Boise - 01:05</option>
-                        <option value="-6" name="America/Cambridge_Bay">Cambridge_Bay - 01:05</option>
-                        <option value="-4" name="America/Campo_Grande">Campo_Grande - 03:05</option>
-                        <option value="-5" name="America/Cancun">Cancun - 02:05</option>
-                        <option value="-4" name="America/Caracas">Caracas - 03:05</option>
-                        <option value="-3" name="America/Cayenne">Cayenne - 04:05</option>
-                        <option value="-5" name="America/Cayman">Cayman - 02:05</option>
-                        <option value="-5" name="America/Chicago">Chicago - 02:05</option>
-                        <option value="-6" name="America/Chihuahua">Chihuahua - 01:05</option>
-                        <option value="-6" name="America/Costa_Rica">Costa_Rica - 01:05</option>
-                        <option value="-7" name="America/Creston">Creston - 00:05</option>
-                        <option value="-4" name="America/Cuiaba">Cuiaba - 03:05</option>
-                        <option value="-4" name="America/Curacao">Curacao - 03:05</option>
-                        <option value="0" name="America/Danmarkshavn">Danmarkshavn - 07:05</option>
-                        <option value="-7" name="America/Dawson">Dawson - 00:05</option>
-                        <option value="-7" name="America/Dawson_Creek">Dawson_Creek - 00:05</option>
-                        <option value="-6" name="America/Denver">Denver - 01:05</option>
-                        <option value="-4" name="America/Detroit">Detroit - 03:05</option>
-                        <option value="-4" name="America/Dominica">Dominica - 03:05</option>
-                        <option value="-6" name="America/Edmonton">Edmonton - 01:05</option>
-                        <option value="-5" name="America/Eirunepe">Eirunepe - 02:05</option>
-                        <option value="-6" name="America/El_Salvador">El_Salvador - 01:05</option>
-                        <option value="-7" name="America/Fort_Nelson">Fort_Nelson - 00:05</option>
-                        <option value="-3" name="America/Fortaleza">Fortaleza - 04:05</option>
-                        <option value="-3" name="America/Glace_Bay">Glace_Bay - 04:05</option>
-                        <option value="-2" name="America/Godthab">Godthab - 05:05</option>
-                        <option value="-3" name="America/Goose_Bay">Goose_Bay - 04:05</option>
-                        <option value="-4" name="America/Grand_Turk">Grand_Turk - 03:05</option>
-                        <option value="-4" name="America/Grenada">Grenada - 03:05</option>
-                        <option value="-4" name="America/Guadeloupe">Guadeloupe - 03:05</option>
-                        <option value="-6" name="America/Guatemala">Guatemala - 01:05</option>
-                        <option value="-5" name="America/Guayaquil">Guayaquil - 02:05</option>
-                        <option value="-4" name="America/Guyana">Guyana - 03:05</option>
-                        <option value="-3" name="America/Halifax">Halifax - 04:05</option>
-                        <option value="-4" name="America/Havana">Havana - 03:05</option>
-                        <option value="-7" name="America/Hermosillo">Hermosillo - 00:05</option>
-                        <option value="-4" name="America/Indiana/Indianapolis">Indiana/Indianapolis - 03:05</option>
-                        <option value="-5" name="America/Indiana/Knox">Indiana/Knox - 02:05</option>
-                        <option value="-4" name="America/Indiana/Marengo">Indiana/Marengo - 03:05</option>
-                        <option value="-4" name="America/Indiana/Petersburg">Indiana/Petersburg - 03:05</option>
-                        <option value="-5" name="America/Indiana/Tell_City">Indiana/Tell_City - 02:05</option>
-                        <option value="-4" name="America/Indiana/Vevay">Indiana/Vevay - 03:05</option>
-                        <option value="-4" name="America/Indiana/Vincennes">Indiana/Vincennes - 03:05</option>
-                        <option value="-4" name="America/Indiana/Winamac">Indiana/Winamac - 03:05</option>
-                        <option value="-6" name="America/Inuvik">Inuvik - 01:05</option>
-                        <option value="-4" name="America/Iqaluit">Iqaluit - 03:05</option>
-                        <option value="-5" name="America/Jamaica">Jamaica - 02:05</option>
-                        <option value="-8" name="America/Juneau">Juneau - 23:05 (11:05 pm)</option>
-                        <option value="-4" name="America/Kentucky/Louisville">Kentucky/Louisville - 03:05</option>
-                        <option value="-4" name="America/Kentucky/Monticello">Kentucky/Monticello - 03:05</option>
-                        <option value="-4" name="America/Kralendijk">Kralendijk - 03:05</option>
-                        <option value="-4" name="America/La_Paz">La_Paz - 03:05</option>
-                        <option value="-5" name="America/Lima">Lima - 02:05</option>
-                        <option value="-7" name="America/Los_Angeles">Los_Angeles - 00:05</option>
-                        <option value="-4" name="America/Lower_Princes">Lower_Princes - 03:05</option>
-                        <option value="-3" name="America/Maceio">Maceio - 04:05</option>
-                        <option value="-6" name="America/Managua">Managua - 01:05</option>
-                        <option value="-4" name="America/Manaus">Manaus - 03:05</option>
-                        <option value="-4" name="America/Marigot">Marigot - 03:05</option>
-                        <option value="-4" name="America/Martinique">Martinique - 03:05</option>
-                        <option value="-5" name="America/Matamoros">Matamoros - 02:05</option>
-                        <option value="-6" name="America/Mazatlan">Mazatlan - 01:05</option>
-                        <option value="-5" name="America/Menominee">Menominee - 02:05</option>
-                        <option value="-5" name="America/Merida">Merida - 02:05</option>
-                        <option value="-8" name="America/Metlakatla">Metlakatla - 23:05 (11:05 pm)</option>
-                        <option value="-5" name="America/Mexico_City">Mexico_City - 02:05</option>
-                        <option value="-2" name="America/Miquelon">Miquelon - 05:05</option>
-                        <option value="-3" name="America/Moncton">Moncton - 04:05</option>
-                        <option value="-5" name="America/Monterrey">Monterrey - 02:05</option>
-                        <option value="-3" name="America/Montevideo">Montevideo - 04:05</option>
-                        <option value="-4" name="America/Montserrat">Montserrat - 03:05</option>
-                        <option value="-4" name="America/Nassau">Nassau - 03:05</option>
-                        <option value="-4" name="America/New_York">New_York - 03:05</option>
-                        <option value="-4" name="America/Nipigon">Nipigon - 03:05</option>
-                        <option value="-8" name="America/Nome">Nome - 23:05 (11:05 pm)</option>
-                        <option value="-2" name="America/Noronha">Noronha - 05:05</option>
-                        <option value="-5" name="America/North_Dakota/Beulah">North_Dakota/Beulah - 02:05</option>
-                        <option value="-5" name="America/North_Dakota/Center">North_Dakota/Center - 02:05</option>
-                        <option value="-5" name="America/North_Dakota/New_Salem">North_Dakota/New_Salem - 02:05</option>
-                        <option value="-6" name="America/Ojinaga">Ojinaga - 01:05</option>
-                        <option value="-5" name="America/Panama">Panama - 02:05</option>
-                        <option value="-4" name="America/Pangnirtung">Pangnirtung - 03:05</option>
-                        <option value="-3" name="America/Paramaribo">Paramaribo - 04:05</option>
-                        <option value="-7" name="America/Phoenix">Phoenix - 00:05</option>
-                        <option value="-4" name="America/Port-au-Prince">Port-au-Prince - 03:05</option>
-                        <option value="-4" name="America/Port_of_Spain">Port_of_Spain - 03:05</option>
-                        <option value="-4" name="America/Porto_Velho">Porto_Velho - 03:05</option>
-                        <option value="-4" name="America/Puerto_Rico">Puerto_Rico - 03:05</option>
-                        <option value="-3" name="America/Punta_Arenas">Punta_Arenas - 04:05</option>
-                        <option value="-5" name="America/Rainy_River">Rainy_River - 02:05</option>
-                        <option value="-5" name="America/Rankin_Inlet">Rankin_Inlet - 02:05</option>
-                        <option value="-3" name="America/Recife">Recife - 04:05</option>
-                        <option value="-6" name="America/Regina">Regina - 01:05</option>
-                        <option value="-5" name="America/Resolute">Resolute - 02:05</option>
-                        <option value="-5" name="America/Rio_Branco">Rio_Branco - 02:05</option>
-                        <option value="-3" name="America/Santarem">Santarem - 04:05</option>
-                        <option value="-4" name="America/Santiago">Santiago - 03:05</option>
-                        <option value="-4" name="America/Santo_Domingo">Santo_Domingo - 03:05</option>
-                        <option value="-3" name="America/Sao_Paulo">Sao_Paulo - 04:05</option>
-                        <option value="0" name="America/Scoresbysund">Scoresbysund - 07:05</option>
-                        <option value="-8" name="America/Sitka">Sitka - 23:05 (11:05 pm)</option>
-                        <option value="-4" name="America/St_Barthelemy">St_Barthelemy - 03:05</option>
-                        <option value="-2.5" name="America/St_Johns">St_Johns - 04:35</option>
-                        <option value="-4" name="America/St_Kitts">St_Kitts - 03:05</option>
-                        <option value="-4" name="America/St_Lucia">St_Lucia - 03:05</option>
-                        <option value="-4" name="America/St_Thomas">St_Thomas - 03:05</option>
-                        <option value="-4" name="America/St_Vincent">St_Vincent - 03:05</option>
-                        <option value="-6" name="America/Swift_Current">Swift_Current - 01:05</option>
-                        <option value="-6" name="America/Tegucigalpa">Tegucigalpa - 01:05</option>
-                        <option value="-3" name="America/Thule">Thule - 04:05</option>
-                        <option value="-4" name="America/Thunder_Bay">Thunder_Bay - 03:05</option>
-                        <option value="-7" name="America/Tijuana">Tijuana - 00:05</option>
-                        <option value="-4" name="America/Toronto">Toronto - 03:05</option>
-                        <option value="-4" name="America/Tortola">Tortola - 03:05</option>
-                        <option value="-7" name="America/Vancouver">Vancouver - 00:05</option>
-                        <option value="-7" name="America/Whitehorse">Whitehorse - 00:05</option>
-                        <option value="-5" name="America/Winnipeg">Winnipeg - 02:05</option>
-                        <option value="-8" name="America/Yakutat">Yakutat - 23:05 (11:05 pm)</option>
-                        <option value="-6" name="America/Yellowknife">Yellowknife - 01:05</option>
-                    </optgroup>
-                    <optgroup label="Antarctica">
-                        <option value="8" name="Antarctica/Casey">Casey - 15:05 (3:05 pm)</option>
-                        <option value="7" name="Antarctica/Davis">Davis - 14:05 (2:05 pm)</option>
-                        <option value="10" name="Antarctica/DumontDUrville">DumontDUrville - 17:05 (5:05 pm)</option>
-                        <option value="11" name="Antarctica/Macquarie">Macquarie - 18:05 (6:05 pm)</option>
-                        <option value="5" name="Antarctica/Mawson">Mawson - 12:05</option>
-                        <option value="12" name="Antarctica/McMurdo">McMurdo - 19:05 (7:05 pm)</option>
-                        <option value="-3" name="Antarctica/Palmer">Palmer - 04:05</option>
-                        <option value="-3" name="Antarctica/Rothera">Rothera - 04:05</option>
-                        <option value="3" name="Antarctica/Syowa">Syowa - 10:05</option>
-                        <option value="2" name="Antarctica/Troll">Troll - 09:05</option>
-                        <option value="6" name="Antarctica/Vostok">Vostok - 13:05 (1:05 pm)</option>
-                    </optgroup>
-                    <optgroup label="Asia">
-                        <option value="3" name="Asia/Aden">Aden - 10:05</option>
-                        <option value="6" name="Asia/Almaty">Almaty - 13:05 (1:05 pm)</option>
-                        <option value="3" name="Asia/Amman">Amman - 10:05</option>
-                        <option value="12" name="Asia/Anadyr">Anadyr - 19:05 (7:05 pm)</option>
-                        <option value="5" name="Asia/Aqtau">Aqtau - 12:05</option>
-                        <option value="5" name="Asia/Aqtobe">Aqtobe - 12:05</option>
-                        <option value="5" name="Asia/Ashgabat">Ashgabat - 12:05</option>
-                        <option value="5" name="Asia/Atyrau">Atyrau - 12:05</option>
-                        <option value="3" name="Asia/Baghdad">Baghdad - 10:05</option>
-                        <option value="3" name="Asia/Bahrain">Bahrain - 10:05</option>
-                        <option value="4" name="Asia/Baku">Baku - 11:05</option>
-                        <option value="7" name="Asia/Bangkok">Bangkok - 14:05 (2:05 pm)</option>
-                        <option value="7" name="Asia/Barnaul">Barnaul - 14:05 (2:05 pm)</option>
-                        <option value="3" name="Asia/Beirut">Beirut - 10:05</option>
-                        <option value="6" name="Asia/Bishkek">Bishkek - 13:05 (1:05 pm)</option>
-                        <option value="8" name="Asia/Brunei">Brunei - 15:05 (3:05 pm)</option>
-                        <option value="9" name="Asia/Chita">Chita - 16:05 (4:05 pm)</option>
-                        <option value="8" name="Asia/Choibalsan">Choibalsan - 15:05 (3:05 pm)</option>
-                        <option value="5.5" name="Asia/Colombo">Colombo - 12:35</option>
-                        <option value="3" name="Asia/Damascus">Damascus - 10:05</option>
-                        <option value="6" name="Asia/Dhaka">Dhaka - 13:05 (1:05 pm)</option>
-                        <option value="9" name="Asia/Dili">Dili - 16:05 (4:05 pm)</option>
-                        <option value="4" name="Asia/Dubai">Dubai - 11:05</option>
-                        <option value="5" name="Asia/Dushanbe">Dushanbe - 12:05</option>
-                        <option value="3" name="Asia/Famagusta">Famagusta - 10:05</option>
-                        <option value="3" name="Asia/Gaza">Gaza - 10:05</option>
-                        <option value="3" name="Asia/Hebron">Hebron - 10:05</option>
-                        <option value="7" name="Asia/Ho_Chi_Minh">Ho_Chi_Minh - 14:05 (2:05 pm)</option>
-                        <option value="8" name="Asia/Hong_Kong">Hong_Kong - 15:05 (3:05 pm)</option>
-                        <option value="7" name="Asia/Hovd">Hovd - 14:05 (2:05 pm)</option>
-                        <option value="8" name="Asia/Irkutsk">Irkutsk - 15:05 (3:05 pm)</option>
-                        <option value="7" name="Asia/Jakarta">Jakarta - 14:05 (2:05 pm)</option>
-                        <option value="9" name="Asia/Jayapura">Jayapura - 16:05 (4:05 pm)</option>
-                        <option value="3" name="Asia/Jerusalem">Jerusalem - 10:05</option>
-                        <option value="4.5" name="Asia/Kabul">Kabul - 11:35</option>
-                        <option value="12" name="Asia/Kamchatka">Kamchatka - 19:05 (7:05 pm)</option>
-                        <option value="5" name="Asia/Karachi">Karachi - 12:05</option>
-                        <option value="5.75" name="Asia/Kathmandu">Kathmandu - 12:50</option>
-                        <option value="9" name="Asia/Khandyga">Khandyga - 16:05 (4:05 pm)</option>
-                        <option value="5.5" name="Asia/Kolkata">Kolkata - 12:35</option>
-                        <option value="7" name="Asia/Krasnoyarsk">Krasnoyarsk - 14:05 (2:05 pm)</option>
-                        <option value="8" name="Asia/Kuala_Lumpur">Kuala_Lumpur - 15:05 (3:05 pm)</option>
-                        <option value="8" name="Asia/Kuching">Kuching - 15:05 (3:05 pm)</option>
-                        <option value="3" name="Asia/Kuwait">Kuwait - 10:05</option>
-                        <option value="8" name="Asia/Macau">Macau - 15:05 (3:05 pm)</option>
-                        <option value="11" name="Asia/Magadan">Magadan - 18:05 (6:05 pm)</option>
-                        <option value="8" name="Asia/Makassar">Makassar - 15:05 (3:05 pm)</option>
-                        <option value="8" name="Asia/Manila">Manila - 15:05 (3:05 pm)</option>
-                        <option value="4" name="Asia/Muscat">Muscat - 11:05</option>
-                        <option value="3" name="Asia/Nicosia">Nicosia - 10:05</option>
-                        <option value="7" name="Asia/Novokuznetsk">Novokuznetsk - 14:05 (2:05 pm)</option>
-                        <option value="7" name="Asia/Novosibirsk">Novosibirsk - 14:05 (2:05 pm)</option>
-                        <option value="6" name="Asia/Omsk">Omsk - 13:05 (1:05 pm)</option>
-                        <option value="5" name="Asia/Oral">Oral - 12:05</option>
-                        <option value="7" name="Asia/Phnom_Penh">Phnom_Penh - 14:05 (2:05 pm)</option>
-                        <option value="7" name="Asia/Pontianak">Pontianak - 14:05 (2:05 pm)</option>
-                        <option value="9" name="Asia/Pyongyang">Pyongyang - 16:05 (4:05 pm)</option>
-                        <option value="3" name="Asia/Qatar">Qatar - 10:05</option>
-                        <option value="6" name="Asia/Qostanay">Qostanay - 13:05 (1:05 pm)</option>
-                        <option value="5" name="Asia/Qyzylorda">Qyzylorda - 12:05</option>
-                        <option value="3" name="Asia/Riyadh">Riyadh - 10:05</option>
-                        <option value="11" name="Asia/Sakhalin">Sakhalin - 18:05 (6:05 pm)</option>
-                        <option value="5" name="Asia/Samarkand">Samarkand - 12:05</option>
-                        <option value="9" name="Asia/Seoul">Seoul - 16:05 (4:05 pm)</option>
-                        <option value="8" name="Asia/Shanghai">Shanghai - 15:05 (3:05 pm)</option>
-                        <option value="8" name="Asia/Singapore">Singapore - 15:05 (3:05 pm)</option>
-                        <option value="11" name="Asia/Srednekolymsk">Srednekolymsk - 18:05 (6:05 pm)</option>
-                        <option value="8" name="Asia/Taipei">Taipei - 15:05 (3:05 pm)</option>
-                        <option value="5" name="Asia/Tashkent">Tashkent - 12:05</option>
-                        <option value="4" name="Asia/Tbilisi">Tbilisi - 11:05</option>
-                        <option value="4.5" name="Asia/Tehran">Tehran - 11:35</option>
-                        <option value="6" name="Asia/Thimphu">Thimphu - 13:05 (1:05 pm)</option>
-                        <option value="9" name="Asia/Tokyo">Tokyo - 16:05 (4:05 pm)</option>
-                        <option value="7" name="Asia/Tomsk">Tomsk - 14:05 (2:05 pm)</option>
-                        <option value="8" name="Asia/Ulaanbaatar">Ulaanbaatar - 15:05 (3:05 pm)</option>
-                        <option value="6" name="Asia/Urumqi">Urumqi - 13:05 (1:05 pm)</option>
-                        <option value="10" name="Asia/Ust-Nera">Ust-Nera - 17:05 (5:05 pm)</option>
-                        <option value="7" name="Asia/Vientiane">Vientiane - 14:05 (2:05 pm)</option>
-                        <option value="10" name="Asia/Vladivostok">Vladivostok - 17:05 (5:05 pm)</option>
-                        <option value="9" name="Asia/Yakutsk">Yakutsk - 16:05 (4:05 pm)</option>
-                        <option value="6.5" name="Asia/Yangon">Yangon - 13:35 (1:35 pm)</option>
-                        <option value="5" name="Asia/Yekaterinburg">Yekaterinburg - 12:05</option>
-                        <option value="4" name="Asia/Yerevan">Yerevan - 11:05</option>
-                    </optgroup>
-                    <optgroup label="Atlantic">
-                        <option value="0" name="Atlantic/Azores">Azores - 07:05</option>
-                        <option value="-3" name="Atlantic/Bermuda">Bermuda - 04:05</option>
-                        <option value="1" name="Atlantic/Canary">Canary - 08:05</option>
-                        <option value="-1" name="Atlantic/Cape_Verde">Cape_Verde - 06:05</option>
-                        <option value="1" name="Atlantic/Faroe">Faroe - 08:05</option>
-                        <option value="1" name="Atlantic/Madeira">Madeira - 08:05</option>
-                        <option value="0" name="Atlantic/Reykjavik">Reykjavik - 07:05</option>
-                        <option value="-2" name="Atlantic/South_Georgia">South_Georgia - 05:05</option>
-                        <option value="0" name="Atlantic/St_Helena">St_Helena - 07:05</option>
-                        <option value="-3" name="Atlantic/Stanley">Stanley - 04:05</option>
-                    </optgroup>
-                    <optgroup label="Australia">
-                        <option value="9.5" name="Australia/Adelaide">Adelaide - 16:35 (4:35 pm)</option>
-                        <option value="10" name="Australia/Brisbane">Brisbane - 17:05 (5:05 pm)</option>
-                        <option value="9.5" name="Australia/Broken_Hill">Broken_Hill - 16:35 (4:35 pm)</option>
-                        <option value="10" name="Australia/Currie">Currie - 17:05 (5:05 pm)</option>
-                        <option value="9.5" name="Australia/Darwin">Darwin - 16:35 (4:35 pm)</option>
-                        <option value="8.75" name="Australia/Eucla">Eucla - 15:50 (3:50 pm)</option>
-                        <option value="10" name="Australia/Hobart">Hobart - 17:05 (5:05 pm)</option>
-                        <option value="10" name="Australia/Lindeman">Lindeman - 17:05 (5:05 pm)</option>
-                        <option value="10.5" name="Australia/Lord_Howe">Lord_Howe - 17:35 (5:35 pm)</option>
-                        <option value="10" name="Australia/Melbourne">Melbourne - 17:05 (5:05 pm)</option>
-                        <option value="8" name="Australia/Perth">Perth - 15:05 (3:05 pm)</option>
-                        <option value="10" name="Australia/Sydney">Sydney - 17:05 (5:05 pm)</option>
-                    </optgroup>
-                    <optgroup label="Europe">
-                        <option value="2" name="Europe/Amsterdam">Amsterdam - 09:05</option>
-                        <option value="2" name="Europe/Andorra">Andorra - 09:05</option>
-                        <option value="4" name="Europe/Astrakhan">Astrakhan - 11:05</option>
-                        <option value="3" name="Europe/Athens">Athens - 10:05</option>
-                        <option value="2" name="Europe/Belgrade">Belgrade - 09:05</option>
-                        <option value="2" name="Europe/Berlin">Berlin - 09:05</option>
-                        <option value="2" name="Europe/Bratislava">Bratislava - 09:05</option>
-                        <option value="2" name="Europe/Brussels">Brussels - 09:05</option>
-                        <option value="3" name="Europe/Bucharest">Bucharest - 10:05</option>
-                        <option value="2" name="Europe/Budapest">Budapest - 09:05</option>
-                        <option value="2" name="Europe/Busingen">Busingen - 09:05</option>
-                        <option value="3" name="Europe/Chisinau">Chisinau - 10:05</option>
-                        <option value="2" name="Europe/Copenhagen">Copenhagen - 09:05</option>
-                        <option value="1" name="Europe/Dublin">Dublin - 08:05</option>
-                        <option value="2" name="Europe/Gibraltar">Gibraltar - 09:05</option>
-                        <option value="1" name="Europe/Guernsey">Guernsey - 08:05</option>
-                        <option value="3" name="Europe/Helsinki">Helsinki - 10:05</option>
-                        <option value="1" name="Europe/Isle_of_Man">Isle_of_Man - 08:05</option>
-                        <option value="3" name="Europe/Istanbul">Istanbul - 10:05</option>
-                        <option value="1" name="Europe/Jersey">Jersey - 08:05</option>
-                        <option value="2" name="Europe/Kaliningrad">Kaliningrad - 09:05</option>
-                        <option value="3" name="Europe/Kiev">Kiev - 10:05</option>
-                        <option value="3" name="Europe/Kirov">Kirov - 10:05</option>
-                        <option value="1" name="Europe/Lisbon">Lisbon - 08:05</option>
-                        <option value="2" name="Europe/Ljubljana">Ljubljana - 09:05</option>
-                        <option value="1" name="Europe/London">London - 08:05</option>
-                        <option value="2" name="Europe/Luxembourg">Luxembourg - 09:05</option>
-                        <option value="2" name="Europe/Madrid">Madrid - 09:05</option>
-                        <option value="2" name="Europe/Malta">Malta - 09:05</option>
-                        <option value="3" name="Europe/Mariehamn">Mariehamn - 10:05</option>
-                        <option value="3" name="Europe/Minsk">Minsk - 10:05</option>
-                        <option value="2" name="Europe/Monaco">Monaco - 09:05</option>
-                        <option value="3" name="Europe/Moscow">Moscow - 10:05</option>
-                        <option value="2" name="Europe/Oslo">Oslo - 09:05</option>
-                        <option value="2" name="Europe/Paris">Paris - 09:05</option>
-                        <option value="2" name="Europe/Podgorica">Podgorica - 09:05</option>
-                        <option value="2" name="Europe/Prague">Prague - 09:05</option>
-                        <option value="3" name="Europe/Riga">Riga - 10:05</option>
-                        <option value="2" name="Europe/Rome">Rome - 09:05</option>
-                        <option value="4" name="Europe/Samara">Samara - 11:05</option>
-                        <option value="2" name="Europe/San_Marino">San_Marino - 09:05</option>
-                        <option value="2" name="Europe/Sarajevo">Sarajevo - 09:05</option>
-                        <option value="4" name="Europe/Saratov">Saratov - 11:05</option>
-                        <option value="3" name="Europe/Simferopol">Simferopol - 10:05</option>
-                        <option value="2" name="Europe/Skopje">Skopje - 09:05</option>
-                        <option value="3" name="Europe/Sofia">Sofia - 10:05</option>
-                        <option value="2" name="Europe/Stockholm">Stockholm - 09:05</option>
-                        <option value="3" name="Europe/Tallinn">Tallinn - 10:05</option>
-                        <option value="2" name="Europe/Tirane">Tirane - 09:05</option>
-                        <option value="4" name="Europe/Ulyanovsk">Ulyanovsk - 11:05</option>
-                        <option value="3" name="Europe/Uzhgorod">Uzhgorod - 10:05</option>
-                        <option value="2" name="Europe/Vaduz">Vaduz - 09:05</option>
-                        <option value="2" name="Europe/Vatican">Vatican - 09:05</option>
-                        <option value="2" name="Europe/Vienna">Vienna - 09:05</option>
-                        <option value="3" name="Europe/Vilnius">Vilnius - 10:05</option>
-                        <option value="4" name="Europe/Volgograd">Volgograd - 11:05</option>
-                        <option value="2" name="Europe/Warsaw">Warsaw - 09:05</option>
-                        <option value="2" name="Europe/Zagreb">Zagreb - 09:05</option>
-                        <option value="3" name="Europe/Zaporozhye">Zaporozhye - 10:05</option>
-                        <option value="2" name="Europe/Zurich">Zurich - 09:05</option>
-                    </optgroup>
-                    <optgroup label="Indian">
-                        <option value="3" name="Indian/Antananarivo">Antananarivo - 10:05</option>
-                        <option value="6" name="Indian/Chagos">Chagos - 13:05 (1:05 pm)</option>
-                        <option value="7" name="Indian/Christmas">Christmas - 14:05 (2:05 pm)</option>
-                        <option value="6.5" name="Indian/Cocos">Cocos - 13:35 (1:35 pm)</option>
-                        <option value="3" name="Indian/Comoro">Comoro - 10:05</option>
-                        <option value="5" name="Indian/Kerguelen">Kerguelen - 12:05</option>
-                        <option value="4" name="Indian/Mahe">Mahe - 11:05</option>
-                        <option value="5" name="Indian/Maldives">Maldives - 12:05</option>
-                        <option value="4" name="Indian/Mauritius">Mauritius - 11:05</option>
-                        <option value="3" name="Indian/Mayotte">Mayotte - 10:05</option>
-                        <option value="4" name="Indian/Reunion">Reunion - 11:05</option>
-                    </optgroup>
-                    <optgroup label="Pacific">
-                        <option value="13" name="Pacific/Apia">Apia - 20:05 (8:05 pm)</option>
-                        <option value="12" name="Pacific/Auckland">Auckland - 19:05 (7:05 pm)</option>
-                        <option value="11" name="Pacific/Bougainville">Bougainville - 18:05 (6:05 pm)</option>
-                        <option value="12.75" name="Pacific/Chatham">Chatham - 19:50 (7:50 pm)</option>
-                        <option value="10" name="Pacific/Chuuk">Chuuk - 17:05 (5:05 pm)</option>
-                        <option value="-6" name="Pacific/Easter">Easter - 01:05</option>
-                        <option value="11" name="Pacific/Efate">Efate - 18:05 (6:05 pm)</option>
-                        <option value="13" name="Pacific/Enderbury">Enderbury - 20:05 (8:05 pm)</option>
-                        <option value="13" name="Pacific/Fakaofo">Fakaofo - 20:05 (8:05 pm)</option>
-                        <option value="12" name="Pacific/Fiji">Fiji - 19:05 (7:05 pm)</option>
-                        <option value="12" name="Pacific/Funafuti">Funafuti - 19:05 (7:05 pm)</option>
-                        <option value="-6" name="Pacific/Galapagos">Galapagos - 01:05</option>
-                        <option value="-9" name="Pacific/Gambier">Gambier - 22:05 (10:05 pm)</option>
-                        <option value="11" name="Pacific/Guadalcanal">Guadalcanal - 18:05 (6:05 pm)</option>
-                        <option value="10" name="Pacific/Guam">Guam - 17:05 (5:05 pm)</option>
-                        <option value="-10" name="Pacific/Honolulu">Honolulu - 21:05 (9:05 pm)</option>
-                        <option value="14" name="Pacific/Kiritimati">Kiritimati - 21:05 (9:05 pm)</option>
-                        <option value="11" name="Pacific/Kosrae">Kosrae - 18:05 (6:05 pm)</option>
-                        <option value="12" name="Pacific/Kwajalein">Kwajalein - 19:05 (7:05 pm)</option>
-                        <option value="12" name="Pacific/Majuro">Majuro - 19:05 (7:05 pm)</option>
-                        <option value="-9.5" name="Pacific/Marquesas">Marquesas - 21:35 (9:35 pm)</option>
-                        <option value="-11" name="Pacific/Midway">Midway - 20:05 (8:05 pm)</option>
-                        <option value="12" name="Pacific/Nauru">Nauru - 19:05 (7:05 pm)</option>
-                        <option value="-11" name="Pacific/Niue">Niue - 20:05 (8:05 pm)</option>
-                        <option value="11" name="Pacific/Norfolk">Norfolk - 18:05 (6:05 pm)</option>
-                        <option value="11" name="Pacific/Noumea">Noumea - 18:05 (6:05 pm)</option>
-                        <option value="-11" name="Pacific/Pago_Pago">Pago_Pago - 20:05 (8:05 pm)</option>
-                        <option value="9" name="Pacific/Palau">Palau - 16:05 (4:05 pm)</option>
-                        <option value="-8" name="Pacific/Pitcairn">Pitcairn - 23:05 (11:05 pm)</option>
-                        <option value="11" name="Pacific/Pohnpei">Pohnpei - 18:05 (6:05 pm)</option>
-                        <option value="10" name="Pacific/Port_Moresby">Port_Moresby - 17:05 (5:05 pm)</option>
-                        <option value="-10" name="Pacific/Rarotonga">Rarotonga - 21:05 (9:05 pm)</option>
-                        <option value="10" name="Pacific/Saipan">Saipan - 17:05 (5:05 pm)</option>
-                        <option value="-10" name="Pacific/Tahiti">Tahiti - 21:05 (9:05 pm)</option>
-                        <option value="12" name="Pacific/Tarawa">Tarawa - 19:05 (7:05 pm)</option>
-                        <option value="13" name="Pacific/Tongatapu">Tongatapu - 20:05 (8:05 pm)</option>
-                        <option value="12" name="Pacific/Wake">Wake - 19:05 (7:05 pm)</option>
-                        <option value="12" name="Pacific/Wallis">Wallis - 19:05 (7:05 pm)</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div>
-                <label for="daylightSavingsTime">Sommerzeitregelung</label>
-                <input type="checkbox" id="daylightSavingsTime" name="daylightSavingsTime" value="true">
-            </div>
-            <div>
-                <label for="sleepTime">Ausschaltzeit</label>
-                <input type="time" id="sleepTime" name="sleepTime" value="01:00">
-            </div>
-            <div>
-                <label for="wakeupTime">Einschaltzeit</label>
-                <input type="time" id="wakeupTime" name="wakeupTime" value="05:00">
-            </div>
-        </fieldset>
-
-        <button type="submit">speichern</button>
-
-    </form>
+    <footer class="center">
+        <p>(C) made with &hearts; by Carsten Walther</p>
+    </footer>
 
     <script src="js/scripts.js"></script>
 </body>

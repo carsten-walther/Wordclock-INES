@@ -1,0 +1,95 @@
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+body {
+  font-family: Arial, Helvetica, "Helvetica Neue", serif;
+  font-size: 14px;
+  background: #333333;
+  color: #ffffff;
+}
+
+header {
+  margin: 1em 0;
+}
+
+main {
+  background: #ffffff;
+  color: #333333;
+  display: block;
+  padding: 1em;
+  margin: auto;
+  max-width: 300px;
+}
+
+footer {
+  margin: 1em 0;
+  font-size: 0.8em;
+  color: #888888;
+}
+
+.center {
+  text-align: center;
+}
+
+form {
+  text-align: left;
+}
+form fieldset {
+  padding: 0 0 1em 0;
+  margin: 0 0 1em 0;
+  border: 0 none;
+  border-bottom: 1px solid #333333;
+}
+form fieldset legend {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+}
+form fieldset div {
+  padding: 0;
+  margin: 0 0 1em 0;
+}
+form label {
+  display: block;
+  padding: 0;
+  margin: 0 0 0.5em 0;
+}
+form input {
+  display: block;
+  margin: 0;
+  padding: 1em;
+  width: 100%;
+}
+form button {
+  display: block;
+  margin: 0;
+  padding: 1em;
+  text-align: center;
+  background: #0090ff;
+  color: #ffffff;
+  border: 0 none;
+  width: 100%;
+}
+
+/*# sourceMappingURL=styles.css.map */

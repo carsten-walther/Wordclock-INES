@@ -24,10 +24,12 @@ foreach ($regions as $name => $mask) {
         $time = new DateTime(NULL, $tz);
         // Us dumb Americans can't handle millitary time
         $ampm = $time->format('H') > 12 ? ' ('. $time->format('g:i a'). ')' : '';
-        // Remove region name and add a sample time
+        // calc offset
+        $offset = ($time->format('Z') / 3600);
+            // Remove region name and add a sample time
         $timezones[$name][$timezone] = [
-            'offset' => ($time->format('Z') / 3600),
-            'label' => substr($timezone, strlen($name) + 1) . ' - ' . $time->format('H:i') . $ampm
+            'offset' => $offset,
+            'label' => str_replace('_', ' ', substr($timezone, strlen($name) + 1)) . ' (' . ($offset > 0 ? ('+' . $offset) : $offset) . 'h)'
         ];
     }
 }
