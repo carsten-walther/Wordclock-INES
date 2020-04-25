@@ -44,15 +44,15 @@ NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UP
 Adafruit_NeoPixel ledStrip = Adafruit_NeoPixel(WS2811_NUMBER, WS2811_DATA_PIN, NEO_GRB + NEO_KHZ800);
 
 // foregroundColor
-RGB foregroundColor = RGB(225, 0, 0);
+RGB foregroundColor = RGB(255, 255, 255);
 // backgroundColor
-RGB backgroundColor = RGB(0, 0, 255);
+RGB backgroundColor = RGB(0, 0, 0);
 // brightness
-int brightness = 10;
+int brightness = 33;
 // timeZone
-int timeZone = 1;
+int timeZone = 0;
 // daylightSavingsTime
-bool daylightSavingsTime = true;
+bool daylightSavingsTime = false;
 // sleepHour
 int sleepHour = 1;
 // sleepMinute
@@ -65,7 +65,7 @@ int wakeupMinute = 0;
 int clockMode = CLOCKMODE_NORMAL;
 
 // Ticker for webServer
-Ticker webServerTicker;
+//Ticker webServerTicker;
 // Ticker for clockMode
 Ticker clockModeTicker;
 
@@ -77,7 +77,6 @@ void setup()
     Serial.begin(BAUD);
     Serial.println(" ");
     Serial.println("Starting Wordclock INES...");
-    Serial.flush();
     #endif
 
     // init WS2811 PIN
@@ -128,25 +127,33 @@ void setup()
         cfg.setAutoFormat(false);
         SPIFFS.setConfig(cfg);
         SPIFFS.begin();
-
-        // start the ntp time client
-        timeClient.begin();
-
-        #ifdef DEBUG
-        Serial.println("ready");
-        #endif
     }
 
+    // start the ntp time client
+    timeClient.begin();
+
+    // process time offsets
+    processTimeOffset();
+
     // attach webServer
-    webServerTicker.attach_ms(250, webServerTick);
+    //webServerTicker.attach_ms(125, webServerTick);
     // attach clockMode
     clockModeTicker.attach_ms(1000, clockModeTick);
+
+    #ifdef DEBUG
+    Serial.println("ready");
+    #endif
 }
 
 // =============================================================================
 
 void loop()
 {
+    // update the ntp time client
+    timeClient.update();
+
+    webServerTick();
+
     // update face
     switch (clockMode) {
 
@@ -166,8 +173,6 @@ void loop()
 
 void webServerTick()
 {
-    // update the ntp time client
-    timeClient.update();
     // run the webServer
     webServer.handleClient();
     // update mdnsResponder service
@@ -176,6 +181,10 @@ void webServerTick()
 
 void clockModeTick()
 {
+    #ifdef DEBUG
+    Serial.println(timeClient.getFormattedTime());
+    #endif
+
     clockMode = CLOCKMODE_NORMAL;
 
     // if time >= sleepTime or time <= wakeupTime
@@ -245,6 +254,22 @@ String split(String data, char separator, int index)
         }
     }
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+void processTimeOffset()
+{
+    int offset = 0;
+
+    if (daylightSavingsTime) {
+        offset = offset + 3600;
+    }
+
+    offset = timeZone * 3600;
+
+    // set time offset
+    timeClient.setTimeOffset(offset);
+    // uptade time
+    timeClient.forceUpdate();
 }
 
 // =============================================================================
@@ -385,7 +410,8 @@ void handleSettingsJson()
     result = result + "\"sleepHour\": " + sleepHour + ",";
     result = result + "\"sleepMinute\": " + sleepMinute + ",";
     result = result + "\"wakeupHour\": " + wakeupHour + ",";
-    result = result + "\"wakeupMinute\": " + wakeupMinute + "";
+    result = result + "\"wakeupMinute\": " + wakeupMinute + ",";
+    result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
     result = result + "}";
 
     webServer.send(200, "application/json", result);
@@ -402,7 +428,7 @@ void handleUpdateJson()
         !webServer.hasArg("backgroundColor") ||
         !webServer.hasArg("brightness") ||
         !webServer.hasArg("timeZone") ||
-        !webServer.hasArg("daylightSavingsTime") ||
+        //!webServer.hasArg("daylightSavingsTime") ||
         !webServer.hasArg("sleepTime") ||
         !webServer.hasArg("wakeupTime")
     ) {
@@ -438,7 +464,10 @@ void handleUpdateJson()
 
     result = result + "{\"success\": " + (success ? "true" : "false") + "}";
 
+    // save settings
     saveEEPROM();
+    // process time offsets
+    processTimeOffset();
 
     webServer.send(200, "application/json", result);
 }
