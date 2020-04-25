@@ -1,4 +1,7 @@
-// global libs
+# 1 "/var/folders/3v/f4hyz79x6j7c8cbpn1l0smjh0000gn/T/tmpRgNztD"
+#include <Arduino.h>
+# 1 "/Users/carstenwalther/Desktop/Wortuhr INES/Firmware/src/Main.ino"
+
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
@@ -12,65 +15,74 @@
 #include <NTPClient.h>
 #include <Ticker.h>
 
-// local libs
+
 #include "Config.h"
 #include "Color/RGB.h"
 
-// WiFiManager
-// Once its business is done, there is no need to keep it around
+
+
 WiFiManager wifiManager;
 
-// Create a web server on port 80
+
 ESP8266WebServer webServer(AP_PORT);
 
-// A UDP instance to let us send and receive packets over UDP
+
 WiFiUDP wifiUdp;
 
-// create a MDNS Responder instance
+
 MDNSResponder mdnsResponder;
 
-// You can specify the time server pool and the offset (in seconds, can be
-// changed later with setTimeOffset() ). Additionaly you can specify the
-// update interval (in milliseconds, can be changed using setUpdateInterval() ).
-NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
 
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = Arduino pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-// NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-// NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-// NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-// NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+
+
+NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
+# 44 "/Users/carstenwalther/Desktop/Wortuhr INES/Firmware/src/Main.ino"
 Adafruit_NeoPixel ledStrip = Adafruit_NeoPixel(WS2811_NUMBER, WS2811_DATA_PIN, NEO_GRB + NEO_KHZ800);
 
-// foregroundColor
+
 RGB foregroundColor = RGB(225, 0, 0);
-// backgroundColor
+
 RGB backgroundColor = RGB(0, 0, 255);
-// brightness
+
 int brightness = 10;
-// timeZone
+
 int timeZone = 1;
-// daylightSavingsTime
+
 bool daylightSavingsTime = true;
-// sleepHour
+
 int sleepHour = 1;
-// sleepMinute
+
 int sleepMinute = 0;
-// wakeupHour
+
 int wakeupHour = 5;
-// wakeupMinute
+
 int wakeupMinute = 0;
-// clockMode
+
 int clockMode = CLOCKMODE_NORMAL;
 
-// Ticker for webServer
+
 Ticker webServerTicker;
-// Ticker for clockMode
+
 Ticker clockModeTicker;
-
-// =============================================================================
-
+void setup();
+void loop();
+void webServerTick();
+void clockModeTick();
+void faceNormal(uint16_t hours, uint16_t minutes);
+void faceNight();
+RGB getRGBFromHex(String hex);
+int hexToInt(char upper, char lower);
+String split(String data, char separator, int index);
+void initEEPROM();
+void loadEEPROM();
+void saveEEPROM();
+void clearEEPROM();
+void handleNotFound();
+bool handleFileRead(String path);
+void handleSettingsJson();
+void handleUpdateJson();
+String getContentType(String filename);
+#line 74 "/Users/carstenwalther/Desktop/Wortuhr INES/Firmware/src/Main.ino"
 void setup()
 {
     #ifdef DEBUG
@@ -80,56 +92,56 @@ void setup()
     Serial.flush();
     #endif
 
-    // init WS2811 PIN
+
     pinMode(WS2811_DATA_PIN, OUTPUT);
 
-    // init ws2811 LED Strip
+
     ledStrip.begin();
     ledStrip.setBrightness(0);
     ledStrip.clear();
     ledStrip.show();
 
-    // init eeprom and hardware
+
     initEEPROM();
 
-    // set host name
+
     wifi_station_set_hostname(AP_HOST);
-    // disable library debug output
+
     wifiManager.setDebugOutput(false);
-    // fetches ssid and pass and tries to connect
-    // if it does not connect it starts an access point with the specified name
-    // here  "AutoConnectAP"
-    // and goes into a blocking loop awaiting configuration
+
+
+
+
     if (!wifiManager.autoConnect(AP_SSID, AP_PASS)) {
 
-        // reset and try again, or maybe put it to deep sleep
+
         ESP.reset();
         delay(1000);
 
     } else {
 
-        // start the web server
+
         webServer.begin();
-        // if someone requests any other file or page,
-        // go to function 'handleNotFound' and check if the file exists
+
+
         webServer.onNotFound(handleNotFound);
-        // if settings requested return settings
+
         webServer.on("/settings.json", HTTP_GET, handleSettingsJson);
-        // if update requested update settings and return result
+
         webServer.on("/update.json", HTTP_POST, handleUpdateJson);
 
-        // start the multicast domain name server
+
         mdnsResponder.begin(AP_HOST);
-        // and add dns services
+
         mdnsResponder.addService("http", "tcp", AP_PORT);
 
-        // start the SPI Flash File System (SPIFFS)
+
         fs::SPIFFSConfig cfg;
         cfg.setAutoFormat(false);
         SPIFFS.setConfig(cfg);
         SPIFFS.begin();
 
-        // start the ntp time client
+
         timeClient.begin();
 
         #ifdef DEBUG
@@ -137,17 +149,17 @@ void setup()
         #endif
     }
 
-    // attach webServer
+
     webServerTicker.attach_ms(250, webServerTick);
-    // attach clockMode
+
     clockModeTicker.attach_ms(1000, clockModeTick);
 }
 
-// =============================================================================
+
 
 void loop()
 {
-    // update face
+
     switch (clockMode) {
 
         case CLOCKMODE_NORMAL:
@@ -162,15 +174,15 @@ void loop()
     ledStrip.show();
 }
 
-// =============================================================================
+
 
 void webServerTick()
 {
-    // update the ntp time client
+
     timeClient.update();
-    // run the webServer
+
     webServer.handleClient();
-    // update mdnsResponder service
+
     mdnsResponder.update();
 }
 
@@ -178,23 +190,23 @@ void clockModeTick()
 {
     clockMode = CLOCKMODE_NORMAL;
 
-    // if time >= sleepTime or time <= wakeupTime
+
     if ((timeClient.getHours() == sleepHour && timeClient.getMinutes() >= sleepMinute) || (timeClient.getHours() == wakeupHour && timeClient.getMinutes() < wakeupMinute)) {
         clockMode = CLOCKMODE_NIGHT;
     }
 
-    // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
+
     if (sleepHour < wakeupHour && timeClient.getHours() >= sleepHour && timeClient.getHours() <= wakeupHour) {
         clockMode = CLOCKMODE_NIGHT;
     }
 
-    // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
+
     if (sleepHour > wakeupHour && (timeClient.getHours() >= sleepHour || timeClient.getHours() <= wakeupHour)) {
         clockMode = CLOCKMODE_NIGHT;
     }
 }
 
-// =============================================================================
+
 
 void faceNormal(uint16_t hours, uint16_t minutes)
 {
@@ -211,7 +223,7 @@ void faceNight()
     ledStrip.setBrightness(brightness);
 }
 
-// =============================================================================
+
 
 RGB getRGBFromHex(String hex)
 {
@@ -247,68 +259,68 @@ String split(String data, char separator, int index)
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
-// =============================================================================
+
 
 void initEEPROM()
 {
     EEPROM.begin(512);
 
-    //write a magic byte to eeprom 196 to determine if we've ever booted on this device before
+
     if (EEPROM.read(EEPROM_init) != 196) {
-        //if not load default config files to EEPROM
+
         saveEEPROM();
     }
 
-    // load config from EEPROM
+
     loadEEPROM();
 }
 
 void loadEEPROM()
 {
-    // EEPROM foregroundColor
+
     foregroundColor = RGB(EEPROM.read(EEPROM_foreground_R), EEPROM.read(EEPROM_foreground_G), EEPROM.read(EEPROM_foreground_B));
-    // EEPROM backgroundColor
+
     backgroundColor = RGB(EEPROM.read(EEPROM_background_R), EEPROM.read(EEPROM_background_G), EEPROM.read(EEPROM_background_B));
-    // EEPROM brightness
+
     brightness = EEPROM.read(EEPROM_brightness);
-    // EEPROM timeZone
+
     timeZone = EEPROM.read(EEPROM_timeZone);
-    // daylightSavingsTime
+
     daylightSavingsTime = EEPROM.read(EEPROM_daylightSavingsTime);
-    // EEPROM sleepHour
+
     sleepHour = EEPROM.read(EEPROM_sleepHour);
-    // EEPROM sleepMinute
+
     sleepMinute = EEPROM.read(EEPROM_sleepMinute);
-    // EEPROM wakeupHour
+
     wakeupHour = EEPROM.read(EEPROM_wakeupHour);
-    // EEPROM wakeupMinute
+
     wakeupMinute = EEPROM.read(EEPROM_wakeupMinute);
 }
 
 void saveEEPROM()
 {
     EEPROM.write(EEPROM_init, 196);
-    // EEPROM foreground color
+
     EEPROM.write(EEPROM_foreground_R, foregroundColor.R);
     EEPROM.write(EEPROM_foreground_G, foregroundColor.G);
     EEPROM.write(EEPROM_foreground_B, foregroundColor.B);
-    // EEPROM background color
+
     EEPROM.write(EEPROM_background_R, backgroundColor.R);
     EEPROM.write(EEPROM_background_G, backgroundColor.G);
     EEPROM.write(EEPROM_background_B, backgroundColor.B);
-    // EEPROM brightness
+
     EEPROM.write(EEPROM_brightness, brightness);
-    // EEPROM timeZone
+
     EEPROM.write(EEPROM_timeZone, timeZone);
-    // daylightSavingsTime
+
     EEPROM.write(EEPROM_daylightSavingsTime, daylightSavingsTime);
-    // EEPROM sleepHour
+
     EEPROM.write(EEPROM_sleepHour, sleepHour);
-    // EEPROM sleepMinute
+
     EEPROM.write(EEPROM_sleepMinute, sleepMinute);
-    // EEPROM wakeupHour
+
     EEPROM.write(EEPROM_wakeupHour, wakeupHour);
-    // EEPROM wakeupMinute
+
     EEPROM.write(EEPROM_wakeupMinute, wakeupMinute);
 
     EEPROM.commit();
@@ -316,7 +328,7 @@ void saveEEPROM()
 
 void clearEEPROM()
 {
-    // write a 0 to all 512 bytes of the EEPROM
+
     for (int i = 0; i < 512; i++) {
         EEPROM.write(i, 0);
     }
@@ -327,11 +339,11 @@ void clearEEPROM()
     EEPROM.end();
 }
 
-// =============================================================================
+
 
 void handleNotFound()
 {
-    // check if the file exists in the flash memory (SPIFFS), if so, send it
+
     if (!handleFileRead(webServer.uri())) {
         webServer.send(404, "text/plain", "Error 404: File Not Found");
     }
@@ -339,35 +351,35 @@ void handleNotFound()
 
 bool handleFileRead(String path)
 {
-    // If a folder is requested, send the index file
+
     if (path.endsWith("/")) {
         path += "index.html";
     }
 
-    // Get the MIME type
+
     String contentType = getContentType(path);
     String pathWithGz = path + ".gz";
 
-    // If the file exists, either as a compressed archive, or normal
+
     if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
 
-        // If there's a compressed version available
+
         if (SPIFFS.exists(pathWithGz)) {
-            // Use the compressed verion
+
             path += ".gz";
         }
 
-        // Open the file
+
         File file = SPIFFS.open(path, "r");
-        // Send it to the client
+
         webServer.streamFile(file, contentType);
-        // Close the file again
+
         file.close();
 
         return true;
     }
 
-    // If the file doesn't exist, return false
+
     return false;
 }
 
@@ -409,29 +421,29 @@ void handleUpdateJson()
         success = false;
     } else {
 
-        // foregroundColor
+
         foregroundColor = getRGBFromHex(webServer.arg("foregroundColor"));
 
-        // backgroundColor
+
         backgroundColor = getRGBFromHex(webServer.arg("backgroundColor"));
 
-        // brightness
+
         brightness = webServer.arg("brightness").toInt();
 
-        // timeZone
+
         timeZone = webServer.arg("timeZone").toInt();
 
-        // daylightSavingsTime
+
         if (webServer.arg("daylightSavingsTime") == String("true"))
             daylightSavingsTime = true;
         else
             daylightSavingsTime = false;
 
-        // sleepTime (sleepHour, sleepMinute)
+
         sleepHour = split(webServer.arg("sleepTime"), ':', 0).toInt();
         sleepMinute = split(webServer.arg("sleepTime"), ':', 1).toInt();
 
-        // wakeupTime (wakeupHour, wakeupMinute)
+
         wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
         wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
     }
