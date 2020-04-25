@@ -12,31 +12,56 @@ h1 {
 }
 
 header {
-  padding: 0;
-  margin: 1em auto 2em auto;
-  max-width: 340px;
+  padding: 1em 0;
+  margin: 0 auto;
 }
 
 main {
   padding: 0;
-  margin: 1em auto;
-  max-width: 340px;
+  margin: 0 auto;
 }
 
 footer {
-  padding: 0;
-  margin: 2em auto;
-  max-width: 340px;
+  padding: 1em 0 0 0;
+  margin: 0 auto;
   font-size: 0.8em;
   color: #a7a7a7;
 }
 
-form fieldset {
+.page {
+  position: relative;
+}
+
+.error-overlay {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+.error-overlay .error-overlay-text {
+  padding: 0;
+  margin: auto;
+  font-size: 2em;
+  font-weight: 300;
+  text-align: center;
+  filter: drop-shadow(0.5em 0.5em 1em #333333);
+}
+
+.blur {
+  filter: blur(0.1em);
+}
+
+form fieldset:not(:last-child) {
   margin-bottom: 2em;
   padding-bottom: 1em;
   border-bottom: 1px solid #dddddd;
 }
-form fieldset legend {
+form fieldset:not(:last-child) legend {
   font-weight: 100;
 }
 
