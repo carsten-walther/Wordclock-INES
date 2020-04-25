@@ -107,6 +107,10 @@ void setup()
         // if someone requests any other file or page,
         // go to function 'handleNotFound' and check if the file exists
         webServer.onNotFound(handleNotFound);
+        // if settings requested return settings
+        webServer.on("/settings.json", HTTP_GET, handleSettingsJson);
+        // if update requested update settings and return result
+        webServer.on("/update.json", HTTP_POST, handleUpdateJson);
 
         // start the multicast domain name server
         mdnsResponder.begin(AP_HOST);
@@ -121,6 +125,10 @@ void setup()
 
         // start the ntp time client
         timeClient.begin();
+
+        #ifdef DEBUG
+        Serial.println("ready");
+        #endif
     }
 }
 
@@ -137,6 +145,8 @@ void loop()
     // update mdnsResponder service
     mdnsResponder.update();
 
+    checkClockMode();
+
     // update face
     switch (clockMode) {
 
@@ -149,20 +159,80 @@ void loop()
             break;
     }
 
-    ledStrip.setBrightness(brightness);
     ledStrip.show();
 }
 
 // =============================================================================
 
+void checkClockMode()
+{
+    clockMode = CLOCKMODE_NORMAL;
+
+    // if time >= sleepTime or time <= wakeupTime
+    if ((timeClient.getHours() == sleepHour && timeClient.getMinutes() >= sleepMinute) || (timeClient.getHours() == wakeupHour && timeClient.getMinutes() < wakeupMinute)) {
+        clockMode = CLOCKMODE_NIGHT;
+    }
+
+    // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
+    if (sleepHour < wakeupHour && timeClient.getHours() >= sleepHour && timeClient.getHours() <= wakeupHour) {
+        clockMode = CLOCKMODE_NIGHT;
+    }
+
+    // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
+    if (sleepHour > wakeupHour && (timeClient.getHours() >= sleepHour || timeClient.getHours() <= wakeupHour)) {
+        clockMode = CLOCKMODE_NIGHT;
+    }
+}
+
 void faceNormal(uint16_t hours, uint16_t minutes)
 {
 
+    ledStrip.setBrightness(brightness);
 }
 
 void faceNight()
 {
+    for (int i = 0; i < ledStrip.numPixels(); i++) {
+        ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
+    }
 
+    ledStrip.setBrightness(brightness);
+}
+
+// =============================================================================
+
+RGB getRGBFromHex(String hex)
+{
+    hex.toUpperCase();
+    char c[7];
+    hex.toCharArray(c, 8);
+    return RGB(hexToInt(c[1], c[2]), hexToInt(c[3], c[4]), hexToInt(c[5], c[6]));
+}
+
+int hexToInt(char upper, char lower)
+{
+    int uVal = (int)upper;
+    int lVal = (int)lower;
+    uVal = uVal > 64 ? uVal - 55 : uVal - 48;
+    uVal = uVal << 4;
+    lVal = lVal > 64 ? lVal - 55 : lVal - 48;
+    return uVal + lVal;
+}
+
+String split(String data, char separator, int index)
+{
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length();
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
 // =============================================================================
@@ -289,6 +359,78 @@ bool handleFileRead(String path)
     return false;
 }
 
+void handleSettingsJson()
+{
+    String result = "";
+
+    result = result + "{";
+    result = result + "\"version\": \"" + VERSION + "\",";
+    result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
+    result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
+    result = result + "\"brightness\": " + brightness + ",";
+    result = result + "\"timeZone\": " + timeZone + ",";
+    result = result + "\"daylightSavingsTime\": " + (daylightSavingsTime ? "true" : "false") + ",";
+    result = result + "\"sleepHour\": " + sleepHour + ",";
+    result = result + "\"sleepMinute\": " + sleepMinute + ",";
+    result = result + "\"wakeupHour\": " + wakeupHour + ",";
+    result = result + "\"wakeupMinute\": " + wakeupMinute + "";
+    result = result + "}";
+
+    webServer.send(200, "application/json", result);
+}
+
+void handleUpdateJson()
+{
+    String result = "";
+
+    bool success = true;
+
+    if (
+        !webServer.hasArg("foregroundColor") ||
+        !webServer.hasArg("backgroundColor") ||
+        !webServer.hasArg("brightness") ||
+        !webServer.hasArg("timeZone") ||
+        !webServer.hasArg("daylightSavingsTime") ||
+        !webServer.hasArg("sleepTime") ||
+        !webServer.hasArg("wakeupTime")
+    ) {
+        success = false;
+    } else {
+
+        // foregroundColor
+        foregroundColor = getRGBFromHex(webServer.arg("foregroundColor"));
+
+        // backgroundColor
+        backgroundColor = getRGBFromHex(webServer.arg("backgroundColor"));
+
+        // brightness
+        brightness = webServer.arg("brightness").toInt();
+
+        // timeZone
+        timeZone = webServer.arg("timeZone").toInt();
+
+        // daylightSavingsTime
+        if (webServer.arg("daylightSavingsTime") == String("true"))
+            daylightSavingsTime = true;
+        else
+            daylightSavingsTime = false;
+
+        // sleepTime (sleepHour, sleepMinute)
+        sleepHour = split(webServer.arg("sleepTime"), ':', 0).toInt();
+        sleepMinute = split(webServer.arg("sleepTime"), ':', 1).toInt();
+
+        // wakeupTime (wakeupHour, wakeupMinute)
+        wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
+        wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
+    }
+
+    result = result + "{\"success\": " + (success ? "true" : "false") + "}";
+
+    saveEEPROM();
+
+    webServer.send(200, "application/json", result);
+}
+
 String getContentType(String filename)
 {
     if (filename.endsWith(".html"))
@@ -297,6 +439,8 @@ String getContentType(String filename)
         return "text/css";
     else if (filename.endsWith(".js"))
         return "application/javascript";
+    else if (filename.endsWith(".gz"))
+        return "application/x-gzip";
     else if (filename.endsWith(".png"))
         return "image/png";
     else if (filename.endsWith(".jpg"))
