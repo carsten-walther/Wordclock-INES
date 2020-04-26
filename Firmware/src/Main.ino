@@ -63,11 +63,15 @@ int wakeupHour = 5;
 int wakeupMinute = 0;
 // clockMode
 int clockMode = CLOCKMODE_NORMAL;
+int clockModeOverride = -1;
 
 // Ticker for webServer
-//Ticker webServerTicker;
+Ticker webServerTicker;
 // Ticker for clockMode
 Ticker clockModeTicker;
+
+// timer
+unsigned long previousMillis = 0;
 
 // =============================================================================
 
@@ -75,6 +79,7 @@ void setup()
 {
     #ifdef DEBUG
     Serial.begin(BAUD);
+    Serial.println(" ");
     Serial.println(" ");
     Serial.println("Starting Wordclock INES...");
     #endif
@@ -136,9 +141,9 @@ void setup()
     processTimeOffset();
 
     // attach webServer
-    //webServerTicker.attach_ms(125, webServerTick);
+    //webServerTicker.attach_ms(500, webServerTick);
     // attach clockMode
-    clockModeTicker.attach_ms(1000, clockModeTick);
+    clockModeTicker.attach_ms(125, clockModeTick);
 
     #ifdef DEBUG
     Serial.println("ready");
@@ -164,9 +169,15 @@ void loop()
         case CLOCKMODE_NIGHT:
             faceNight();
             break;
-    }
 
-    ledStrip.show();
+        case CLOCKMODE_SCANNER:
+            faceScanner();
+            break;
+
+        case CLOCKMODE_TEST:
+            faceTest();
+            break;
+    }
 }
 
 // =============================================================================
@@ -181,10 +192,6 @@ void webServerTick()
 
 void clockModeTick()
 {
-    #ifdef DEBUG
-    Serial.println(timeClient.getFormattedTime());
-    #endif
-
     clockMode = CLOCKMODE_NORMAL;
 
     // if time >= sleepTime or time <= wakeupTime
@@ -201,23 +208,274 @@ void clockModeTick()
     if (sleepHour > wakeupHour && (timeClient.getHours() >= sleepHour || timeClient.getHours() <= wakeupHour)) {
         clockMode = CLOCKMODE_NIGHT;
     }
+
+    // override clockMode
+    if (clockModeOverride > -1) {
+        clockMode = clockModeOverride;
+    }
 }
 
 // =============================================================================
 
+void faceScanner()
+{
+    unsigned int speedDelay = 125;
+
+    // 9, 10, 11, 12
+
+    if (millis() - previousMillis >= speedDelay) {
+
+        previousMillis = millis();
+
+        // set brightness
+        ledStrip.setBrightness(brightness);
+
+        // RightToLeft
+        for (int i = 12; i >= 9; i--) {
+
+            for (int i = 0; i < ledStrip.numPixels(); i++) {
+                ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
+            }
+
+            ledStrip.setPixelColor(i, ledStrip.Color(255, 0, 0));
+            ledStrip.show();
+
+            delay(speedDelay);
+        }
+        delay(speedDelay / 2);
+
+        // LeftToRight
+        for (int i = 9; i <= 12; i++) {
+
+            for (int i = 0; i < ledStrip.numPixels(); i++) {
+                ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
+            }
+
+            ledStrip.setPixelColor(i, ledStrip.Color(255, 0, 0));
+            ledStrip.show();
+
+            delay(speedDelay);
+        }
+        delay(speedDelay / 2);
+    }
+}
+
+void faceTest()
+{
+    // set brightness
+    ledStrip.setBrightness(brightness);
+
+    for (int i = 0; i < ledStrip.numPixels(); i++) {
+        ledStrip.setPixelColor(i, ledStrip.Color(255, 255, 255));
+        delay(250);
+        ledStrip.show();
+    }
+
+    for (int i = 0; i < ledStrip.numPixels(); i++) {
+        ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
+        delay(250);
+        ledStrip.show();
+    }
+}
+
 void faceNormal(uint16_t hours, uint16_t minutes)
 {
+    unsigned int speedDelay = 1000;
 
-    ledStrip.setBrightness(brightness);
+    if (millis() - previousMillis >= speedDelay) {
+
+        previousMillis = millis();
+
+        while (hours < 0) {
+            hours += 12;
+        }
+
+        while (hours > 24) {
+            hours -= 12;
+        }
+
+        #ifdef DEBUG
+        Serial.printf("hours:\t\t%i\n", hours);
+        Serial.printf("minutes:\t%i\n", minutes);
+        Serial.printf("brightness:\t%i\n", brightness);
+        #endif
+
+        // set colors
+        uint32_t foregroundCol = ledStrip.Color(foregroundColor.R, foregroundColor.G, foregroundColor.B);
+        uint32_t backgroundCol = ledStrip.Color(backgroundColor.R, backgroundColor.G, backgroundColor.B);
+
+        // set brightness
+        ledStrip.setBrightness(brightness);
+
+        for (int i = 0; i < ledStrip.numPixels(); i++) {
+            ledStrip.setPixelColor(i, backgroundCol);
+        }
+
+        // minutes
+        switch (minutes / 5) {
+            case 0:
+                // glatte Stunde
+                ledStrip.setPixelColor(DE_GENAU, foregroundCol);
+                break;
+            case 1:
+                // 5 nach
+                ledStrip.setPixelColor(DE_FUENF, foregroundCol);
+                ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                break;
+            case 2:
+                // 10 nach
+                ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
+                ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                break;
+            case 3:
+                // viertel
+                ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 4:
+                // 10 vor halb
+                ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
+                ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 5:
+                // 5 vor halb
+                ledStrip.setPixelColor(DE_FUENF, foregroundCol);
+                ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 6:
+                // halb
+                ledStrip.setPixelColor(DE_GENAU, foregroundCol);
+                ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 7:
+                // 5 nach halb
+                ledStrip.setPixelColor(DE_FUENF, foregroundCol);
+                ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 8:
+                // 10 nach halb
+                ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
+                ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 9:
+                // drei viertel
+                ledStrip.setPixelColor(DE_DREI, foregroundCol);
+                ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 10:
+                // 10 vor
+                ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
+                ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                hours = hours + 1;
+                break;
+            case 11:
+                // 5 vor
+                ledStrip.setPixelColor(DE_FUENF, foregroundCol);
+                ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                hours = hours + 1;
+                break;
+        }
+
+        // hours
+        switch (hours) {
+            case 0:
+            case 12:
+            case 24:
+                ledStrip.setPixelColor(DE_H_ZWOELF, foregroundCol);
+                break;
+            case 1:
+            case 13:
+                ledStrip.setPixelColor(DE_H_EINS, foregroundCol);
+                break;
+            case 2:
+            case 14:
+                ledStrip.setPixelColor(DE_H_ZWEI, foregroundCol);
+                break;
+            case 3:
+            case 15:
+                ledStrip.setPixelColor(DE_H_DREI, foregroundCol);
+                break;
+            case 4:
+            case 16:
+                ledStrip.setPixelColor(DE_H_VIER, foregroundCol);
+                break;
+            case 5:
+            case 17:
+                ledStrip.setPixelColor(DE_H_FUENF, foregroundCol);
+                break;
+            case 6:
+            case 18:
+                ledStrip.setPixelColor(DE_H_SECHS, foregroundCol);
+                break;
+            case 7:
+            case 19:
+                ledStrip.setPixelColor(DE_H_SIEBEN, foregroundCol);
+                break;
+            case 8:
+            case 20:
+                ledStrip.setPixelColor(DE_H_ACHT, foregroundCol);
+                break;
+            case 9:
+            case 21:
+                ledStrip.setPixelColor(DE_H_NEUN, foregroundCol);
+                break;
+            case 10:
+            case 22:
+                ledStrip.setPixelColor(DE_H_ZEHN, foregroundCol);
+                break;
+            case 11:
+            case 23:
+                ledStrip.setPixelColor(DE_H_ELF, foregroundCol);
+                break;
+        }
+
+        // minutes indicators
+        switch (minutes % 5) {
+            case 0:
+                break;
+            case 1:
+                ledStrip.setPixelColor(DE_M_EINS, foregroundCol);
+                break;
+            case 2:
+                ledStrip.setPixelColor(DE_M_EINS, foregroundCol);
+                ledStrip.setPixelColor(DE_M_ZWEI, foregroundCol);
+                break;
+            case 3:
+                ledStrip.setPixelColor(DE_M_EINS, foregroundCol);
+                ledStrip.setPixelColor(DE_M_ZWEI, foregroundCol);
+                ledStrip.setPixelColor(DE_M_DREI, foregroundCol);
+                break;
+            case 4:
+                ledStrip.setPixelColor(DE_M_EINS, foregroundCol);
+                ledStrip.setPixelColor(DE_M_ZWEI, foregroundCol);
+                ledStrip.setPixelColor(DE_M_DREI, foregroundCol);
+                ledStrip.setPixelColor(DE_M_VIER, foregroundCol);
+                break;
+        }
+
+        ledStrip.show();
+    }
 }
 
 void faceNight()
 {
+    ledStrip.setBrightness(0);
+
     for (int i = 0; i < ledStrip.numPixels(); i++) {
         ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
     }
 
-    ledStrip.setBrightness(brightness);
+    ledStrip.show();
 }
 
 // =============================================================================
@@ -404,7 +662,7 @@ void handleSettingsJson()
     result = result + "\"version\": \"" + VERSION + "\",";
     result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
     result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
-    result = result + "\"brightness\": " + brightness + ",";
+    result = result + "\"brightness\": " + map(brightness, 0, 255, 0, 100) + ",";
     result = result + "\"timeZone\": " + timeZone + ",";
     result = result + "\"daylightSavingsTime\": " + (daylightSavingsTime ? "true" : "false") + ",";
     result = result + "\"sleepHour\": " + sleepHour + ",";
@@ -442,7 +700,7 @@ void handleUpdateJson()
         backgroundColor = getRGBFromHex(webServer.arg("backgroundColor"));
 
         // brightness
-        brightness = webServer.arg("brightness").toInt();
+        brightness = map(webServer.arg("brightness").toInt(), 0, 100, 0, 255);
 
         // timeZone
         timeZone = webServer.arg("timeZone").toInt();
@@ -460,6 +718,11 @@ void handleUpdateJson()
         // wakeupTime (wakeupHour, wakeupMinute)
         wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
         wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
+
+        // clockModeOverride
+        if (webServer.hasArg("clockMode")) {
+            clockModeOverride = webServer.arg("clockMode").toInt();
+        }
     }
 
     result = result + "{\"success\": " + (success ? "true" : "false") + "}";

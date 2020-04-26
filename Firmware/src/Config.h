@@ -13,7 +13,7 @@
 //
 
 // Should the debugging function be activated via Serial?
-#define DEBUG
+//#define DEBUG
 
 // Serial baud rate
 #define BAUD 115200
@@ -92,5 +92,39 @@
 // Which modes can be used?
 #define CLOCKMODE_NORMAL 0
 #define CLOCKMODE_NIGHT 1
+#define CLOCKMODE_SCANNER 2
+#define CLOCKMODE_TEST 3
+
+//
+// Words =======================================================================
+//
+
+#define DE_GENAU        0
+#define DE_DREI         1
+#define DE_VIERTEL      2
+#define DE_ZEHN         3
+#define DE_FUENF        4
+#define DE_ZWANZIG      5
+#define DE_NACH         6
+#define DE_VOR          7
+#define DE_HALB         8
+
+#define DE_M_EINS      12
+#define DE_M_ZWEI      11
+#define DE_M_DREI      10
+#define DE_M_VIER       9
+
+#define DE_H_EINS      13
+#define DE_H_ZWEI      14
+#define DE_H_DREI      15
+#define DE_H_VIER      16
+#define DE_H_FUENF     17
+#define DE_H_SECHS     18
+#define DE_H_SIEBEN    19
+#define DE_H_ACHT      20
+#define DE_H_NEUN      21
+#define DE_H_ZEHN      22
+#define DE_H_ELF       23
+#define DE_H_ZWOELF    24
 
 #endif // CONFIG_H_
