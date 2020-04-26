@@ -65,4 +65,8 @@ form fieldset:not(:last-child) legend {
   font-weight: 100;
 }
 
+input[type=color] {
+  padding: 0px 2px;
+}
+
 /*# sourceMappingURL=styles.css.map */
