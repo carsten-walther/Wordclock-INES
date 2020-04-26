@@ -11,7 +11,7 @@ let fullColorHex = function (red, green, blue) {
 
 let overlayError = function (type) {
   let form = $('form');
-  form.find('input, select, button').attr('disabled', '');
+  form.find('input, select, button').attr('disabled', true);
 
   let page = $('#page');
   page.addClass('blur');
@@ -36,7 +36,7 @@ let getSettings = function () {
       $('#version').html(data.version);
       $('#foregroundColor').val(fullColorHex(data.foregroundColor.red, data.foregroundColor.green, data.foregroundColor.blue));
       $('#backgroundColor').val(fullColorHex(data.backgroundColor.red, data.backgroundColor.green, data.backgroundColor.blue));
-      $('#brightness').val(data.brightness);
+      $('#brightness').val(data.brightness).trigger('change');
       $('#timeZone').val(data.timeZone);
       $('#daylightSavingsTime').prop('checked', data.daylightSavingsTime);
       $('#sleepTime').val(((data.sleepHour < 10) ? '0' + data.sleepHour : data.sleepHour) + ':' + ((data.sleepMinute < 10) ? '0' + data.sleepMinute : data.sleepMinute));
@@ -58,7 +58,7 @@ let setSettings = function () {
     data: $('form').serialize(),
     dataType: 'json',
     beforeSend: function () {
-      $('form').find('input, select, button').attr('disabled', '');
+      $('form').find('input, select, button').attr('disabled', true);
     },
     success: function (data, textStatus, jqXHR) {
       if (data.success) {
@@ -77,6 +77,18 @@ let setSettings = function () {
 $(function () {
 
   getSettings();
+
+  $('#brightness').on('mousemove touchmove change', function (event) {
+    $('#brightnessValue').html($(this).val());
+  });
+
+  $('#daylightSavingsTime').change(function (event) {
+    if ($(this).is(':checked')) {
+      $('#daylightSavingsTimeHidden').attr('disabled', true);
+    } else {
+      $('#daylightSavingsTimeHidden').removeAttr('disabled');
+    }
+  });
 
   $('#submit').click(function (event) {
     event.preventDefault();

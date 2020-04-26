@@ -41,21 +41,33 @@
                         <form action="index.html" method="post" data-unexpected-error="Es ist ein unbekannter Fehler aufgetreten." data-connection-error="Es konnte keine Verbindung aufgebaut werden.">
                             <fieldset>
                                 <legend>Farben</legend>
-                                <div class="form-group">
-                                    <label for="foregroundColor">Vordergrundfarbe</label>
-                                    <input class="form-control" type="color" id="foregroundColor" name="foregroundColor" value="#000000" disabled>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="foregroundColor">Vordergrundfarbe</label>
+                                        <input class="form-control" type="color" id="foregroundColor" name="foregroundColor" value="#000000" disabled>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="backgroundColor">Hintergrundfarbe</label>
+                                        <input class="form-control" type="color" id="backgroundColor" name="backgroundColor" value="#000000" disabled>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="backgroundColor">Hintergrundfarbe</label>
-                                    <input class="form-control" type="color" id="backgroundColor" name="backgroundColor" value="#000000" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="brightness">Helligkeit</label>
+                                    <label for="brightness" class="d-block">Helligkeit <span class="float-right" id="brightnessValue">1</span></label>
                                     <input class="custom-range" type="range" id="brightness" name="brightness" min="1" max="100" value="1" step="1" disabled>
                                 </div>
                             </fieldset>
                             <fieldset>
                                 <legend>Einstellungen</legend>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="wakeupTime">Einschaltzeit</label>
+                                        <input class="form-control" type="time" id="wakeupTime" name="wakeupTime" value="00:00" disabled>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="sleepTime">Ausschaltzeit</label>
+                                        <input class="form-control" type="time" id="sleepTime" name="sleepTime" value="00:00" disabled>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="timeZone">Zeitzone</label>
                                     <select class="form-control" id="timeZone" name="timeZone" disabled>
@@ -505,17 +517,10 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-switch">
+                                        <input type="hidden" id="daylightSavingsTimeHidden" name="daylightSavingsTime" value="false">
                                         <input type="checkbox" class="custom-control-input" id="daylightSavingsTime" name="daylightSavingsTime" value="true" disabled>
                                         <label class="custom-control-label" for="daylightSavingsTime">Sommerzeitregelung</label>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sleepTime">Ausschaltzeit</label>
-                                    <input class="form-control" type="time" id="sleepTime" name="sleepTime" value="00:00" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="wakeupTime">Einschaltzeit</label>
-                                    <input class="form-control" type="time" id="wakeupTime" name="wakeupTime" value="00:00" disabled>
                                 </div>
                             </fieldset>
                             <fieldset>
