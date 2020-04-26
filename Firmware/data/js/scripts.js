@@ -11,7 +11,7 @@ let fullColorHex = function (red, green, blue) {
 
 let overlayError = function (type) {
   let form = $('form');
-  form.find('input, select, button').attr('disabled', true);
+  form.find('input, select, button, [data-toggle="buttons"]').attr('disabled', true);
 
   let page = $('#page');
   page.addClass('blur');
@@ -42,7 +42,7 @@ let getSettings = function () {
       $('#sleepTime').val(((data.sleepHour < 10) ? '0' + data.sleepHour : data.sleepHour) + ':' + ((data.sleepMinute < 10) ? '0' + data.sleepMinute : data.sleepMinute));
       $('#wakeupTime').val(((data.wakeupHour < 10) ? '0' + data.wakeupHour : data.wakeupHour) + ':' + ((data.wakeupMinute < 10) ? '0' + data.wakeupMinute : data.wakeupMinute));
 
-      $('form').find('input, select, button').removeAttr('disabled');
+      $('form').find('input, select, button, [data-toggle="buttons"]').removeAttr('disabled');
     },
     error: function (jqXHR, textStatus, errorThrown) {
       overlayError((jqXHR.status === 404 ? 'connection' : ''));
@@ -58,7 +58,7 @@ let setSettings = function () {
     data: $('form').serialize(),
     dataType: 'json',
     beforeSend: function () {
-      $('form').find('input, select, button').attr('disabled', true);
+      $('form').find('input, select, button, [data-toggle="buttons"]').attr('disabled', true);
     },
     success: function (data, textStatus, jqXHR) {
       if (data.success) {
