@@ -90,8 +90,8 @@
 //
 
 // Which modes can be used?
-#define CLOCKMODE_NORMAL 0
-#define CLOCKMODE_NIGHT 1
+#define CLOCKMODE_NIGHT 0
+#define CLOCKMODE_NORMAL 1
 #define CLOCKMODE_SCANNER 2
 #define CLOCKMODE_TEST 3
 
@@ -126,5 +126,11 @@
 #define DE_H_ZEHN      22
 #define DE_H_ELF       23
 #define DE_H_ZWOELF    24
+
+//
+// Certs =======================================================================
+//
+
+
 
 #endif // CONFIG_H_

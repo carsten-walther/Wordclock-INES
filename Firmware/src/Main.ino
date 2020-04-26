@@ -123,9 +123,13 @@ void setup()
         webServer.on("/update.json", HTTP_POST, handleUpdateJson);
 
         // start the multicast domain name server
-        mdnsResponder.begin(AP_HOST);
-        // and add dns services
-        mdnsResponder.addService("http", "tcp", AP_PORT);
+        if (mdnsResponder.begin(AP_HOST)) {
+            #ifdef DEBUG
+            Serial.println("MDNS responder started");
+            #endif
+            mdnsResponder.addService("http", "tcp", AP_PORT);
+            mdnsResponder.addService("https", "tcp", AP_PORT_SSL);
+        }
 
         // start the SPI Flash File System (SPIFFS)
         fs::SPIFFSConfig cfg;
@@ -660,6 +664,7 @@ void handleSettingsJson()
 
     result = result + "{";
     result = result + "\"version\": \"" + VERSION + "\",";
+    result = result + "\"clockMode\": " + clockMode + ",";
     result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
     result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
     result = result + "\"brightness\": " + map(brightness, 0, 255, 0, 100) + ",";
