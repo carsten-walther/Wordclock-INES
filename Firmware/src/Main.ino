@@ -428,7 +428,7 @@ void handleUpdateJson()
         !webServer.hasArg("backgroundColor") ||
         !webServer.hasArg("brightness") ||
         !webServer.hasArg("timeZone") ||
-        //!webServer.hasArg("daylightSavingsTime") ||
+        !webServer.hasArg("daylightSavingsTime") ||
         !webServer.hasArg("sleepTime") ||
         !webServer.hasArg("wakeupTime")
     ) {
