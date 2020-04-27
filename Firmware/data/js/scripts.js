@@ -1,4 +1,3 @@
-
 let rgbToHex = function (rgb) {
   let hex = Number(rgb).toString(16);
   if (hex.length < 2) hex = "0" + hex;
@@ -24,14 +23,15 @@ let overlayError = function (type) {
 }
 
 let updateForm = function (data) {
-  $('#version').html(data.result.version);
   $('#foregroundColor').val(fullColorHex(data.result.foregroundColor.red, data.result.foregroundColor.green, data.result.foregroundColor.blue));
   $('#backgroundColor').val(fullColorHex(data.result.backgroundColor.red, data.result.backgroundColor.green, data.result.backgroundColor.blue));
   $('#brightness').val(data.result.brightness).trigger('change');
   $('#timeZone').val(data.result.timeZone);
-  $('#daylightSavingsTime').prop('checked', data.result.daylightSavingsTime);
+  $('#daylightSavingsTime').val(data.result.daylightSavingsTime);
+  $('#daylightSavingsTimeHelper').prop('checked', data.result.daylightSavingsTime);
   $('#sleepTime').val(((data.result.sleepHour < 10) ? '0' + data.result.sleepHour : data.result.sleepHour) + ':' + ((data.result.sleepMinute < 10) ? '0' + data.result.sleepMinute : data.result.sleepMinute));
   $('#wakeupTime').val(((data.result.wakeupHour < 10) ? '0' + data.result.wakeupHour : data.result.wakeupHour) + ':' + ((data.result.wakeupMinute < 10) ? '0' + data.result.wakeupMinute : data.result.wakeupMinute));
+  $('#version').html(data.result.version);
 }
 
 let getSettings = function () {
