@@ -32,6 +32,10 @@ footer {
   position: relative;
 }
 
+.jumbotron h1 {
+  margin: 0;
+}
+
 .error-overlay {
   position: fixed;
   z-index: 100;
