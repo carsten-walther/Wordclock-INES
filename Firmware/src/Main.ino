@@ -663,18 +663,10 @@ void handleSettingsJson()
     String result = "";
 
     result = result + "{";
-    result = result + "\"version\": \"" + VERSION + "\",";
-    result = result + "\"clockMode\": " + clockMode + ",";
-    result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
-    result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
-    result = result + "\"brightness\": " + map(brightness, 0, 255, 0, 100) + ",";
-    result = result + "\"timeZone\": " + timeZone + ",";
-    result = result + "\"daylightSavingsTime\": " + (daylightSavingsTime ? "true" : "false") + ",";
-    result = result + "\"sleepHour\": " + sleepHour + ",";
-    result = result + "\"sleepMinute\": " + sleepMinute + ",";
-    result = result + "\"wakeupHour\": " + wakeupHour + ",";
-    result = result + "\"wakeupMinute\": " + wakeupMinute + ",";
-    result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
+    result = result + "{\"success\": true}";
+    result = result + "\"result\": {";
+    result = result + generateSettingsData();
+    result = result + "}";
     result = result + "}";
 
     webServer.send(200, "application/json", result);
@@ -730,14 +722,39 @@ void handleUpdateJson()
         }
     }
 
-    result = result + "{\"success\": " + (success ? "true" : "false") + "}";
-
     // save settings
     saveEEPROM();
     // process time offsets
     processTimeOffset();
 
+    result = result + "{";
+    result = result + "{\"success\": " + (success ? "true" : "false") + "}";
+    result = result + "\"result\": {";
+    result = result + generateSettingsData();
+    result = result + "}";
+    result = result + "}";
+
     webServer.send(200, "application/json", result);
+}
+
+String generateSettingsData()
+{
+    String result = "";
+
+    result = result + "\"version\": \"" + VERSION + "\",";
+    result = result + "\"clockMode\": " + clockMode + ",";
+    result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
+    result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
+    result = result + "\"brightness\": " + map(brightness, 0, 255, 0, 100) + ",";
+    result = result + "\"timeZone\": " + timeZone + ",";
+    result = result + "\"daylightSavingsTime\": " + (daylightSavingsTime ? "true" : "false") + ",";
+    result = result + "\"sleepHour\": " + sleepHour + ",";
+    result = result + "\"sleepMinute\": " + sleepMinute + ",";
+    result = result + "\"wakeupHour\": " + wakeupHour + ",";
+    result = result + "\"wakeupMinute\": " + wakeupMinute + ",";
+    result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
+
+    return result;
 }
 
 String getContentType(String filename)
