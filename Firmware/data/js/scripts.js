@@ -31,6 +31,7 @@ let updateForm = function (data) {
   $('#daylightSavingsTimeHelper').prop('checked', data.result.daylightSavingsTime);
   $('#sleepTime').val(((data.result.sleepHour < 10) ? '0' + data.result.sleepHour : data.result.sleepHour) + ':' + ((data.result.sleepMinute < 10) ? '0' + data.result.sleepMinute : data.result.sleepMinute));
   $('#wakeupTime').val(((data.result.wakeupHour < 10) ? '0' + data.result.wakeupHour : data.result.wakeupHour) + ':' + ((data.result.wakeupMinute < 10) ? '0' + data.result.wakeupMinute : data.result.wakeupMinute));
+  $('#language').val(data.result.language);
   $('#version').html(data.result.version);
 }
 

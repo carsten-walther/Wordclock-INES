@@ -84,6 +84,7 @@
 #define EEPROM_sleepMinute 204
 #define EEPROM_wakeupHour 205
 #define EEPROM_wakeupMinute 206
+#define EEPROM_language 207
 
 //
 // Clockmodes ==================================================================
@@ -126,6 +127,13 @@
 #define DE_H_ZEHN      22
 #define DE_H_ELF       23
 #define DE_H_ZWOELF    24
+
+// Language
+
+#define LANGUAGE_DE_DE  0 // Hochdeutsch
+#define LANGUAGE_DE_SW  1 // Schwaebisch
+#define LANGUAGE_DE_BA  2 // Bayrisch
+#define LANGUAGE_DE_SA  3 // Saechsisch
 
 //
 // Certs =======================================================================

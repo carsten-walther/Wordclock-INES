@@ -64,6 +64,8 @@ int wakeupMinute = 0;
 // clockMode
 int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
+// language
+int language = 0;
 
 // Ticker for webServer
 Ticker webServerTicker;
@@ -331,16 +333,28 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 break;
             case 3:
-                // viertel
-                ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
-                hours = hours + 1;
+                if ((language == LANGUAGE_DE_SW) || (language == LANGUAGE_DE_SA)) {
+                    // viertel
+                    ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
+                    hours = hours + 1;
+                } else {
+                    // viertel nach
+                    ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
+                    ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                }
                 break;
             case 4:
-                // 10 vor halb
-                ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
-                ledStrip.setPixelColor(DE_VOR, foregroundCol);
-                ledStrip.setPixelColor(DE_HALB, foregroundCol);
-                hours = hours + 1;
+                if (language == LANGUAGE_DE_SA) {
+                    // 10 vor halb
+                    ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
+                    ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                    ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                    hours = hours + 1;
+                } else {
+                    // 20 nach
+                    ledStrip.setPixelColor(DE_ZWANZIG, foregroundCol);
+                    ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                }
                 break;
             case 5:
                 // 5 vor halb
@@ -363,17 +377,30 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 hours = hours + 1;
                 break;
             case 8:
-                // 10 nach halb
-                ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
-                ledStrip.setPixelColor(DE_NACH, foregroundCol);
-                ledStrip.setPixelColor(DE_HALB, foregroundCol);
-                hours = hours + 1;
+                if (language == LANGUAGE_DE_SA) {
+                    // 10 nach halb
+                    ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
+                    ledStrip.setPixelColor(DE_NACH, foregroundCol);
+                    ledStrip.setPixelColor(DE_HALB, foregroundCol);
+                    hours = hours + 1;
+                } else {
+                    // 20 vor
+                    ledStrip.setPixelColor(DE_ZWANZIG, foregroundCol);
+                    ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                }
                 break;
             case 9:
-                // drei viertel
-                ledStrip.setPixelColor(DE_DREI, foregroundCol);
-                ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
-                hours = hours + 1;
+                if ((language == LANGUAGE_DE_SW) || (language == LANGUAGE_DE_BA) || (language == LANGUAGE_DE_SA)) {
+                    // drei viertel
+                    ledStrip.setPixelColor(DE_DREI, foregroundCol);
+                    ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
+                    hours = hours + 1;
+                } else {
+                    // viertel vor
+                    ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
+                    ledStrip.setPixelColor(DE_VOR, foregroundCol);
+                    hours = hours + 1;
+                }
                 break;
             case 10:
                 // 10 vor
@@ -569,6 +596,8 @@ void loadEEPROM()
     wakeupHour = EEPROM.read(EEPROM_wakeupHour);
     // EEPROM wakeupMinute
     wakeupMinute = EEPROM.read(EEPROM_wakeupMinute);
+    // EEPROM language
+    language = EEPROM.read(EEPROM_language);
 }
 
 void saveEEPROM()
@@ -596,6 +625,8 @@ void saveEEPROM()
     EEPROM.write(EEPROM_wakeupHour, wakeupHour);
     // EEPROM wakeupMinute
     EEPROM.write(EEPROM_wakeupMinute, wakeupMinute);
+    // EEPROM language
+    EEPROM.write(EEPROM_language, language);
 
     EEPROM.commit();
 }
@@ -684,7 +715,8 @@ void handleUpdateJson()
         !webServer.hasArg("timeZone") ||
         !webServer.hasArg("daylightSavingsTime") ||
         !webServer.hasArg("sleepTime") ||
-        !webServer.hasArg("wakeupTime")
+        !webServer.hasArg("wakeupTime") ||
+        !webServer.hasArg("language")
     ) {
         success = false;
     } else {
@@ -719,6 +751,9 @@ void handleUpdateJson()
         if (webServer.hasArg("clockMode")) {
             clockModeOverride = webServer.arg("clockMode").toInt();
         }
+
+        // language
+        language = webServer.arg("language").toInt();
     }
 
     // save settings
@@ -742,6 +777,7 @@ String generateSettingsData()
 
     result = result + "\"version\": \"" + VERSION + "\",";
     result = result + "\"clockMode\": " + clockMode + ",";
+    result = result + "\"language\": " + language + ",";
     result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
     result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
     result = result + "\"brightness\": " + map(brightness, 0, 255, 0, 100) + ",";
