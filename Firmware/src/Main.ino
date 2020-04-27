@@ -128,7 +128,6 @@ void setup()
             Serial.println("MDNS responder started");
             #endif
             mdnsResponder.addService("http", "tcp", AP_PORT);
-            mdnsResponder.addService("https", "tcp", AP_PORT_SSL);
         }
 
         // start the SPI Flash File System (SPIFFS)
@@ -663,7 +662,7 @@ void handleSettingsJson()
     String result = "";
 
     result = result + "{";
-    result = result + "{\"success\": true}";
+    result = result + "\"success\": true,";
     result = result + "\"result\": {";
     result = result + generateSettingsData();
     result = result + "}";
@@ -728,7 +727,7 @@ void handleUpdateJson()
     processTimeOffset();
 
     result = result + "{";
-    result = result + "{\"success\": " + (success ? "true" : "false") + "}";
+    result = result + "\"success\": " + (success ? "true" : "false") + ",";
     result = result + "\"result\": {";
     result = result + generateSettingsData();
     result = result + "}";
