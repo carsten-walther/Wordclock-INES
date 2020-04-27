@@ -22,7 +22,7 @@ main {
 }
 
 footer {
-  padding: 1em 0 0 0;
+  padding: 2em 0 0 0;
   margin: 0 auto;
   font-size: 0.8em;
   color: #a7a7a7;
@@ -62,11 +62,15 @@ form fieldset:not(:last-child) {
   border-bottom: 1px solid #dddddd;
 }
 form fieldset:not(:last-child) legend {
-  font-weight: 100;
+  font-weight: 300;
+}
+
+label {
+  font-weight: 300;
 }
 
 input[type=color] {
-  padding: 0px 2px;
+  padding: 0 2px;
 }
 
 /*# sourceMappingURL=styles.css.map */
