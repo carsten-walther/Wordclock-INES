@@ -23,6 +23,17 @@ let overlayError = function (type) {
   }
 }
 
+let updateForm = function (data) {
+  $('#version').html(data.result.version);
+  $('#foregroundColor').val(fullColorHex(data.result.foregroundColor.red, data.result.foregroundColor.green, data.result.foregroundColor.blue));
+  $('#backgroundColor').val(fullColorHex(data.result.backgroundColor.red, data.result.backgroundColor.green, data.result.backgroundColor.blue));
+  $('#brightness').val(data.result.brightness).trigger('change');
+  $('#timeZone').val(data.result.timeZone);
+  $('#daylightSavingsTime').prop('checked', data.result.daylightSavingsTime);
+  $('#sleepTime').val(((data.result.sleepHour < 10) ? '0' + data.result.sleepHour : data.result.sleepHour) + ':' + ((data.result.sleepMinute < 10) ? '0' + data.result.sleepMinute : data.result.sleepMinute));
+  $('#wakeupTime').val(((data.result.wakeupHour < 10) ? '0' + data.result.wakeupHour : data.result.wakeupHour) + ':' + ((data.result.wakeupMinute < 10) ? '0' + data.result.wakeupMinute : data.result.wakeupMinute));
+}
+
 let getSettings = function () {
   $.ajax({
     type: 'GET',
@@ -32,17 +43,10 @@ let getSettings = function () {
       $('form').find('input, select, button').attr('disabled', '');
     },
     success: function (data, textStatus, jqXHR) {
-
-      $('#version').html(data.version);
-      $('#foregroundColor').val(fullColorHex(data.foregroundColor.red, data.foregroundColor.green, data.foregroundColor.blue));
-      $('#backgroundColor').val(fullColorHex(data.backgroundColor.red, data.backgroundColor.green, data.backgroundColor.blue));
-      $('#brightness').val(data.brightness).trigger('change');
-      $('#timeZone').val(data.timeZone);
-      $('#daylightSavingsTime').prop('checked', data.daylightSavingsTime);
-      $('#sleepTime').val(((data.sleepHour < 10) ? '0' + data.sleepHour : data.sleepHour) + ':' + ((data.sleepMinute < 10) ? '0' + data.sleepMinute : data.sleepMinute));
-      $('#wakeupTime').val(((data.wakeupHour < 10) ? '0' + data.wakeupHour : data.wakeupHour) + ':' + ((data.wakeupMinute < 10) ? '0' + data.wakeupMinute : data.wakeupMinute));
-
-      $('form').find('input, select, button, [data-toggle="buttons"]').removeAttr('disabled');
+      if (data.success) {
+        updateForm(data);
+        $('form').find('input, select, button, [data-toggle="buttons"]').removeAttr('disabled');
+      }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       overlayError((jqXHR.status === 404 ? 'connection' : ''));
@@ -62,7 +66,8 @@ let setSettings = function () {
     },
     success: function (data, textStatus, jqXHR) {
       if (data.success) {
-        getSettings();
+        updateForm(data);
+        $('form').find('input, select, button, [data-toggle="buttons"]').removeAttr('disabled');
       } else {
         overlayError((jqXHR.status === 404 ? 'connection' : ''));
       }
@@ -82,11 +87,11 @@ $(function () {
     $('#brightnessValue').html($(this).val());
   });
 
-  $('#daylightSavingsTime').change(function (event) {
+  $('#daylightSavingsTimeHelper').change(function (event) {
     if ($(this).is(':checked')) {
-      $('#daylightSavingsTimeHidden').attr('disabled', true);
+      $('#daylightSavingsTime').val(true);
     } else {
-      $('#daylightSavingsTimeHidden').removeAttr('disabled');
+      $('#daylightSavingsTime').val(false);
     }
   });
 

@@ -533,9 +533,9 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-switch">
-                                        <input type="hidden" id="daylightSavingsTimeHidden" name="daylightSavingsTime" value="false">
-                                        <input type="checkbox" class="custom-control-input" id="daylightSavingsTime" name="daylightSavingsTime" value="true" disabled>
-                                        <label class="custom-control-label" for="daylightSavingsTime">Sommerzeitregelung</label>
+										<input type="hidden" id="daylightSavingsTime" name="daylightSavingsTime" value="false">
+										<input type="checkbox" class="custom-control-input" id="daylightSavingsTimeHelper" disabled>
+                                        <label class="custom-control-label" for="daylightSavingsTimeHelper">Sommerzeitregelung</label>
                                     </div>
                                 </div>
                             </fieldset>
@@ -562,19 +562,13 @@
     <script src="/js/scripts.js"></script>
 
     <script>
+		// register service worker
         if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/js/service-worker.js').then(function(reg) {
-                    reg.onupdatefound = function() {
-                        let installingWorker = reg.installing;
-                        installingWorker.onstatechange = function() {
-                            if (installingWorker.state === 'installed') {
-                                window.dispatchEvent(new Event('swUpdate'))
-                            }
-                        }
-                    }
-                }).catch(function(err) {
-                    console.error('service worker error', err)
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/js/service-worker.js').then(function (reg) {
+                    // ...
+                }).catch(function (err) {
+                    console.error('service worker error', err);
                 });
             });
         }
