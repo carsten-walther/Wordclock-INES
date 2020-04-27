@@ -6,43 +6,43 @@ self.workbox.setConfig({
 
 self.workbox.precaching.precacheAndRoute([
     {
-        "url": "css/_form.scss"
+        "url": "/css/_form.scss"
     },
     {
-        "url": "css/_general.scss"
+        "url": "/css/_general.scss"
     },
     {
-        "url": "css/styles.css"
+        "url": "/css/styles.css"
     },
     {
-        "url": "css/styles.css.map"
+        "url": "/css/styles.css.map"
     },
     {
-        "url": "css/styles.css"
+        "url": "/css/styles.css"
     },
     {
-        "url": "img/apple-touch-icon.png"
+        "url": "/img/apple-touch-icon.png"
     },
     {
-        "url": "img/favicon.ico"
+        "url": "/img/favicon.ico"
     },
     {
-        "url": "img/icon-128x128.png"
+        "url": "/img/icon-128x128.png"
     },
     {
-        "url": "img/icon-192x192.png"
+        "url": "/img/icon-192x192.png"
     },
     {
-        "url": "img/icon-512x512.png"
+        "url": "/img/icon-512x512.png"
     },
     {
-        "url": "js/script.js"
+        "url": "/js/scripts.js"
     },
     {
-        "url": "index.html"
+        "url": "/index.html"
     },
     {
-        "url": "manifest.json"
+        "url": "/manifest.json"
     }
 ]);
 
