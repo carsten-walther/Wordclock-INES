@@ -2,12 +2,14 @@
 
 **Another word clock, model INES**
 
-[![GitHub version](https://img.shields.io/github/release/carsten-walther/clock-INES.svg)](https://github.com/carsten-walther/clock-INES/releases/latest)
-[![GitHub download](https://img.shields.io/github/downloads/carsten-walther/clock-INES/total.svg)](https://github.com/carsten-walther/clock-INES/releases/latest)
-[![License](https://img.shields.io/github/license/carsten-walther/clock-INES.svg)](LICENSE.txt)
-
-
 This clock shows the time in words.
+
+[![Issues](https://img.shields.io/github/issues/carsten-walther/Wordclock-INES)](https://img.shields.io/github/issues/carsten-walther/Wordclock-INES)
+[![Forks](https://img.shields.io/github/forks/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/network/members)
+[![Stars](https://img.shields.io/github/stars/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/stargazers)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/releases/latest)
+[![License](https://img.shields.io/github/license/carsten-walther/Wordclock-INES)](LICENSE.txt)
+[![GitHub All Releases](https://img.shields.io/github/downloads/carsten-walther/Wordclock-INES/total)](https://github.com/carsten-walther/Wordclock-INES/releases/latest)
 
 ## Requirements
 
@@ -73,5 +75,10 @@ The desired language can be set via a selection menu. Thus the time can be displ
 
 ## Support me / Follow me
 
-[![Web](https://img.shields.io/badge/www-carstenwalther.de-blue.svg?style=flat-square&logo=www&colorB=3d72a8&colorA=333333)](https://www.carstenwalther.de)
-[![Facebook](https://img.shields.io/badge/-%40carsten.walther-blue.svg?style=flat-square&logo=facebook&colorB=3d72a8&colorA=333333)](https://www.facebook.com/carsten.walther)
+![GitHub followers](https://img.shields.io/github/followers/carsten-walther?style=social)
+![GitHub forks](https://img.shields.io/github/forks/carsten-walther/Wordclock-INES?style=social)
+![GitHub stars](https://img.shields.io/github/stars/carsten-walther/Wordclock-INES?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/carsten-walther/Wordclock-INES?style=social)
+
+[![Web](https://img.shields.io/badge/carstenwalther.de-blue.svg?logo=rss&style=social)](https://www.carstenwalther.de)
+[![Facebook](https://img.shields.io/badge/carsten.walther-blue.svg?logo=facebook&style=social)](https://www.facebook.com/carsten.walther)
