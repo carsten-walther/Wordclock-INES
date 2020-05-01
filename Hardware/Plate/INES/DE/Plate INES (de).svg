@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600px" height="600px" viewBox="0 0 600 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Background" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Plate">
+            <g id="Background" fill="#333333" stroke="#979797">
+                <rect id="Rectangle" x="0.5" y="0.5" width="599" height="599"></rect>
+            </g>
+            <g id="Words" transform="translate(89.010582, 104.772487)" fill="#FFFFFF" font-family="Galvji" font-size="26" font-weight="normal">
+                <g id="Hours" transform="translate(0.000000, 239.851852)">
+                    <text id="NEUN-ZEHN-ELF-ZWÖLF">
+                        <tspan x="23.5748672" y="145.375661">NEUN     ZEHN     ELF     ZWÖLF</tspan>
+                    </text>
+                    <text id="ACHT-SIEBEN-SECHS-FÜ">
+                        <tspan x="4.21451565" y="85.3756614">ACHT     SIEBEN     SECHS     FÜNF</tspan>
+                    </text>
+                    <text id="EINS-ZWEI-DREI-VIER">
+                        <tspan x="42.6940078" y="25.3756614">EINS     ZWEI     DREI     VIER</tspan>
+                    </text>
+                </g>
+                <g id="Minutes" transform="translate(0.529101, 0.000000)">
+                    <text id="ZWANZIG-NACH-VOR-HAL">
+                        <tspan x="4.69469246" y="145.227513">ZWANZIG     NACH     VOR     HALB</tspan>
+                    </text>
+                    <text id="FÜNF-ZEHN-VIERTEL">
+                        <tspan x="56.9359034" y="85.2275132">FÜNF     ZEHN     VIERTEL</tspan>
+                    </text>
+                    <text id="GENAU-DREI-">
+                        <tspan x="114.058462" y="25.2275132">GENAU     DREI-</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Dashes" transform="translate(200.003726, 298.398962)" stroke="#FFFFFF" stroke-linecap="square" stroke-width="3">
+                <line x1="0.703556113" y1="1.25076058" x2="40.8382875" y2="1.95131473" id="Line" transform="translate(20.770922, 1.601038) rotate(-1.000000) translate(-20.770922, -1.601038) "></line>
+                <line x1="53.5204575" y1="1.25076058" x2="93.655189" y2="1.95131473" id="Line" transform="translate(73.587823, 1.601038) rotate(-1.000000) translate(-73.587823, -1.601038) "></line>
+                <line x1="106.337359" y1="1.25076058" x2="146.47209" y2="1.95131473" id="Line" transform="translate(126.404725, 1.601038) rotate(-1.000000) translate(-126.404725, -1.601038) "></line>
+                <line x1="159.15426" y1="1.25076058" x2="199.288992" y2="1.95131473" id="Line" transform="translate(179.221626, 1.601038) rotate(-1.000000) translate(-179.221626, -1.601038) "></line>
+            </g>
+        </g>
+    </g>
+</svg>
