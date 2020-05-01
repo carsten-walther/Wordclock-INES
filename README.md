@@ -2,14 +2,18 @@
 
 **Another word clock, model INES**
 
-This clock shows the time in words.
-
 [![Issues](https://img.shields.io/github/issues/carsten-walther/Wordclock-INES)](https://img.shields.io/github/issues/carsten-walther/Wordclock-INES)
 [![Forks](https://img.shields.io/github/forks/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/network/members)
 [![Stars](https://img.shields.io/github/stars/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/stargazers)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/releases/latest)
 [![License](https://img.shields.io/github/license/carsten-walther/Wordclock-INES)](LICENSE.txt)
 [![GitHub All Releases](https://img.shields.io/github/downloads/carsten-walther/Wordclock-INES/total)](https://github.com/carsten-walther/Wordclock-INES/releases/latest)
+
+This clock shows the time in words.
+
+![Wordclock INES Plate](Documentation/img/Plate-INES-de.png)
+
+A detailed [build](Documentation/BUILD.md) and [operation](Documentation/README.md) manual can be found in [Documentation](Documentation) folder.
 
 ## Requirements
 
