@@ -4,7 +4,7 @@
 
 This clock shows the time in words.
 
-![Wordclock INES Plate](Documentation/img/Plate-INES-de.png)
+![Wordclock INES Plate](img/Plate-INES-de.png)
 
 ## Table of contents
 
