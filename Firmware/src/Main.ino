@@ -10,11 +10,11 @@
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
-#include <Ticker.h>
 
 // local libs
 #include "Config.h"
 #include "Color/RGB.h"
+#include "Ticker/Ticker.h"
 
 // WiFiManager
 // Once its business is done, there is no need to keep it around
