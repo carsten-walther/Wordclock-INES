@@ -24,7 +24,6 @@
 #include "Config.h"
 #include "Timezones.h"
 #include "Color/RGB.h"
-#include "Ticker/Ticker.h"
 
 // WiFiManager
 // Once its business is done, there is no need to keep it around
@@ -77,11 +76,12 @@ int clockModeOverride = -1;
 // language
 int language = 0;
 
-// Ticker for clockMode
-Ticker clockModeTicker;
-
-// timer
-unsigned long previousMillis = 0;
+// general timer
+unsigned long previousMillis_webServer_ticker = 0;
+unsigned long previousMillis_clockMode_ticker = 0;
+unsigned long previousMillis_debugging_ticker = 0;
+// face timer
+unsigned long previousMillis_face = 0;
 
 // =============================================================================
 
@@ -89,9 +89,9 @@ void setup()
 {
     #ifdef DEBUG
     Serial.begin(BAUD);
-    Serial.println(" ");
-    Serial.println(" ");
-    Serial.println("Starting Wordclock INES...");
+    Serial.printf("\n");
+    Serial.printf("\n");
+    Serial.printf("Starting Wordclock INES...\n");
     #endif
 
     // init WS2811 PIN
@@ -134,9 +134,6 @@ void setup()
 
         // start the multicast domain name server
         if (mdnsResponder.begin(SERVER_HOST)) {
-            #ifdef DEBUG
-            Serial.println("MDNS responder started");
-            #endif
             mdnsResponder.addService("http", "tcp", SERVER_PORT);
         }
 
@@ -153,11 +150,8 @@ void setup()
     // process time offsets
     processTimeOffset();
 
-    // attach clockMode
-    clockModeTicker.attach_ms(125, clockModeTick);
-
     #ifdef DEBUG
-    Serial.println("ready");
+    Serial.println("setup complete");
     #endif
 }
 
@@ -165,14 +159,13 @@ void setup()
 
 void loop()
 {
-    // update the ntp time client
-    timeClient.update();
+    clockMode_ticker();
 
-    // run the web server
-    webServer.handleClient();
+    webServer_ticker();
 
-    // update mdnsResponder service
-    mdnsResponder.update();
+    #ifdef DEBUG
+    debugging_ticker();
+    #endif
 
     // update face
     switch (clockMode) {
@@ -197,29 +190,71 @@ void loop()
 
 // =============================================================================
 
-
-void clockModeTick()
+void clockMode_ticker()
 {
-    clockMode = CLOCKMODE_NORMAL;
+    unsigned int speedDelay = 125;
 
-    // if time >= sleepTime or time <= wakeupTime
-    if ((timeClient.getHours() == sleepHour && timeClient.getMinutes() >= sleepMinute) || (timeClient.getHours() == wakeupHour && timeClient.getMinutes() < wakeupMinute)) {
-        clockMode = CLOCKMODE_NIGHT;
+    if (millis() - previousMillis_clockMode_ticker >= speedDelay) {
+
+        previousMillis_clockMode_ticker = millis();
+
+        clockMode = CLOCKMODE_NORMAL;
+
+        // if time >= sleepTime or time <= wakeupTime
+        if ((timeClient.getHours() == sleepHour && timeClient.getMinutes() >= sleepMinute) || (timeClient.getHours() == wakeupHour && timeClient.getMinutes() < wakeupMinute)) {
+            clockMode = CLOCKMODE_NIGHT;
+        }
+
+        // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
+        if (sleepHour < wakeupHour && timeClient.getHours() >= sleepHour && timeClient.getHours() <= wakeupHour) {
+            clockMode = CLOCKMODE_NIGHT;
+        }
+
+        // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
+        if (sleepHour > wakeupHour && (timeClient.getHours() >= sleepHour || timeClient.getHours() <= wakeupHour)) {
+            clockMode = CLOCKMODE_NIGHT;
+        }
+
+        // override clockMode
+        if (clockModeOverride > -1) {
+            clockMode = clockModeOverride;
+        }
     }
+}
 
-    // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
-    if (sleepHour < wakeupHour && timeClient.getHours() >= sleepHour && timeClient.getHours() <= wakeupHour) {
-        clockMode = CLOCKMODE_NIGHT;
+void webServer_ticker()
+{
+    unsigned int speedDelay = 50;
+
+    if (millis() - previousMillis_webServer_ticker >= speedDelay) {
+
+        previousMillis_webServer_ticker = millis();
+
+        // update the ntp time client
+        timeClient.update();
+
+        // run the web server
+        webServer.handleClient();
+
+        // update mdnsResponder service
+        mdnsResponder.update();
     }
+}
 
-    // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
-    if (sleepHour > wakeupHour && (timeClient.getHours() >= sleepHour || timeClient.getHours() <= wakeupHour)) {
-        clockMode = CLOCKMODE_NIGHT;
-    }
+void debugging_ticker()
+{
+    unsigned int speedDelay = 1000;
 
-    // override clockMode
-    if (clockModeOverride > -1) {
-        clockMode = clockModeOverride;
+    if (millis() - previousMillis_debugging_ticker >= speedDelay) {
+
+        previousMillis_debugging_ticker = millis();
+
+        Serial.printf("\n");
+        Serial.printf("mode:\t\t\t%i\n", clockMode);
+        Serial.printf("time:\t\t\t%i:%i\n", timeClient.getHours(), timeClient.getMinutes());
+        Serial.printf("brightness:\t\t%i\n", brightness);
+        Serial.printf("timeZone:\t\t%i: %f\n", timeZone, TIMEZONES[timeZone]);
+        Serial.printf("daylightSavingsTime:\t%i\n", daylightSavingsTime);
     }
 }
 
@@ -229,11 +264,9 @@ void faceScanner()
 {
     unsigned int speedDelay = 125;
 
-    // 9, 10, 11, 12
+    if (millis() - previousMillis_face >= speedDelay) {
 
-    if (millis() - previousMillis >= speedDelay) {
-
-        previousMillis = millis();
+        previousMillis_face = millis();
 
         // set brightness
         ledStrip.setBrightness(brightness);
@@ -270,19 +303,26 @@ void faceScanner()
 
 void faceTest()
 {
-    // set brightness
-    ledStrip.setBrightness(brightness);
+    unsigned int speedDelay = 125;
 
-    for (int i = 0; i < ledStrip.numPixels(); i++) {
-        ledStrip.setPixelColor(i, ledStrip.Color(255, 255, 255));
-        delay(250);
-        ledStrip.show();
-    }
+    if (millis() - previousMillis_face >= speedDelay) {
 
-    for (int i = 0; i < ledStrip.numPixels(); i++) {
-        ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
-        delay(250);
-        ledStrip.show();
+        previousMillis_face = millis();
+
+        // set brightness
+        ledStrip.setBrightness(brightness);
+
+        for (int i = 0; i < ledStrip.numPixels(); i++) {
+            ledStrip.setPixelColor(i, ledStrip.Color(255, 255, 255));
+            delay(speedDelay);
+            ledStrip.show();
+        }
+
+        for (int i = 0; i < ledStrip.numPixels(); i++) {
+            ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
+            delay(speedDelay);
+            ledStrip.show();
+        }
     }
 }
 
@@ -290,9 +330,9 @@ void faceNormal(uint16_t hours, uint16_t minutes)
 {
     unsigned int speedDelay = 1000;
 
-    if (millis() - previousMillis >= speedDelay) {
+    if (millis() - previousMillis_face >= speedDelay) {
 
-        previousMillis = millis();
+        previousMillis_face = millis();
 
         while (hours < 0) {
             hours += 12;
@@ -301,12 +341,6 @@ void faceNormal(uint16_t hours, uint16_t minutes)
         while (hours > 24) {
             hours -= 12;
         }
-
-        #ifdef DEBUG
-        Serial.printf("hours:\t\t%i\n", hours);
-        Serial.printf("minutes:\t%i\n", minutes);
-        Serial.printf("brightness:\t%i\n", brightness);
-        #endif
 
         // set colors
         uint32_t foregroundCol = ledStrip.Color(foregroundColor.R, foregroundColor.G, foregroundColor.B);
@@ -502,13 +536,16 @@ void faceNormal(uint16_t hours, uint16_t minutes)
 
 void faceNight()
 {
-    ledStrip.setBrightness(0);
+    unsigned int speedDelay = 1000;
 
-    for (int i = 0; i < ledStrip.numPixels(); i++) {
-        ledStrip.setPixelColor(i, ledStrip.Color(0, 0, 0));
+    if (millis() - previousMillis_face >= speedDelay) {
+
+        previousMillis_face = millis();
+
+        ledStrip.setBrightness(0);
+        ledStrip.clear();
+        ledStrip.show();
     }
-
-    ledStrip.show();
 }
 
 // =============================================================================
