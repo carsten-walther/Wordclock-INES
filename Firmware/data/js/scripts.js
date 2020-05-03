@@ -88,6 +88,12 @@ $(function () {
     $('#brightnessValue').html($(this).val());
   });
 
+  $('#timeZone').on('change', function (event) {
+    let useDaylightTime = JSON.parse($(this).find(':selected').data('daylight-savings-time'));
+    $('#daylightSavingsTime').val(useDaylightTime);
+    $('#daylightSavingsTimeHelper').prop('checked', useDaylightTime);
+  });
+
   $('#daylightSavingsTimeHelper').change(function (event) {
     if ($(this).is(':checked')) {
       $('#daylightSavingsTime').val(true);

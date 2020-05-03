@@ -22,6 +22,7 @@
 
 // local libs
 #include "Config.h"
+#include "Timezones.h"
 #include "Color/RGB.h"
 #include "Ticker/Ticker.h"
 
@@ -554,7 +555,7 @@ void processTimeOffset()
         offset = offset + 3600;
     }
 
-    offset = timeZone * 3600;
+    offset = offset + TIMEZONES[timeZone] * 3600;
 
     // set time offset
     timeClient.setTimeOffset(offset);
