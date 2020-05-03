@@ -1,3 +1,12 @@
+/*
+ * Main
+ *
+ * @file Main.ino
+ * @package .
+ *
+ * @author Carsten Walther
+ */
+
 // global libs
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
@@ -21,7 +30,7 @@
 WiFiManager wifiManager;
 
 // Create a web server on port 80
-ESP8266WebServer webServer(AP_PORT);
+ESP8266WebServer webServer(SERVER_PORT);
 
 // A UDP instance to let us send and receive packets over UDP
 WiFiUDP wifiUdp;
@@ -67,8 +76,6 @@ int clockModeOverride = -1;
 // language
 int language = 0;
 
-// Ticker for webServer
-Ticker webServerTicker;
 // Ticker for clockMode
 Ticker clockModeTicker;
 
@@ -99,7 +106,7 @@ void setup()
     initEEPROM();
 
     // set host name
-    wifi_station_set_hostname(AP_HOST);
+    wifi_station_set_hostname(SERVER_HOST);
     // disable library debug output
     wifiManager.setDebugOutput(false);
     // fetches ssid and pass and tries to connect
@@ -125,11 +132,11 @@ void setup()
         webServer.on("/update.json", HTTP_POST, handleUpdateJson);
 
         // start the multicast domain name server
-        if (mdnsResponder.begin(AP_HOST)) {
+        if (mdnsResponder.begin(SERVER_HOST)) {
             #ifdef DEBUG
             Serial.println("MDNS responder started");
             #endif
-            mdnsResponder.addService("http", "tcp", AP_PORT);
+            mdnsResponder.addService("http", "tcp", SERVER_PORT);
         }
 
         // start the SPI Flash File System (SPIFFS)
@@ -145,8 +152,6 @@ void setup()
     // process time offsets
     processTimeOffset();
 
-    // attach webServer
-    //webServerTicker.attach_ms(500, webServerTick);
     // attach clockMode
     clockModeTicker.attach_ms(125, clockModeTick);
 
@@ -162,7 +167,11 @@ void loop()
     // update the ntp time client
     timeClient.update();
 
-    webServerTick();
+    // run the web server
+    webServer.handleClient();
+
+    // update mdnsResponder service
+    mdnsResponder.update();
 
     // update face
     switch (clockMode) {
@@ -187,13 +196,6 @@ void loop()
 
 // =============================================================================
 
-void webServerTick()
-{
-    // run the webServer
-    webServer.handleClient();
-    // update mdnsResponder service
-    mdnsResponder.update();
-}
 
 void clockModeTick()
 {

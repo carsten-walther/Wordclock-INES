@@ -1,3 +1,11 @@
+/*
+ * Config
+ *
+ * @file Config.h
+ * @package .
+ *
+ * @author Carsten Walther
+ */
 
 #ifndef CONFIG_H_
 #define CONFIG_H_
@@ -22,17 +30,21 @@
 // Access Point settings =======================================================
 //
 
-// Access Point Hostname (.local is attached to the domain automatically by mDNS)
-#define AP_HOST "ines"
-
 // Access Point SSID
 #define AP_SSID "Wordclock Ines"
 
 // Access Point Passwort
 #define AP_PASS "password"
 
-// Web Server Port
-#define AP_PORT 80
+//
+// Webserver ===================================================================
+//
+
+// Access Point Hostname (.local is attached to the domain automatically by mDNS)
+#define SERVER_HOST "ines"
+
+// Web Server Ports
+#define SERVER_PORT 80
 
 //
 // NTP settings ================================================================
@@ -134,11 +146,5 @@
 #define LANGUAGE_DE_SW  1 // Schwaebisch
 #define LANGUAGE_DE_BA  2 // Bayrisch
 #define LANGUAGE_DE_SA  3 // Saechsisch
-
-//
-// Certs =======================================================================
-//
-
-
 
 #endif // CONFIG_H_
