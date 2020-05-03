@@ -210,18 +210,5 @@
 
     <script src="/js/scripts.js"></script>
 
-    <script>
-		// register service worker
-        if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/js/service-worker.js').then(function (reg) {
-                    // ...
-                }).catch(function (err) {
-                    console.error('service worker error', err);
-                });
-            });
-        }
-    </script>
-
 </body>
 </html>
