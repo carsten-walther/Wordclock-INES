@@ -30,9 +30,6 @@ The following is necessary to build this clock:
 
 ## Libraries
 
-included:
-* Ticker v1.0
-
 not included:
 * [Adafruit NeoPixel v1.3.5](https://github.com/adafruit/Adafruit_NeoPixel.git)
 * [NTPClient v3.1.0](https://github.com/arduino-libraries/NTPClient.git)
@@ -69,9 +66,9 @@ The switch-on or switch-off time can be used to specify the time from which the 
 
 This deactivates the display of the time during this period and the clock thus saves power.
 
-#### Time zone/ summer time control
+#### Time zone/ daylight savings time
 
-The clock obtains the correct time from the Network Time Protocol (NTP) via an Internet connection. To ensure that the correct time is displayed, the time zone corresponding to the location can be selected. In addition, the daylight saving time control can be switched on or off via a switch.
+The clock obtains the correct time from the Network Time Protocol (NTP) via an Internet connection. To ensure that the correct time is displayed, the time zone corresponding to the location can be selected. In addition, the daylight savings time control can be switched on or off via a switch.
 
 #### Language
 
