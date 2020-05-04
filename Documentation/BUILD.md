@@ -1,10 +1,12 @@
 # Wordclock
 
-**Another word clock, model INES**
+**Another word clock**
 
 This clock shows the time in words.
 
-![Wordclock INES Plate](img/Plate-INES-de.png)
+![Wordclock Plate Model INES](img/Plate-INES-de.png)
+
+_Image: Wordclock Plate Model INES_
 
 ## Table of contents
 
