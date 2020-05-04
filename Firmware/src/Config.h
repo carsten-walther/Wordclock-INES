@@ -31,7 +31,7 @@
 //
 
 // Access Point SSID
-#define AP_SSID "Wordclock Ines"
+#define AP_SSID "Wordclock"
 
 // Access Point Passwort
 #define AP_PASS "password"
@@ -41,7 +41,7 @@
 //
 
 // Access Point Hostname (.local is attached to the domain automatically by mDNS)
-#define SERVER_HOST "ines"
+#define SERVER_HOST "wordclock"
 
 // Web Server Ports
 #define SERVER_PORT 80
