@@ -1,13 +1,7 @@
-/*
- * Main
- *
- * @file Main.ino
- * @package .
- *
- * @author Carsten Walther
- */
-
-// global libs
+# 1 "/var/folders/3v/f4hyz79x6j7c8cbpn1l0smjh0000gn/T/tmp0DTQcL"
+#include <Arduino.h>
+# 1 "/Users/carstenwalther/Desktop/Wortuhr/Firmware/src/Main.ino"
+# 11 "/Users/carstenwalther/Desktop/Wortuhr/Firmware/src/Main.ino"
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -18,85 +12,95 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
-// local libs
+
 #include "Config.h"
 #include "Timezones.h"
 #include "Settings/Settings.h"
 
-// WiFiManager
-// Once its business is done, there is no need to keep it around
+
+
 WiFiManager wifiManager;
 
-// Create a web server on port 80
+
 ESP8266WebServer webServer(SERVER_PORT);
 
-// A UDP instance to let us send and receive packets over UDP
+
 WiFiUDP wifiUdp;
 
-// create a MDNS Responder instance
+
 MDNSResponder mdnsResponder;
 
-// You can specify the time server pool and the offset (in seconds, can be
-// changed later with setTimeOffset() ). Additionaly you can specify the
-// update interval (in milliseconds, can be changed using setUpdateInterval() ).
-NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
 
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = Arduino pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-// NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-// NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-// NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-// NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+
+
+NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
+# 51 "/Users/carstenwalther/Desktop/Wortuhr/Firmware/src/Main.ino"
 Adafruit_NeoPixel ledStrip = Adafruit_NeoPixel(WS2811_NUMBER, WS2811_DATA_PIN, NEO_GRB + NEO_KHZ800);
 
-// Parameters Structure
+
 ParametersType defaults = {
-    // foreground color
-    255,            // foregroundColorRed
-    255,            // foregroundColorGreen
-    255,            // foregroundColorBlue
-    // background color
-    0,              // backgroundColorRed
-    0,              // backgroundColorGreen
-    0,              // backgroundColorBlue
-    // settings
-    33,             // brightness
-    0,              // timeZone
-    false,          // daylightSavingsTime
-    1,              // sleepHour
-    0,              // sleepMinute
-    5,              // wakeupHour
-    0,              // wakeupMinute
-    0,              // language
-    SETTING_VERSION // Version
+
+    255,
+    255,
+    255,
+
+    0,
+    0,
+    0,
+
+    33,
+    0,
+    false,
+    1,
+    0,
+    5,
+    0,
+    0,
+    SETTING_VERSION
 };
 
-// Settings
+
 Settings settings(defaults);
 
-// color RGB
+
 typedef struct {
-    // Red, Green, Blue color members (0-255) where
-    // (0,0,0) is black and (255,255,255) is white
+
+
     uint8_t R;
     uint8_t G;
     uint8_t B;
 } RGB;
 
-// clockMode
+
 int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
 
-// general timer
+
 unsigned long previousMillis_webServer_ticker = 0;
 unsigned long previousMillis_clockMode_ticker = 0;
 unsigned long previousMillis_debugging_ticker = 0;
-// face timer
+
 unsigned long previousMillis_face = 0;
-
-// =============================================================================
-
+void setup();
+void loop();
+void clockMode_ticker();
+void webServer_ticker();
+void debugging_ticker();
+void faceScanner();
+void faceTest();
+void faceNormal(uint16_t hours, uint16_t minutes);
+void faceNight();
+RGB getRGBFromHex(String hex);
+uint8_t hexToInt(char upper, char lower);
+String split(String data, char separator, int index);
+void processTimeOffset();
+void handleNotFound();
+bool handleFileRead(String path);
+void handleSettingsJson();
+void handleUpdateJson();
+String generateSettingsData();
+String getContentType(String filename);
+#line 100 "/Users/carstenwalther/Desktop/Wortuhr/Firmware/src/Main.ino"
 void setup()
 {
     #ifdef DEBUG
@@ -106,47 +110,47 @@ void setup()
     Serial.printf("Starting Wordclock...\n");
     #endif
 
-    // init WS2811 PIN
+
     pinMode(WS2811_DATA_PIN, OUTPUT);
 
-    // init ws2811 LED Strip
+
     ledStrip.begin();
     ledStrip.setBrightness(0);
     ledStrip.clear();
     ledStrip.show();
 
-    // set host name
+
     wifi_station_set_hostname(SERVER_HOST);
-    // disable library debug output
+
     wifiManager.setDebugOutput(false);
-    // fetches ssid and pass and tries to connect
-    // if it does not connect it starts an access point with the specified name
-    // here  "AutoConnectAP"
-    // and goes into a blocking loop awaiting configuration
+
+
+
+
     if (!wifiManager.autoConnect(AP_SSID, AP_PASS)) {
 
-        // reset and try again, or maybe put it to deep sleep
+
         ESP.reset();
         delay(1000);
 
     } else {
 
-        // start the web server
+
         webServer.begin();
-        // if someone requests any other file or page,
-        // go to function 'handleNotFound' and check if the file exists
+
+
         webServer.onNotFound(handleNotFound);
-        // if settings requested return settings
+
         webServer.on("/settings.json", HTTP_GET, handleSettingsJson);
-        // if update requested update settings and return result
+
         webServer.on("/update.json", HTTP_POST, handleUpdateJson);
 
-        // start the multicast domain name server
+
         if (mdnsResponder.begin(SERVER_HOST)) {
             mdnsResponder.addService("http", "tcp", SERVER_PORT);
         }
 
-        // start the SPI Flash File System (SPIFFS)
+
         fs::SPIFFSConfig cfg;
         cfg.setAutoFormat(false);
         SPIFFS.setConfig(cfg);
@@ -158,10 +162,10 @@ void setup()
     Serial.println(generateSettingsData());
     #endif
 
-    // start the ntp time client
+
     timeClient.begin();
 
-    // process time offsets
+
     processTimeOffset();
 
     #ifdef DEBUG
@@ -169,7 +173,7 @@ void setup()
     #endif
 }
 
-// =============================================================================
+
 
 void loop()
 {
@@ -181,7 +185,7 @@ void loop()
     debugging_ticker();
     #endif
 
-    // update face
+
     switch (clockMode) {
 
         case CLOCKMODE_NORMAL:
@@ -202,7 +206,7 @@ void loop()
     }
 }
 
-// =============================================================================
+
 
 void clockMode_ticker()
 {
@@ -214,22 +218,22 @@ void clockMode_ticker()
 
         clockMode = CLOCKMODE_NORMAL;
 
-        // if time >= sleepTime or time <= wakeupTime
+
         if ((timeClient.getHours() == settings.parameters->sleepHour && timeClient.getMinutes() >= settings.parameters->sleepMinute) || (timeClient.getHours() == settings.parameters->wakeupHour && timeClient.getMinutes() < settings.parameters->wakeupMinute)) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
-        // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
+
         if (settings.parameters->sleepHour < settings.parameters->wakeupHour && timeClient.getHours() >= settings.parameters->sleepHour && timeClient.getHours() <= settings.parameters->wakeupHour) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
-        // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
+
         if (settings.parameters->sleepHour > settings.parameters->wakeupHour && (timeClient.getHours() >= settings.parameters->sleepHour || timeClient.getHours() <= settings.parameters->wakeupHour)) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
-        // override clockMode
+
         if (clockModeOverride > -1) {
             clockMode = clockModeOverride;
         }
@@ -244,13 +248,13 @@ void webServer_ticker()
 
         previousMillis_webServer_ticker = millis();
 
-        // update the ntp time client
+
         timeClient.update();
 
-        // run the web server
+
         webServer.handleClient();
 
-        // update mdnsResponder service
+
         mdnsResponder.update();
     }
 }
@@ -274,7 +278,7 @@ void debugging_ticker()
     }
 }
 
-// =============================================================================
+
 
 void faceScanner()
 {
@@ -284,10 +288,10 @@ void faceScanner()
 
         previousMillis_face = millis();
 
-        // set brightness
+
         ledStrip.setBrightness(settings.parameters->brightness);
 
-        // RightToLeft
+
         for (int i = 12; i >= 9; i--) {
 
             for (int i = 0; i < ledStrip.numPixels(); i++) {
@@ -301,7 +305,7 @@ void faceScanner()
         }
         delay(speedDelay / 2);
 
-        // LeftToRight
+
         for (int i = 9; i <= 12; i++) {
 
             for (int i = 0; i < ledStrip.numPixels(); i++) {
@@ -325,7 +329,7 @@ void faceTest()
 
         previousMillis_face = millis();
 
-        // set brightness
+
         ledStrip.setBrightness(settings.parameters->brightness);
 
         for (int i = 0; i < ledStrip.numPixels(); i++) {
@@ -358,72 +362,72 @@ void faceNormal(uint16_t hours, uint16_t minutes)
             hours -= 12;
         }
 
-        // set colors
+
         uint32_t foregroundCol = ledStrip.Color(settings.parameters->foregroundColorRed, settings.parameters->foregroundColorGreen, settings.parameters->foregroundColorBlue);
         uint32_t backgroundCol = ledStrip.Color(settings.parameters->backgroundColorRed, settings.parameters->backgroundColorGreen, settings.parameters->backgroundColorBlue);
 
-        // set brightness
+
         ledStrip.setBrightness(settings.parameters->brightness);
 
         for (int i = 0; i < ledStrip.numPixels(); i++) {
             ledStrip.setPixelColor(i, backgroundCol);
         }
 
-        // minutes
+
         switch (minutes / 5) {
             case 0:
-                // glatte Stunde
+
                 ledStrip.setPixelColor(DE_GENAU, foregroundCol);
                 break;
             case 1:
-                // 5 nach
+
                 ledStrip.setPixelColor(DE_FUENF, foregroundCol);
                 ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 break;
             case 2:
-                // 10 nach
+
                 ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
                 ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 break;
             case 3:
                 if ((settings.parameters->language == LANGUAGE_DE_SW) || (settings.parameters->language == LANGUAGE_DE_SA)) {
-                    // viertel
+
                     ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
                     hours = hours + 1;
                 } else {
-                    // viertel nach
+
                     ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
                     ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 }
                 break;
             case 4:
                 if (settings.parameters->language == LANGUAGE_DE_SA) {
-                    // 10 vor halb
+
                     ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
                     ledStrip.setPixelColor(DE_VOR, foregroundCol);
                     ledStrip.setPixelColor(DE_HALB, foregroundCol);
                     hours = hours + 1;
                 } else {
-                    // 20 nach
+
                     ledStrip.setPixelColor(DE_ZWANZIG, foregroundCol);
                     ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 }
                 break;
             case 5:
-                // 5 vor halb
+
                 ledStrip.setPixelColor(DE_FUENF, foregroundCol);
                 ledStrip.setPixelColor(DE_VOR, foregroundCol);
                 ledStrip.setPixelColor(DE_HALB, foregroundCol);
                 hours = hours + 1;
                 break;
             case 6:
-                // halb
+
                 ledStrip.setPixelColor(DE_GENAU, foregroundCol);
                 ledStrip.setPixelColor(DE_HALB, foregroundCol);
                 hours = hours + 1;
                 break;
             case 7:
-                // 5 nach halb
+
                 ledStrip.setPixelColor(DE_FUENF, foregroundCol);
                 ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 ledStrip.setPixelColor(DE_HALB, foregroundCol);
@@ -431,45 +435,45 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 break;
             case 8:
                 if (settings.parameters->language == LANGUAGE_DE_SA) {
-                    // 10 nach halb
+
                     ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
                     ledStrip.setPixelColor(DE_NACH, foregroundCol);
                     ledStrip.setPixelColor(DE_HALB, foregroundCol);
                     hours = hours + 1;
                 } else {
-                    // 20 vor
+
                     ledStrip.setPixelColor(DE_ZWANZIG, foregroundCol);
                     ledStrip.setPixelColor(DE_VOR, foregroundCol);
                 }
                 break;
             case 9:
                 if ((settings.parameters->language == LANGUAGE_DE_SW) || (settings.parameters->language == LANGUAGE_DE_BA) || (settings.parameters->language == LANGUAGE_DE_SA)) {
-                    // drei viertel
+
                     ledStrip.setPixelColor(DE_DREI, foregroundCol);
                     ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
                     hours = hours + 1;
                 } else {
-                    // viertel vor
+
                     ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
                     ledStrip.setPixelColor(DE_VOR, foregroundCol);
                     hours = hours + 1;
                 }
                 break;
             case 10:
-                // 10 vor
+
                 ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
                 ledStrip.setPixelColor(DE_VOR, foregroundCol);
                 hours = hours + 1;
                 break;
             case 11:
-                // 5 vor
+
                 ledStrip.setPixelColor(DE_FUENF, foregroundCol);
                 ledStrip.setPixelColor(DE_VOR, foregroundCol);
                 hours = hours + 1;
                 break;
         }
 
-        // hours
+
         switch (hours) {
             case 0:
             case 12:
@@ -522,7 +526,7 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 break;
         }
 
-        // minutes indicators
+
         switch (minutes % 5) {
             case 0:
                 break;
@@ -564,7 +568,7 @@ void faceNight()
     }
 }
 
-// =============================================================================
+
 
 RGB getRGBFromHex(String hex)
 {
@@ -614,17 +618,17 @@ void processTimeOffset()
 
     offset = offset + TIMEZONES[settings.parameters->timeZone] * 3600;
 
-    // set time offset
+
     timeClient.setTimeOffset(offset);
-    // uptade time
+
     timeClient.forceUpdate();
 }
 
-// =============================================================================
+
 
 void handleNotFound()
 {
-    // check if the file exists in the flash memory (SPIFFS), if so, send it
+
     if (!handleFileRead(webServer.uri())) {
         webServer.send(404, "text/plain", "Error 404: File Not Found");
     }
@@ -632,35 +636,35 @@ void handleNotFound()
 
 bool handleFileRead(String path)
 {
-    // If a folder is requested, send the index file
+
     if (path.endsWith("/")) {
         path += "index.html";
     }
 
-    // Get the MIME type
+
     String contentType = getContentType(path);
     String pathWithGz = path + ".gz";
 
-    // If the file exists, either as a compressed archive, or normal
+
     if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
 
-        // If there's a compressed version available
+
         if (SPIFFS.exists(pathWithGz)) {
-            // Use the compressed verion
+
             path += ".gz";
         }
 
-        // Open the file
+
         File file = SPIFFS.open(path, "r");
-        // Send it to the client
+
         webServer.streamFile(file, contentType);
-        // Close the file again
+
         file.close();
 
         return true;
     }
 
-    // If the file doesn't exist, return false
+
     return false;
 }
 
@@ -699,51 +703,51 @@ void handleUpdateJson()
 
         RGB color;
 
-        // foregroundColor
+
         color = getRGBFromHex(webServer.arg("foregroundColor"));
         settings.parameters->foregroundColorRed = color.R;
         settings.parameters->foregroundColorGreen = color.G;
         settings.parameters->foregroundColorBlue = color.B;
 
-        // backgroundColor
+
         color = getRGBFromHex(webServer.arg("backgroundColor"));
         settings.parameters->backgroundColorRed = color.R;
         settings.parameters->backgroundColorGreen = color.G;
         settings.parameters->backgroundColorBlue = color.B;
 
-        // brightness
+
         settings.parameters->brightness = map(webServer.arg("brightness").toInt(), 0, 100, 0, 255);
 
-        // timeZone
+
         settings.parameters->timeZone = webServer.arg("timeZone").toInt();
 
-        // daylightSavingsTime
+
         if (webServer.arg("daylightSavingsTime") == String("true"))
             settings.parameters->daylightSavingsTime = true;
         else
             settings.parameters->daylightSavingsTime = false;
 
-        // sleepTime (sleepHour, sleepMinute)
+
         settings.parameters->sleepHour = split(webServer.arg("sleepTime"), ':', 0).toInt();
         settings.parameters->sleepMinute = split(webServer.arg("sleepTime"), ':', 1).toInt();
 
-        // wakeupTime (wakeupHour, wakeupMinute)
+
         settings.parameters->wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
         settings.parameters->wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
 
-        // language
+
         settings.parameters->language = webServer.arg("language").toInt();
 
-        // clockModeOverride
+
         if (webServer.hasArg("clockMode")) {
             clockModeOverride = webServer.arg("clockMode").toInt();
         }
     }
 
-    // save settings
+
     settings.save();
 
-    // process time offsets
+
     processTimeOffset();
 
     result = result + "{";
