@@ -44,7 +44,6 @@ class Settings
     public:
         Settings(ParametersType defaults);
         void save();
-
         ParametersType *parameters;
 
     private:

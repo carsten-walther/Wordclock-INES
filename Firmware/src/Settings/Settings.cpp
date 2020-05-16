@@ -21,6 +21,8 @@ Settings::Settings(ParametersType defaults)
 {
     memcpy(buffer, &defaults, sizeof(defaults));
 
+    EEPROM.begin(4095);
+
     // Read version number from EEPROM
     char savedVersion[sizeof(SETTING_VERSION)];
     int eepromVersionOffset = sizeof(buffer) - (sizeof(SETTING_VERSION) + 1);
@@ -33,6 +35,8 @@ Settings::Settings(ParametersType defaults)
         EEPROM.get(cfgStart, buffer);
     }
 
+    EEPROM.end();
+
     parameters = (ParametersType *) buffer;
 }
 
@@ -43,5 +47,11 @@ Settings::Settings(ParametersType defaults)
  */
 void Settings::save()
 {
+    EEPROM.begin(4095);
     EEPROM.put(cfgStart, buffer);
+
+    delay(250);
+
+    EEPROM.commit();
+    EEPROM.end();
 }
