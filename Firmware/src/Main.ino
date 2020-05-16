@@ -14,7 +14,6 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <FS.h>
-#include <EEPROM.h>
 #include <DNSServer.h>
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
