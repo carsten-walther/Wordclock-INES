@@ -8,7 +8,6 @@
  */
 
 // global libs
-#include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -75,11 +74,6 @@ ParametersType defaults = {
     SETTING_VERSION
 };
 Settings settings(defaults);
-
-// foregroundColor
-RGB foregroundColor = RGB(settings.parameters->foregroundColorRed, settings.parameters->foregroundColorGreen, settings.parameters->foregroundColorBlue);
-// backgroundColor
-RGB backgroundColor = RGB(settings.parameters->backgroundColorRed, settings.parameters->backgroundColorGreen, settings.parameters->backgroundColorBlue);
 
 // clockMode
 int clockMode = CLOCKMODE_NORMAL;
@@ -352,8 +346,8 @@ void faceNormal(uint16_t hours, uint16_t minutes)
         }
 
         // set colors
-        uint32_t foregroundCol = ledStrip.Color(foregroundColor.R, foregroundColor.G, foregroundColor.B);
-        uint32_t backgroundCol = ledStrip.Color(backgroundColor.R, backgroundColor.G, backgroundColor.B);
+        uint32_t foregroundCol = ledStrip.Color(settings.parameters->foregroundColorRed, settings.parameters->foregroundColorGreen, settings.parameters->foregroundColorBlue);
+        uint32_t backgroundCol = ledStrip.Color(settings.parameters->backgroundColorRed, settings.parameters->backgroundColorGreen, settings.parameters->backgroundColorBlue);
 
         // set brightness
         ledStrip.setBrightness(settings.parameters->brightness);
@@ -686,11 +680,19 @@ void handleUpdateJson()
         success = false;
     } else {
 
+        RGB color;
+
         // foregroundColor
-        foregroundColor = getRGBFromHex(webServer.arg("foregroundColor"));
+        color = getRGBFromHex(webServer.arg("foregroundColor"));
+        settings.parameters->foregroundColorRed = color.R;
+        settings.parameters->foregroundColorGreen = color.G;
+        settings.parameters->foregroundColorBlue = color.B;
 
         // backgroundColor
-        backgroundColor = getRGBFromHex(webServer.arg("backgroundColor"));
+        color = getRGBFromHex(webServer.arg("backgroundColor"));
+        settings.parameters->backgroundColorRed = color.R;
+        settings.parameters->backgroundColorGreen = color.G;
+        settings.parameters->backgroundColorBlue = color.B;
 
         // brightness
         settings.parameters->brightness = map(webServer.arg("brightness").toInt(), 0, 100, 0, 255);
@@ -712,13 +714,13 @@ void handleUpdateJson()
         settings.parameters->wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
         settings.parameters->wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
 
+        // language
+        settings.parameters->language = webServer.arg("language").toInt();
+
         // clockModeOverride
         if (webServer.hasArg("clockMode")) {
             clockModeOverride = webServer.arg("clockMode").toInt();
         }
-
-        // language
-        settings.parameters->language = webServer.arg("language").toInt();
     }
 
     // save settings
@@ -742,10 +744,9 @@ String generateSettingsData()
     String result = "";
 
     result = result + "\"version\": \"" + VERSION + "\",";
-    result = result + "\"clockMode\": " + clockMode + ",";
     result = result + "\"language\": " + settings.parameters->language + ",";
-    result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
-    result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
+    result = result + "\"foregroundColor\": {\"red\": " + settings.parameters->foregroundColorRed + ", \"green\": " + settings.parameters->foregroundColorGreen + ", \"blue\": " + settings.parameters->foregroundColorBlue + "},";
+    result = result + "\"backgroundColor\": {\"red\": " + settings.parameters->backgroundColorRed + ", \"green\": " + settings.parameters->backgroundColorGreen + ", \"blue\": " + settings.parameters->backgroundColorBlue + "},";
     result = result + "\"brightness\": " + map(settings.parameters->brightness, 0, 255, 0, 100) + ",";
     result = result + "\"timeZone\": " + settings.parameters->timeZone + ",";
     result = result + "\"daylightSavingsTime\": " + (settings.parameters->daylightSavingsTime ? "true" : "false") + ",";
@@ -754,6 +755,7 @@ String generateSettingsData()
     result = result + "\"wakeupHour\": " + settings.parameters->wakeupHour + ",";
     result = result + "\"wakeupMinute\": " + settings.parameters->wakeupMinute + ",";
     result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
+    result = result + "\"clockMode\": " + clockMode + ",";
 
     return result;
 }
