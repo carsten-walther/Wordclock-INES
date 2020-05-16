@@ -17,9 +17,6 @@
 // Software Version
 #define VERSION "0.0.2"
 
-// Settings Version
-#define SETTING_VERSION "Version1.0"
-
 //
 // Debug/Serial Settings =======================================================
 //

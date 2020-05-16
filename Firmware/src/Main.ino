@@ -52,27 +52,28 @@ NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UP
 Adafruit_NeoPixel ledStrip = Adafruit_NeoPixel(WS2811_NUMBER, WS2811_DATA_PIN, NEO_GRB + NEO_KHZ800);
 
 // Parameters Structure
-// Settings
 ParametersType defaults = {
     // foreground color
-    255,    // foregroundColorRed
-    255,    // foregroundColorGreen
-    255,    // foregroundColorBlue
+    255,            // foregroundColorRed
+    255,            // foregroundColorGreen
+    255,            // foregroundColorBlue
     // background color
-    0,      // backgroundColorRed
-    0,      // backgroundColorGreen
-    0,      // backgroundColorBlue
+    0,              // backgroundColorRed
+    0,              // backgroundColorGreen
+    0,              // backgroundColorBlue
     // settings
-    33,     // brightness
-    0,      // timeZone
-    false,  // daylightSavingsTime
-    1,      // sleepHour
-    0,      // sleepMinute
-    5,      // wakeupHour
-    0,      // wakeupMinute
-    0,      // language
-    SETTING_VERSION
+    33,             // brightness
+    0,              // timeZone
+    false,          // daylightSavingsTime
+    1,              // sleepHour
+    0,              // sleepMinute
+    5,              // wakeupHour
+    0,              // wakeupMinute
+    0,              // language
+    SETTING_VERSION // Version
 };
+
+// Settings
 Settings settings(defaults);
 
 // clockMode
@@ -94,7 +95,7 @@ void setup()
     Serial.begin(BAUD);
     Serial.printf("\n");
     Serial.printf("\n");
-    Serial.printf("Starting Wordclock INES...\n");
+    Serial.printf("Starting Wordclock...\n");
     #endif
 
     // init WS2811 PIN
@@ -105,9 +106,6 @@ void setup()
     ledStrip.setBrightness(0);
     ledStrip.clear();
     ledStrip.show();
-
-    // init settings
-    settings.save();
 
     // set host name
     wifi_station_set_hostname(SERVER_HOST);
@@ -146,6 +144,11 @@ void setup()
         SPIFFS.setConfig(cfg);
         SPIFFS.begin();
     }
+
+    #ifdef DEBUG
+    Serial.println("EEPROM:");
+    Serial.println(generateSettingsData());
+    #endif
 
     // start the ntp time client
     timeClient.begin();
@@ -258,6 +261,8 @@ void debugging_ticker()
         Serial.printf("brightness:\t\t%i\n", settings.parameters->brightness);
         Serial.printf("timeZone:\t\t%i: %f\n", settings.parameters->timeZone, TIMEZONES[settings.parameters->timeZone]);
         Serial.printf("daylightSavingsTime:\t%i\n", settings.parameters->daylightSavingsTime);
+        Serial.printf("foreground color:\t%i, %i, %i\n", settings.parameters->foregroundColorRed, settings.parameters->foregroundColorGreen, settings.parameters->foregroundColorBlue);
+        Serial.printf("background color:\t%i, %i, %i\n", settings.parameters->backgroundColorRed, settings.parameters->backgroundColorGreen, settings.parameters->backgroundColorBlue);
     }
 }
 
@@ -743,8 +748,6 @@ String generateSettingsData()
 {
     String result = "";
 
-    result = result + "\"version\": \"" + VERSION + "\",";
-    result = result + "\"language\": " + settings.parameters->language + ",";
     result = result + "\"foregroundColor\": {\"red\": " + settings.parameters->foregroundColorRed + ", \"green\": " + settings.parameters->foregroundColorGreen + ", \"blue\": " + settings.parameters->foregroundColorBlue + "},";
     result = result + "\"backgroundColor\": {\"red\": " + settings.parameters->backgroundColorRed + ", \"green\": " + settings.parameters->backgroundColorGreen + ", \"blue\": " + settings.parameters->backgroundColorBlue + "},";
     result = result + "\"brightness\": " + map(settings.parameters->brightness, 0, 255, 0, 100) + ",";
@@ -754,8 +757,11 @@ String generateSettingsData()
     result = result + "\"sleepMinute\": " + settings.parameters->sleepMinute + ",";
     result = result + "\"wakeupHour\": " + settings.parameters->wakeupHour + ",";
     result = result + "\"wakeupMinute\": " + settings.parameters->wakeupMinute + ",";
-    result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
+    result = result + "\"language\": " + settings.parameters->language + ",";
     result = result + "\"clockMode\": " + clockMode + ",";
+    result = result + "\"version\": \"" + VERSION + "\",";
+    result = result + "\"eeprom\": \"" + SETTING_VERSION + "\",";
+    result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
 
     return result;
 }

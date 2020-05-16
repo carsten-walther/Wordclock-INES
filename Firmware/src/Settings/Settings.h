@@ -14,7 +14,7 @@
 #include <EEPROM.h>
 
 // Settings Version
-#define SETTING_VERSION "Version1.0"
+#define SETTING_VERSION "VER1.0"
 
 // Parameters Structure
 typedef struct {
@@ -36,7 +36,7 @@ typedef struct {
     int wakeupMinute;
     int language;
     // version
-    char ver[sizeof(SETTING_VERSION)];
+    char version[sizeof(SETTING_VERSION)];
 } ParametersType;
 
 class Settings
@@ -44,9 +44,11 @@ class Settings
     public:
         Settings(ParametersType defaults);
         void save();
+
         ParametersType *parameters;
 
     private:
+        int cfgStart = 0;
         byte buffer[sizeof(ParametersType)];
 };
 

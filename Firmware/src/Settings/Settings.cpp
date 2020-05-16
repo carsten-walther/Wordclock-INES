@@ -23,14 +23,14 @@ Settings::Settings(ParametersType defaults)
 
     // Read version number from EEPROM
     char savedVersion[sizeof(SETTING_VERSION)];
-    int eepromVersionOffset = sizeof(buffer) - sizeof(SETTING_VERSION);
+    int eepromVersionOffset = sizeof(buffer) - (sizeof(SETTING_VERSION) + 1);
     EEPROM.get(eepromVersionOffset, savedVersion);
 
     // If version in EEPROM is correct,
-    // overwrite the default coonfig with eeprom values
+    // overwrite the default config with eeprom values
     if (strcmp(savedVersion, SETTING_VERSION) == 0) {
         // Overwrite the structure with EEPROM data
-        EEPROM.get(0, buffer);
+        EEPROM.get(cfgStart, buffer);
     }
 
     parameters = (ParametersType *) buffer;
@@ -43,5 +43,5 @@ Settings::Settings(ParametersType defaults)
  */
 void Settings::save()
 {
-    EEPROM.put(0, buffer);
+    EEPROM.put(cfgStart, buffer);
 }
