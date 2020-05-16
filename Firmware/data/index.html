@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="WORDCLOCK">
@@ -32,59 +33,61 @@
             <div class="row">
                 <div class="col-12 offset-0 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
                     <header class="jumbotron mt-3">
-                        <h1 class="text-center">&mdash; WORDCLOCK &mdash;</h1>
+                        <h1 class="text-center">&mdash; <span class="uppercase" data-langkey="Wordclock">Wordclock</span> &mdash;</h1>
                     </header>
                 </div>
                 <div class="col-12 offset-0 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
                     <main>
-                        <form action="index.html" method="post" data-unexpected-error="Es ist ein unbekannter Fehler aufgetreten." data-connection-error="Es konnte keine Verbindung aufgebaut werden.">
+                        <form action="index.html" method="post">
+                            <span data-langkey="An unknown error has occurred." data-unexpected-error class="hidden">An unknown error has occurred.</span>
+                            <span data-langkey="No connection could be established." data-connection-error class="hidden">No connection could be established.</span>
                             <fieldset>
-                                <legend>Farben</legend>
+                                <legend data-langkey="Colors">Colors</legend>
                                 <div class="form-row">
                                     <div class="form-group col-6">
-                                        <label for="foregroundColor">Vordergrundfarbe</label>
+                                        <label for="foregroundColor" data-langkey="Foreground color">Foreground color</label>
                                         <input class="form-control" type="color" id="foregroundColor" name="foregroundColor" value="#000000" disabled>
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="backgroundColor">Hintergrundfarbe</label>
+                                        <label for="backgroundColor" data-langkey="Background color">Background color</label>
                                         <input class="form-control" type="color" id="backgroundColor" name="backgroundColor" value="#000000" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="brightness" class="d-block">Helligkeit <span class="float-right" id="brightnessValue">1</span></label>
+                                    <label for="brightness" class="d-block" data-langkey="Brightness">Brightness <span class="float-right" id="brightnessValue">1</span></label>
                                     <input class="custom-range" type="range" id="brightness" name="brightness" min="0" max="100" value="0" step="1" disabled>
                                 </div>
                             </fieldset>
                             <fieldset>
-                                <legend class="d-none">Mode</legend>
+                                <legend class="d-none" data-langkey="Mode">Mode</legend>
                                 <div class="form-group">
                                     <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
                                         <label class="btn btn-outline-secondary active">
-                                            <input type="radio" name="clockMode" id="clockMode-1" value="1" checked> Normal
+                                            <input type="radio" name="clockMode" id="clockMode-1" value="1" checked> <span data-langkey="Normal">Normal</span>
                                         </label>
                                         <label class="btn btn-outline-secondary">
-                                            <input type="radio" name="clockMode" id="clockMode-2" value="2"> Scanner
+                                            <input type="radio" name="clockMode" id="clockMode-2" value="2"> <span data-langkey="Scanner">Scanner</span>
                                         </label>
                                         <label class="btn btn-outline-secondary">
-                                            <input type="radio" name="clockMode" id="clockMode-3" value="3"> Test
+                                            <input type="radio" name="clockMode" id="clockMode-3" value="3"> <span data-langkey="Test">Test</span>
                                         </label>
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset>
-                                <legend>Einstellungen</legend>
+                                <legend data-langkey="Settings">Settings</legend>
                                 <div class="form-row">
                                     <div class="form-group col-6">
-                                        <label for="wakeupTime">Einschaltzeit</label>
+                                        <label for="wakeupTime" data-langkey="Wakeup time">Wakeup time</label>
                                         <input class="form-control" type="time" id="wakeupTime" name="wakeupTime" value="00:00" disabled>
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="sleepTime">Ausschaltzeit</label>
+                                        <label for="sleepTime" data-langkey="Sleep time">Sleep time</label>
                                         <input class="form-control" type="time" id="sleepTime" name="sleepTime" value="00:00" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="timeZone">Zeitzone</label>
+                                    <label for="timeZone" data-langkey="Time zone">Time zone</label>
                                     <select class="form-control" id="timeZone" name="timeZone" disabled>
                                         <option value="0" data-daylight-savings-time="false">(GMT-12:00) International Date Line West</option>
                                         <option value="1" data-daylight-savings-time="false">(GMT-11:00) Midway Island, Samoa</option>
@@ -174,21 +177,21 @@
                                     <div class="custom-control custom-switch">
 										<input type="hidden" id="daylightSavingsTime" name="daylightSavingsTime" value="false">
 										<input type="checkbox" class="custom-control-input" id="daylightSavingsTimeHelper" disabled>
-                                        <label class="custom-control-label" for="daylightSavingsTimeHelper">Sommerzeitregelung</label>
+                                        <label class="custom-control-label" for="daylightSavingsTimeHelper" data-langkey="Daylight savings time">Daylight savings time</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="language">Sprache</label>
+                                    <label for="language" data-langkey="Language">Language</label>
                                     <select class="form-control" id="language" name="language" disabled>
-                                        <option value="0">Hochdeutsch</option>
-                                        <option value="1">Schwäbisch</option>
-                                        <option value="2">Bayrisch</option>
-                                        <option value="3">Sächsisch</option>
+                                        <option value="0" data-langkey="High German">Hochdeutsch</option>
+                                        <option value="1" data-langkey="Swabian">Schwäbisch</option>
+                                        <option value="2" data-langkey="Bavarian">Bayrisch</option>
+                                        <option value="3" data-langkey="Saxon">Sächsisch</option>
                                     </select>
                                 </div>
                             </fieldset>
                             <fieldset>
-                                <button class="btn btn-primary btn-block" type="submit" id="submit" name="submit" disabled>speichern</button>
+                                <button class="btn btn-primary btn-block" type="submit" id="submit" name="submit" disabled data-langkey="save">save</button>
                             </fieldset>
                         </form>
                     </main>
@@ -207,6 +210,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
+    <script src="/js/i18n.js"></script>
     <script src="/js/scripts.js"></script>
 
 </body>

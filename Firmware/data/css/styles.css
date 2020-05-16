@@ -60,6 +60,14 @@ footer {
   filter: blur(0.1em);
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
+.hidden {
+  display: none;
+}
+
 form fieldset:not(:last-child) {
   margin-bottom: 2em;
   padding-bottom: 1em;
