@@ -1,6 +1,6 @@
 {
-  "name": "Wortuhr INES",
-  "short_name": "Wortuhr INES",
+  "name": "Wordclock",
+  "short_name": "Wordclock",
   "start_url": "/",
   "display": "standalone",
   "icons": [{
