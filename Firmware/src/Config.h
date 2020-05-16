@@ -14,7 +14,11 @@
 // Version =====================================================================
 //
 
-#define VERSION "0.0.1"
+// Software Version
+#define VERSION "0.0.2"
+
+// Settings Version
+#define SETTING_VERSION "Version1.0"
 
 //
 // Debug/Serial Settings =======================================================
@@ -76,27 +80,6 @@
 // How many LEDs are there?
 // Default: 25
 #define WS2811_NUMBER 25
-
-//
-// EEPROM Settings =============================================================
-//
-
-// At which addresses in the EEPROM should which settings be stored?
-#define EEPROM_init 500
-#define EEPROM_foreground_R 100
-#define EEPROM_foreground_G 101
-#define EEPROM_foreground_B 102
-#define EEPROM_background_R 103
-#define EEPROM_background_G 104
-#define EEPROM_background_B 105
-#define EEPROM_brightness 200
-#define EEPROM_timeZone 201
-#define EEPROM_daylightSavingsTime 202
-#define EEPROM_sleepHour 203
-#define EEPROM_sleepMinute 204
-#define EEPROM_wakeupHour 205
-#define EEPROM_wakeupMinute 206
-#define EEPROM_language 207
 
 //
 // Clockmodes ==================================================================

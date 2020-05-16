@@ -24,6 +24,7 @@
 #include "Config.h"
 #include "Timezones.h"
 #include "Color/RGB.h"
+#include "Settings/Settings.h"
 
 // WiFiManager
 // Once its business is done, there is no need to keep it around
@@ -52,29 +53,38 @@ NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UP
 // NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 Adafruit_NeoPixel ledStrip = Adafruit_NeoPixel(WS2811_NUMBER, WS2811_DATA_PIN, NEO_GRB + NEO_KHZ800);
 
+// Parameters Structure
+// Settings
+ParametersType defaults = {
+    // foreground color
+    255,    // foregroundColorRed
+    255,    // foregroundColorGreen
+    255,    // foregroundColorBlue
+    // background color
+    0,      // backgroundColorRed
+    0,      // backgroundColorGreen
+    0,      // backgroundColorBlue
+    // settings
+    33,     // brightness
+    0,      // timeZone
+    false,  // daylightSavingsTime
+    1,      // sleepHour
+    0,      // sleepMinute
+    5,      // wakeupHour
+    0,      // wakeupMinute
+    0,      // language
+    SETTING_VERSION
+};
+Settings settings(defaults);
+
 // foregroundColor
-RGB foregroundColor = RGB(255, 255, 255);
+RGB foregroundColor = RGB(settings.parameters->foregroundColorRed, settings.parameters->foregroundColorGreen, settings.parameters->foregroundColorBlue);
 // backgroundColor
-RGB backgroundColor = RGB(0, 0, 0);
-// brightness
-int brightness = 33;
-// timeZone
-int timeZone = 0;
-// daylightSavingsTime
-bool daylightSavingsTime = false;
-// sleepHour
-int sleepHour = 1;
-// sleepMinute
-int sleepMinute = 0;
-// wakeupHour
-int wakeupHour = 5;
-// wakeupMinute
-int wakeupMinute = 0;
+RGB backgroundColor = RGB(settings.parameters->backgroundColorRed, settings.parameters->backgroundColorGreen, settings.parameters->backgroundColorBlue);
+
 // clockMode
 int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
-// language
-int language = 0;
 
 // general timer
 unsigned long previousMillis_webServer_ticker = 0;
@@ -103,8 +113,8 @@ void setup()
     ledStrip.clear();
     ledStrip.show();
 
-    // init eeprom and hardware
-    initEEPROM();
+    // init settings
+    settings.save();
 
     // set host name
     wifi_station_set_hostname(SERVER_HOST);
@@ -201,17 +211,17 @@ void clockMode_ticker()
         clockMode = CLOCKMODE_NORMAL;
 
         // if time >= sleepTime or time <= wakeupTime
-        if ((timeClient.getHours() == sleepHour && timeClient.getMinutes() >= sleepMinute) || (timeClient.getHours() == wakeupHour && timeClient.getMinutes() < wakeupMinute)) {
+        if ((timeClient.getHours() == settings.parameters->sleepHour && timeClient.getMinutes() >= settings.parameters->sleepMinute) || (timeClient.getHours() == settings.parameters->wakeupHour && timeClient.getMinutes() < settings.parameters->wakeupMinute)) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
         // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
-        if (sleepHour < wakeupHour && timeClient.getHours() >= sleepHour && timeClient.getHours() <= wakeupHour) {
+        if (settings.parameters->sleepHour < settings.parameters->wakeupHour && timeClient.getHours() >= settings.parameters->sleepHour && timeClient.getHours() <= settings.parameters->wakeupHour) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
         // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
-        if (sleepHour > wakeupHour && (timeClient.getHours() >= sleepHour || timeClient.getHours() <= wakeupHour)) {
+        if (settings.parameters->sleepHour > settings.parameters->wakeupHour && (timeClient.getHours() >= settings.parameters->sleepHour || timeClient.getHours() <= settings.parameters->wakeupHour)) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
@@ -252,9 +262,9 @@ void debugging_ticker()
         Serial.printf("\n");
         Serial.printf("mode:\t\t\t%i\n", clockMode);
         Serial.printf("time:\t\t\t%i:%i\n", timeClient.getHours(), timeClient.getMinutes());
-        Serial.printf("brightness:\t\t%i\n", brightness);
-        Serial.printf("timeZone:\t\t%i: %f\n", timeZone, TIMEZONES[timeZone]);
-        Serial.printf("daylightSavingsTime:\t%i\n", daylightSavingsTime);
+        Serial.printf("brightness:\t\t%i\n", settings.parameters->brightness);
+        Serial.printf("timeZone:\t\t%i: %f\n", settings.parameters->timeZone, TIMEZONES[settings.parameters->timeZone]);
+        Serial.printf("daylightSavingsTime:\t%i\n", settings.parameters->daylightSavingsTime);
     }
 }
 
@@ -269,7 +279,7 @@ void faceScanner()
         previousMillis_face = millis();
 
         // set brightness
-        ledStrip.setBrightness(brightness);
+        ledStrip.setBrightness(settings.parameters->brightness);
 
         // RightToLeft
         for (int i = 12; i >= 9; i--) {
@@ -310,7 +320,7 @@ void faceTest()
         previousMillis_face = millis();
 
         // set brightness
-        ledStrip.setBrightness(brightness);
+        ledStrip.setBrightness(settings.parameters->brightness);
 
         for (int i = 0; i < ledStrip.numPixels(); i++) {
             ledStrip.setPixelColor(i, ledStrip.Color(255, 255, 255));
@@ -347,7 +357,7 @@ void faceNormal(uint16_t hours, uint16_t minutes)
         uint32_t backgroundCol = ledStrip.Color(backgroundColor.R, backgroundColor.G, backgroundColor.B);
 
         // set brightness
-        ledStrip.setBrightness(brightness);
+        ledStrip.setBrightness(settings.parameters->brightness);
 
         for (int i = 0; i < ledStrip.numPixels(); i++) {
             ledStrip.setPixelColor(i, backgroundCol);
@@ -370,7 +380,7 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 ledStrip.setPixelColor(DE_NACH, foregroundCol);
                 break;
             case 3:
-                if ((language == LANGUAGE_DE_SW) || (language == LANGUAGE_DE_SA)) {
+                if ((settings.parameters->language == LANGUAGE_DE_SW) || (settings.parameters->language == LANGUAGE_DE_SA)) {
                     // viertel
                     ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
                     hours = hours + 1;
@@ -381,7 +391,7 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 }
                 break;
             case 4:
-                if (language == LANGUAGE_DE_SA) {
+                if (settings.parameters->language == LANGUAGE_DE_SA) {
                     // 10 vor halb
                     ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
                     ledStrip.setPixelColor(DE_VOR, foregroundCol);
@@ -414,7 +424,7 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 hours = hours + 1;
                 break;
             case 8:
-                if (language == LANGUAGE_DE_SA) {
+                if (settings.parameters->language == LANGUAGE_DE_SA) {
                     // 10 nach halb
                     ledStrip.setPixelColor(DE_ZEHN, foregroundCol);
                     ledStrip.setPixelColor(DE_NACH, foregroundCol);
@@ -427,7 +437,7 @@ void faceNormal(uint16_t hours, uint16_t minutes)
                 }
                 break;
             case 9:
-                if ((language == LANGUAGE_DE_SW) || (language == LANGUAGE_DE_BA) || (language == LANGUAGE_DE_SA)) {
+                if ((settings.parameters->language == LANGUAGE_DE_SW) || (settings.parameters->language == LANGUAGE_DE_BA) || (settings.parameters->language == LANGUAGE_DE_SA)) {
                     // drei viertel
                     ledStrip.setPixelColor(DE_DREI, foregroundCol);
                     ledStrip.setPixelColor(DE_VIERTEL, foregroundCol);
@@ -588,100 +598,16 @@ void processTimeOffset()
 {
     int offset = 0;
 
-    if (daylightSavingsTime) {
+    if (settings.parameters->daylightSavingsTime) {
         offset = offset + 3600;
     }
 
-    offset = offset + TIMEZONES[timeZone] * 3600;
+    offset = offset + TIMEZONES[settings.parameters->timeZone] * 3600;
 
     // set time offset
     timeClient.setTimeOffset(offset);
     // uptade time
     timeClient.forceUpdate();
-}
-
-// =============================================================================
-
-void initEEPROM()
-{
-    EEPROM.begin(512);
-
-    //write a magic byte to eeprom 196 to determine if we've ever booted on this device before
-    if (EEPROM.read(EEPROM_init) != 196) {
-        //if not load default config files to EEPROM
-        saveEEPROM();
-    }
-
-    // load config from EEPROM
-    loadEEPROM();
-}
-
-void loadEEPROM()
-{
-    // EEPROM foregroundColor
-    foregroundColor = RGB(EEPROM.read(EEPROM_foreground_R), EEPROM.read(EEPROM_foreground_G), EEPROM.read(EEPROM_foreground_B));
-    // EEPROM backgroundColor
-    backgroundColor = RGB(EEPROM.read(EEPROM_background_R), EEPROM.read(EEPROM_background_G), EEPROM.read(EEPROM_background_B));
-    // EEPROM brightness
-    brightness = EEPROM.read(EEPROM_brightness);
-    // EEPROM timeZone
-    timeZone = EEPROM.read(EEPROM_timeZone);
-    // daylightSavingsTime
-    daylightSavingsTime = EEPROM.read(EEPROM_daylightSavingsTime);
-    // EEPROM sleepHour
-    sleepHour = EEPROM.read(EEPROM_sleepHour);
-    // EEPROM sleepMinute
-    sleepMinute = EEPROM.read(EEPROM_sleepMinute);
-    // EEPROM wakeupHour
-    wakeupHour = EEPROM.read(EEPROM_wakeupHour);
-    // EEPROM wakeupMinute
-    wakeupMinute = EEPROM.read(EEPROM_wakeupMinute);
-    // EEPROM language
-    language = EEPROM.read(EEPROM_language);
-}
-
-void saveEEPROM()
-{
-    EEPROM.write(EEPROM_init, 196);
-    // EEPROM foreground color
-    EEPROM.write(EEPROM_foreground_R, foregroundColor.R);
-    EEPROM.write(EEPROM_foreground_G, foregroundColor.G);
-    EEPROM.write(EEPROM_foreground_B, foregroundColor.B);
-    // EEPROM background color
-    EEPROM.write(EEPROM_background_R, backgroundColor.R);
-    EEPROM.write(EEPROM_background_G, backgroundColor.G);
-    EEPROM.write(EEPROM_background_B, backgroundColor.B);
-    // EEPROM brightness
-    EEPROM.write(EEPROM_brightness, brightness);
-    // EEPROM timeZone
-    EEPROM.write(EEPROM_timeZone, timeZone);
-    // daylightSavingsTime
-    EEPROM.write(EEPROM_daylightSavingsTime, daylightSavingsTime);
-    // EEPROM sleepHour
-    EEPROM.write(EEPROM_sleepHour, sleepHour);
-    // EEPROM sleepMinute
-    EEPROM.write(EEPROM_sleepMinute, sleepMinute);
-    // EEPROM wakeupHour
-    EEPROM.write(EEPROM_wakeupHour, wakeupHour);
-    // EEPROM wakeupMinute
-    EEPROM.write(EEPROM_wakeupMinute, wakeupMinute);
-    // EEPROM language
-    EEPROM.write(EEPROM_language, language);
-
-    EEPROM.commit();
-}
-
-void clearEEPROM()
-{
-    // write a 0 to all 512 bytes of the EEPROM
-    for (int i = 0; i < 512; i++) {
-        EEPROM.write(i, 0);
-    }
-
-    delay(500);
-
-    EEPROM.commit();
-    EEPROM.end();
 }
 
 // =============================================================================
@@ -768,24 +694,24 @@ void handleUpdateJson()
         backgroundColor = getRGBFromHex(webServer.arg("backgroundColor"));
 
         // brightness
-        brightness = map(webServer.arg("brightness").toInt(), 0, 100, 0, 255);
+        settings.parameters->brightness = map(webServer.arg("brightness").toInt(), 0, 100, 0, 255);
 
         // timeZone
-        timeZone = webServer.arg("timeZone").toInt();
+        settings.parameters->timeZone = webServer.arg("timeZone").toInt();
 
         // daylightSavingsTime
         if (webServer.arg("daylightSavingsTime") == String("true"))
-            daylightSavingsTime = true;
+            settings.parameters->daylightSavingsTime = true;
         else
-            daylightSavingsTime = false;
+            settings.parameters->daylightSavingsTime = false;
 
         // sleepTime (sleepHour, sleepMinute)
-        sleepHour = split(webServer.arg("sleepTime"), ':', 0).toInt();
-        sleepMinute = split(webServer.arg("sleepTime"), ':', 1).toInt();
+        settings.parameters->sleepHour = split(webServer.arg("sleepTime"), ':', 0).toInt();
+        settings.parameters->sleepMinute = split(webServer.arg("sleepTime"), ':', 1).toInt();
 
         // wakeupTime (wakeupHour, wakeupMinute)
-        wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
-        wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
+        settings.parameters->wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
+        settings.parameters->wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
 
         // clockModeOverride
         if (webServer.hasArg("clockMode")) {
@@ -793,11 +719,12 @@ void handleUpdateJson()
         }
 
         // language
-        language = webServer.arg("language").toInt();
+        settings.parameters->language = webServer.arg("language").toInt();
     }
 
     // save settings
-    saveEEPROM();
+    settings.save();
+
     // process time offsets
     processTimeOffset();
 
@@ -817,16 +744,16 @@ String generateSettingsData()
 
     result = result + "\"version\": \"" + VERSION + "\",";
     result = result + "\"clockMode\": " + clockMode + ",";
-    result = result + "\"language\": " + language + ",";
+    result = result + "\"language\": " + settings.parameters->language + ",";
     result = result + "\"foregroundColor\": {\"red\": " + foregroundColor.R + ", \"green\": " + foregroundColor.G + ", \"blue\": " + foregroundColor.B + "},";
     result = result + "\"backgroundColor\": {\"red\": " + backgroundColor.R + ", \"green\": " + backgroundColor.G + ", \"blue\": " + backgroundColor.B + "},";
-    result = result + "\"brightness\": " + map(brightness, 0, 255, 0, 100) + ",";
-    result = result + "\"timeZone\": " + timeZone + ",";
-    result = result + "\"daylightSavingsTime\": " + (daylightSavingsTime ? "true" : "false") + ",";
-    result = result + "\"sleepHour\": " + sleepHour + ",";
-    result = result + "\"sleepMinute\": " + sleepMinute + ",";
-    result = result + "\"wakeupHour\": " + wakeupHour + ",";
-    result = result + "\"wakeupMinute\": " + wakeupMinute + ",";
+    result = result + "\"brightness\": " + map(settings.parameters->brightness, 0, 255, 0, 100) + ",";
+    result = result + "\"timeZone\": " + settings.parameters->timeZone + ",";
+    result = result + "\"daylightSavingsTime\": " + (settings.parameters->daylightSavingsTime ? "true" : "false") + ",";
+    result = result + "\"sleepHour\": " + settings.parameters->sleepHour + ",";
+    result = result + "\"sleepMinute\": " + settings.parameters->sleepMinute + ",";
+    result = result + "\"wakeupHour\": " + settings.parameters->wakeupHour + ",";
+    result = result + "\"wakeupMinute\": " + settings.parameters->wakeupMinute + ",";
     result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
 
     return result;
