@@ -11,6 +11,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266SSDP.h>
 #include <ESP8266mDNS.h>
 #include <FS.h>
 #include <DNSServer.h>
@@ -150,7 +151,29 @@ void setup()
         fs::SPIFFSConfig cfg;
         cfg.setAutoFormat(false);
         SPIFFS.setConfig(cfg);
-        SPIFFS.begin();
+        if (SPIFFS.begin()) {
+            #ifdef DEBUG
+            Serial.println("SPIFFS started");
+            #endif
+        }
+
+        // init SSDP
+        SSDP.setSchemaURL("description.xml");
+        SSDP.setHTTPPort(SERVER_PORT);
+        SSDP.setName(AP_SSID);
+        SSDP.setSerialNumber(ESP.getChipId());
+        SSDP.setURL("/");
+        SSDP.setModelName(AP_SSID);
+        SSDP.setModelNumber(VERSION);
+        SSDP.setModelURL("https://github.com/carsten-walther/wordclock");
+        SSDP.setManufacturer("Carsten Walther");
+        SSDP.setManufacturerURL("https://www.carstenwalther.de");
+        SSDP.setDeviceType("upnp:rootdevice");
+        if (SSDP.begin()) {
+            #ifdef DEBUG
+            Serial.println("SSDP started");
+            #endif
+        }
     }
 
     #ifdef DEBUG
@@ -754,6 +777,9 @@ void handleUpdateJson()
     result = result + "}";
 
     webServer.send(200, "application/json", result);
+void handleSSDP()
+{
+    SSDP.schema(HTTP.client());
 }
 
 String generateSettingsData()
