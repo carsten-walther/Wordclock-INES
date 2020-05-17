@@ -32,12 +32,12 @@ WiFiManager wifiManager;
 ESP8266WebServer HTTP(SERVER_PORT);
 
 // A UDP instance to let us send and receive packets over UDP
-WiFiUDP wifiUdp;
+WiFiUDP UDP;
 
 // You can specify the time server pool and the offset (in seconds, can be
 // changed later with setTimeOffset() ). Additionaly you can specify the
 // update interval (in milliseconds, can be changed using setUpdateInterval() ).
-NTPClient NTP = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
+NTPClient NTP = NTPClient(UDP, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
