@@ -29,18 +29,15 @@
 WiFiManager wifiManager;
 
 // Create a web server on port 80
-ESP8266WebServer webServer(SERVER_PORT);
+ESP8266WebServer HTTP(SERVER_PORT);
 
 // A UDP instance to let us send and receive packets over UDP
 WiFiUDP wifiUdp;
 
-// create a MDNS Responder instance
-MDNSResponder mdnsResponder;
-
 // You can specify the time server pool and the offset (in seconds, can be
 // changed later with setTimeOffset() ). Additionaly you can specify the
 // update interval (in milliseconds, can be changed using setUpdateInterval() ).
-NTPClient timeClient = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
+NTPClient NTP = NTPClient(wifiUdp, NTP_HOST_NAME, NTP_TIME_OFFSET, NTP_UPDATE_INTERVAL);
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -90,7 +87,7 @@ int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
 
 // general timer
-unsigned long previousMillis_webServer_ticker = 0;
+unsigned long previousMillis_HTTP_ticker = 0;
 unsigned long previousMillis_clockMode_ticker = 0;
 unsigned long previousMillis_debugging_ticker = 0;
 // face timer
@@ -132,19 +129,28 @@ void setup()
 
     } else {
 
-        // start the web server
-        webServer.begin();
         // if someone requests any other file or page,
         // go to function 'handleNotFound' and check if the file exists
-        webServer.onNotFound(handleNotFound);
+        HTTP.onNotFound(handleNotFound);
         // if settings requested return settings
-        webServer.on("/settings.json", HTTP_GET, handleSettingsJson);
+        HTTP.on("/settings.json", HTTP_GET, handleSettingsJson);
         // if update requested update settings and return result
-        webServer.on("/update.json", HTTP_POST, handleUpdateJson);
+        HTTP.on("/update.json", HTTP_POST, handleUpdateJson);
+        // if ssdp return description
+        HTTP.on("/description.xml", HTTP_GET, handleSSDP);
+
+        // start the web server
+        HTTP.begin();
+        #ifdef DEBUG
+        Serial.println("HTTP started");
+        #endif
 
         // start the multicast domain name server
-        if (mdnsResponder.begin(SERVER_HOST)) {
-            mdnsResponder.addService("http", "tcp", SERVER_PORT);
+        if (MDNS.begin(SERVER_HOST)) {
+            MDNS.addService("http", "tcp", SERVER_PORT);
+            #ifdef DEBUG
+            Serial.println("MDNS started");
+            #endif
         }
 
         // start the SPI Flash File System (SPIFFS)
@@ -182,7 +188,7 @@ void setup()
     #endif
 
     // start the ntp time client
-    timeClient.begin();
+    NTP.begin();
 
     // process time offsets
     processTimeOffset();
@@ -198,7 +204,7 @@ void loop()
 {
     clockMode_ticker();
 
-    webServer_ticker();
+    HTTP_ticker();
 
     #ifdef DEBUG
     debugging_ticker();
@@ -208,7 +214,7 @@ void loop()
     switch (clockMode) {
 
         case CLOCKMODE_NORMAL:
-            faceNormal(timeClient.getHours(), timeClient.getMinutes());
+            faceNormal(NTP.getHours(), NTP.getMinutes());
             break;
 
         case CLOCKMODE_NIGHT:
@@ -238,17 +244,17 @@ void clockMode_ticker()
         clockMode = CLOCKMODE_NORMAL;
 
         // if time >= sleepTime or time <= wakeupTime
-        if ((timeClient.getHours() == settings.parameters->sleepHour && timeClient.getMinutes() >= settings.parameters->sleepMinute) || (timeClient.getHours() == settings.parameters->wakeupHour && timeClient.getMinutes() < settings.parameters->wakeupMinute)) {
+        if ((NTP.getHours() == settings.parameters->sleepHour && NTP.getMinutes() >= settings.parameters->sleepMinute) || (NTP.getHours() == settings.parameters->wakeupHour && NTP.getMinutes() < settings.parameters->wakeupMinute)) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
         // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
-        if (settings.parameters->sleepHour < settings.parameters->wakeupHour && timeClient.getHours() >= settings.parameters->sleepHour && timeClient.getHours() <= settings.parameters->wakeupHour) {
+        if (settings.parameters->sleepHour < settings.parameters->wakeupHour && NTP.getHours() >= settings.parameters->sleepHour && NTP.getHours() <= settings.parameters->wakeupHour) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
         // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
-        if (settings.parameters->sleepHour > settings.parameters->wakeupHour && (timeClient.getHours() >= settings.parameters->sleepHour || timeClient.getHours() <= settings.parameters->wakeupHour)) {
+        if (settings.parameters->sleepHour > settings.parameters->wakeupHour && (NTP.getHours() >= settings.parameters->sleepHour || NTP.getHours() <= settings.parameters->wakeupHour)) {
             clockMode = CLOCKMODE_NIGHT;
         }
 
@@ -259,22 +265,22 @@ void clockMode_ticker()
     }
 }
 
-void webServer_ticker()
+void HTTP_ticker()
 {
     unsigned int speedDelay = 50;
 
-    if (millis() - previousMillis_webServer_ticker >= speedDelay) {
+    if (millis() - previousMillis_HTTP_ticker >= speedDelay) {
 
-        previousMillis_webServer_ticker = millis();
+        previousMillis_HTTP_ticker = millis();
 
         // update the ntp time client
-        timeClient.update();
+        NTP.update();
 
-        // run the web server
-        webServer.handleClient();
+        // update MDNS service
+        MDNS.update();
 
-        // update mdnsResponder service
-        mdnsResponder.update();
+        // handle HTTP client
+        HTTP.handleClient();
     }
 }
 
@@ -288,7 +294,7 @@ void debugging_ticker()
 
         Serial.printf("\n");
         Serial.printf("mode:\t\t\t%i\n", clockMode);
-        Serial.printf("time:\t\t\t%i:%i\n", timeClient.getHours(), timeClient.getMinutes());
+        Serial.printf("time:\t\t\t%i:%i\n", NTP.getHours(), NTP.getMinutes());
         Serial.printf("brightness:\t\t%i\n", settings.parameters->brightness);
         Serial.printf("timeZone:\t\t%i: %f\n", settings.parameters->timeZone, TIMEZONES[settings.parameters->timeZone]);
         Serial.printf("daylightSavingsTime:\t%i\n", settings.parameters->daylightSavingsTime);
@@ -638,9 +644,9 @@ void processTimeOffset()
     offset = offset + TIMEZONES[settings.parameters->timeZone] * 3600;
 
     // set time offset
-    timeClient.setTimeOffset(offset);
+    NTP.setTimeOffset(offset);
     // uptade time
-    timeClient.forceUpdate();
+    NTP.forceUpdate();
 }
 
 // =============================================================================
@@ -648,8 +654,8 @@ void processTimeOffset()
 void handleNotFound()
 {
     // check if the file exists in the flash memory (SPIFFS), if so, send it
-    if (!handleFileRead(webServer.uri())) {
-        webServer.send(404, "text/plain", "Error 404: File Not Found");
+    if (!handleFileRead(HTTP.uri())) {
+        HTTP.send(404, "text/plain", "Error 404: File Not Found");
     }
 }
 
@@ -676,7 +682,7 @@ bool handleFileRead(String path)
         // Open the file
         File file = SPIFFS.open(path, "r");
         // Send it to the client
-        webServer.streamFile(file, contentType);
+        HTTP.streamFile(file, contentType);
         // Close the file again
         file.close();
 
@@ -698,7 +704,7 @@ void handleSettingsJson()
     result = result + "}";
     result = result + "}";
 
-    webServer.send(200, "application/json", result);
+    HTTP.send(200, "application/json", result);
 }
 
 void handleUpdateJson()
@@ -708,14 +714,14 @@ void handleUpdateJson()
     bool success = true;
 
     if (
-        !webServer.hasArg("foregroundColor") ||
-        !webServer.hasArg("backgroundColor") ||
-        !webServer.hasArg("brightness") ||
-        !webServer.hasArg("timeZone") ||
-        !webServer.hasArg("daylightSavingsTime") ||
-        !webServer.hasArg("sleepTime") ||
-        !webServer.hasArg("wakeupTime") ||
-        !webServer.hasArg("language")
+        !HTTP.hasArg("foregroundColor") ||
+        !HTTP.hasArg("backgroundColor") ||
+        !HTTP.hasArg("brightness") ||
+        !HTTP.hasArg("timeZone") ||
+        !HTTP.hasArg("daylightSavingsTime") ||
+        !HTTP.hasArg("sleepTime") ||
+        !HTTP.hasArg("wakeupTime") ||
+        !HTTP.hasArg("language")
     ) {
         success = false;
     } else {
@@ -723,43 +729,43 @@ void handleUpdateJson()
         RGB color;
 
         // foregroundColor
-        color = getRGBFromHex(webServer.arg("foregroundColor"));
+        color = getRGBFromHex(HTTP.arg("foregroundColor"));
         settings.parameters->foregroundColorRed = color.R;
         settings.parameters->foregroundColorGreen = color.G;
         settings.parameters->foregroundColorBlue = color.B;
 
         // backgroundColor
-        color = getRGBFromHex(webServer.arg("backgroundColor"));
+        color = getRGBFromHex(HTTP.arg("backgroundColor"));
         settings.parameters->backgroundColorRed = color.R;
         settings.parameters->backgroundColorGreen = color.G;
         settings.parameters->backgroundColorBlue = color.B;
 
         // brightness
-        settings.parameters->brightness = map(webServer.arg("brightness").toInt(), 0, 100, 0, 255);
+        settings.parameters->brightness = map(HTTP.arg("brightness").toInt(), 0, 100, 0, 255);
 
         // timeZone
-        settings.parameters->timeZone = webServer.arg("timeZone").toInt();
+        settings.parameters->timeZone = HTTP.arg("timeZone").toInt();
 
         // daylightSavingsTime
-        if (webServer.arg("daylightSavingsTime") == String("true"))
+        if (HTTP.arg("daylightSavingsTime") == String("true"))
             settings.parameters->daylightSavingsTime = true;
         else
             settings.parameters->daylightSavingsTime = false;
 
         // sleepTime (sleepHour, sleepMinute)
-        settings.parameters->sleepHour = split(webServer.arg("sleepTime"), ':', 0).toInt();
-        settings.parameters->sleepMinute = split(webServer.arg("sleepTime"), ':', 1).toInt();
+        settings.parameters->sleepHour = split(HTTP.arg("sleepTime"), ':', 0).toInt();
+        settings.parameters->sleepMinute = split(HTTP.arg("sleepTime"), ':', 1).toInt();
 
         // wakeupTime (wakeupHour, wakeupMinute)
-        settings.parameters->wakeupHour = split(webServer.arg("wakeupTime"), ':', 0).toInt();
-        settings.parameters->wakeupMinute = split(webServer.arg("wakeupTime"), ':', 1).toInt();
+        settings.parameters->wakeupHour = split(HTTP.arg("wakeupTime"), ':', 0).toInt();
+        settings.parameters->wakeupMinute = split(HTTP.arg("wakeupTime"), ':', 1).toInt();
 
         // language
-        settings.parameters->language = webServer.arg("language").toInt();
+        settings.parameters->language = HTTP.arg("language").toInt();
 
         // clockModeOverride
-        if (webServer.hasArg("clockMode")) {
-            clockModeOverride = webServer.arg("clockMode").toInt();
+        if (HTTP.hasArg("clockMode")) {
+            clockModeOverride = HTTP.arg("clockMode").toInt();
         }
     }
 
@@ -776,7 +782,9 @@ void handleUpdateJson()
     result = result + "}";
     result = result + "}";
 
-    webServer.send(200, "application/json", result);
+    HTTP.send(200, "application/json", result);
+}
+
 void handleSSDP()
 {
     SSDP.schema(HTTP.client());
@@ -799,7 +807,7 @@ String generateSettingsData()
     result = result + "\"clockMode\": " + clockMode + ",";
     result = result + "\"version\": \"" + VERSION + "\",";
     result = result + "\"eeprom\": \"" + SETTING_VERSION + "\",";
-    result = result + "\"time\": \"" + timeClient.getFormattedTime() + "\"";
+    result = result + "\"time\": \"" + NTP.getFormattedTime() + "\"";
 
     return result;
 }
