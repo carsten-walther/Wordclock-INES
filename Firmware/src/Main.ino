@@ -13,7 +13,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h>
 #include <ESP8266mDNS.h>
-#include <FS.h>
+#include <LittleFS.h>
 #include <DNSServer.h>
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
@@ -153,13 +153,10 @@ void setup()
             #endif
         }
 
-        // start the SPI Flash File System (SPIFFS)
-        fs::SPIFFSConfig cfg;
-        cfg.setAutoFormat(false);
-        SPIFFS.setConfig(cfg);
-        if (SPIFFS.begin()) {
+        // start the SPI Flash File System (LittleFS)
+        if (LittleFS.begin()) {
             #ifdef DEBUG
-            Serial.println("SPIFFS started");
+            Serial.println("LittleFS started");
             #endif
         }
 
@@ -653,7 +650,7 @@ void processTimeOffset()
 
 void handleNotFound()
 {
-    // check if the file exists in the flash memory (SPIFFS), if so, send it
+    // check if the file exists in the flash memory (LittleFS), if so, send it
     if (!handleFileRead(HTTP.uri())) {
         HTTP.send(404, "text/plain", "Error 404: File Not Found");
     }
@@ -671,16 +668,16 @@ bool handleFileRead(String path)
     String pathWithGz = path + ".gz";
 
     // If the file exists, either as a compressed archive, or normal
-    if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
+    if (LittleFS.exists(pathWithGz) || LittleFS.exists(path)) {
 
         // If there's a compressed version available
-        if (SPIFFS.exists(pathWithGz)) {
+        if (LittleFS.exists(pathWithGz)) {
             // Use the compressed verion
             path += ".gz";
         }
 
         // Open the file
-        File file = SPIFFS.open(path, "r");
+        File file = LittleFS.open(path, "r");
         // Send it to the client
         HTTP.streamFile(file, contentType);
         // Close the file again
