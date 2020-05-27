@@ -86,6 +86,8 @@ typedef struct {
 int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
 
+// current millis
+unsigned long currentMillis = 0;
 // general timer
 unsigned long previousMillis_HTTP_ticker = 0;
 unsigned long previousMillis_clockMode_ticker = 0;
@@ -199,6 +201,8 @@ void setup()
 
 void loop()
 {
+    currentMillis = millis();
+
     clockMode_ticker();
 
     HTTP_ticker();
@@ -232,11 +236,11 @@ void loop()
 
 void clockMode_ticker()
 {
-    unsigned int speedDelay = 125;
+    unsigned long speedDelay = 125;
 
-    if (millis() - previousMillis_clockMode_ticker >= speedDelay) {
+    if (currentMillis - previousMillis_clockMode_ticker > speedDelay) {
 
-        previousMillis_clockMode_ticker = millis();
+        previousMillis_clockMode_ticker = currentMillis;
 
         clockMode = CLOCKMODE_NORMAL;
 
@@ -264,11 +268,11 @@ void clockMode_ticker()
 
 void HTTP_ticker()
 {
-    unsigned int speedDelay = 50;
+    unsigned long speedDelay = 50;
 
-    if (millis() - previousMillis_HTTP_ticker >= speedDelay) {
+    if (currentMillis - previousMillis_HTTP_ticker > speedDelay) {
 
-        previousMillis_HTTP_ticker = millis();
+        previousMillis_HTTP_ticker = currentMillis;
 
         // update the ntp time client
         NTP.update();
@@ -283,11 +287,11 @@ void HTTP_ticker()
 
 void debugging_ticker()
 {
-    unsigned int speedDelay = 1000;
+    unsigned long speedDelay = 1000;
 
-    if (millis() - previousMillis_debugging_ticker >= speedDelay) {
+    if (currentMillis - previousMillis_debugging_ticker > speedDelay) {
 
-        previousMillis_debugging_ticker = millis();
+        previousMillis_debugging_ticker = currentMillis;
 
         Serial.printf("\n");
         Serial.printf("mode:\t\t\t%i\n", clockMode);
@@ -304,11 +308,11 @@ void debugging_ticker()
 
 void faceScanner()
 {
-    unsigned int speedDelay = 125;
+    unsigned long speedDelay = 125;
 
-    if (millis() - previousMillis_face >= speedDelay) {
+    if (currentMillis - previousMillis_face > speedDelay) {
 
-        previousMillis_face = millis();
+        previousMillis_face = currentMillis;
 
         // set brightness
         ledStrip.setBrightness(settings.parameters->brightness);
@@ -345,11 +349,11 @@ void faceScanner()
 
 void faceTest()
 {
-    unsigned int speedDelay = 125;
+    unsigned long speedDelay = 125;
 
-    if (millis() - previousMillis_face >= speedDelay) {
+    if (currentMillis - previousMillis_face > speedDelay) {
 
-        previousMillis_face = millis();
+        previousMillis_face = currentMillis;
 
         // set brightness
         ledStrip.setBrightness(settings.parameters->brightness);
@@ -370,11 +374,11 @@ void faceTest()
 
 void faceNormal(uint16_t hours, uint16_t minutes)
 {
-    unsigned int speedDelay = 1000;
+    unsigned long speedDelay = 1000;
 
-    if (millis() - previousMillis_face >= speedDelay) {
+    if (currentMillis - previousMillis_face > speedDelay) {
 
-        previousMillis_face = millis();
+        previousMillis_face = currentMillis;
 
         while (hours < 0) {
             hours += 12;
@@ -578,11 +582,11 @@ void faceNormal(uint16_t hours, uint16_t minutes)
 
 void faceNight()
 {
-    unsigned int speedDelay = 1000;
+    unsigned long speedDelay = 1000;
 
-    if (millis() - previousMillis_face >= speedDelay) {
+    if (currentMillis - previousMillis_face > speedDelay) {
 
-        previousMillis_face = millis();
+        previousMillis_face = currentMillis;
 
         ledStrip.setBrightness(0);
         ledStrip.clear();
@@ -644,6 +648,19 @@ void processTimeOffset()
     NTP.setTimeOffset(offset);
     // uptade time
     NTP.forceUpdate();
+}
+
+
+void delay(unsigned long ms)
+{
+    unsigned long start = millis();
+    for (;;) {
+        unsigned long now = millis();
+        unsigned long elapsed = now - start;
+        if (elapsed >= ms) {
+            return;
+        }
+    }
 }
 
 // =============================================================================
