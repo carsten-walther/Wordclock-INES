@@ -13,7 +13,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h>
 #include <ESP8266mDNS.h>
-#include <LittleFS.h>
+#include <FS.h>
 #include <DNSServer.h>
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
@@ -86,8 +86,6 @@ typedef struct {
 int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
 
-// current millis
-unsigned long currentMillis = 0;
 // general timer
 unsigned long previousMillis_HTTP_ticker = 0;
 unsigned long previousMillis_clockMode_ticker = 0;
@@ -155,10 +153,13 @@ void setup()
             #endif
         }
 
-        // start the SPI Flash File System (LittleFS)
-        if (LittleFS.begin()) {
+        // start the SPI Flash File System (SPIFFS)
+        fs::SPIFFSConfig cfg;
+        cfg.setAutoFormat(false);
+        SPIFFS.setConfig(cfg);
+        if (SPIFFS.begin()) {
             #ifdef DEBUG
-            Serial.println("LittleFS started");
+            Serial.println("SPIFFS started");
             #endif
         }
 
@@ -201,8 +202,6 @@ void setup()
 
 void loop()
 {
-    currentMillis = millis();
-
     clockMode_ticker();
 
     HTTP_ticker();
@@ -236,9 +235,10 @@ void loop()
 
 void clockMode_ticker()
 {
-    unsigned long speedDelay = 125;
+    unsigned int speedDelay = 125;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_clockMode_ticker > speedDelay) {
+    if (currentMillis - previousMillis_clockMode_ticker >= speedDelay) {
 
         previousMillis_clockMode_ticker = currentMillis;
 
@@ -268,9 +268,10 @@ void clockMode_ticker()
 
 void HTTP_ticker()
 {
-    unsigned long speedDelay = 50;
+    unsigned int speedDelay = 50;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_HTTP_ticker > speedDelay) {
+    if (currentMillis - previousMillis_HTTP_ticker >= speedDelay) {
 
         previousMillis_HTTP_ticker = currentMillis;
 
@@ -287,9 +288,10 @@ void HTTP_ticker()
 
 void debugging_ticker()
 {
-    unsigned long speedDelay = 1000;
+    unsigned int speedDelay = 1000;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_debugging_ticker > speedDelay) {
+    if (currentMillis - previousMillis_debugging_ticker >= speedDelay) {
 
         previousMillis_debugging_ticker = currentMillis;
 
@@ -308,9 +310,10 @@ void debugging_ticker()
 
 void faceScanner()
 {
-    unsigned long speedDelay = 125;
+    unsigned int speedDelay = 125;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_face > speedDelay) {
+    if (currentMillis - previousMillis_face >= speedDelay) {
 
         previousMillis_face = currentMillis;
 
@@ -349,9 +352,10 @@ void faceScanner()
 
 void faceTest()
 {
-    unsigned long speedDelay = 125;
+    unsigned int speedDelay = 125;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_face > speedDelay) {
+    if (currentMillis - previousMillis_face >= speedDelay) {
 
         previousMillis_face = currentMillis;
 
@@ -374,9 +378,10 @@ void faceTest()
 
 void faceNormal(uint16_t hours, uint16_t minutes)
 {
-    unsigned long speedDelay = 1000;
+    unsigned int speedDelay = 1000;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_face > speedDelay) {
+    if (currentMillis - previousMillis_face >= speedDelay) {
 
         previousMillis_face = currentMillis;
 
@@ -582,9 +587,10 @@ void faceNormal(uint16_t hours, uint16_t minutes)
 
 void faceNight()
 {
-    unsigned long speedDelay = 1000;
+    unsigned int speedDelay = 1000;
+    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_face > speedDelay) {
+    if (currentMillis - previousMillis_face >= speedDelay) {
 
         previousMillis_face = currentMillis;
 
@@ -650,24 +656,11 @@ void processTimeOffset()
     NTP.forceUpdate();
 }
 
-
-void delay(unsigned long ms)
-{
-    unsigned long start = millis();
-    for (;;) {
-        unsigned long now = millis();
-        unsigned long elapsed = now - start;
-        if (elapsed >= ms) {
-            return;
-        }
-    }
-}
-
 // =============================================================================
 
 void handleNotFound()
 {
-    // check if the file exists in the flash memory (LittleFS), if so, send it
+    // check if the file exists in the flash memory (SPIFFS), if so, send it
     if (!handleFileRead(HTTP.uri())) {
         HTTP.send(404, "text/plain", "Error 404: File Not Found");
     }
@@ -685,16 +678,16 @@ bool handleFileRead(String path)
     String pathWithGz = path + ".gz";
 
     // If the file exists, either as a compressed archive, or normal
-    if (LittleFS.exists(pathWithGz) || LittleFS.exists(path)) {
+    if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
 
         // If there's a compressed version available
-        if (LittleFS.exists(pathWithGz)) {
+        if (SPIFFS.exists(pathWithGz)) {
             // Use the compressed verion
             path += ".gz";
         }
 
         // Open the file
-        File file = LittleFS.open(path, "r");
+        File file = SPIFFS.open(path, "r");
         // Send it to the client
         HTTP.streamFile(file, contentType);
         // Close the file again
