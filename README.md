@@ -4,12 +4,12 @@
 
 This clock shows the time in words.
 
-[![Issues](https://img.shields.io/github/issues/carsten-walther/Wordclock-INES)](https://img.shields.io/github/issues/carsten-walther/Wordclock-INES)
-[![Forks](https://img.shields.io/github/forks/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/network/members)
-[![Stars](https://img.shields.io/github/stars/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/stargazers)
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/carsten-walther/Wordclock-INES)](https://github.com/carsten-walther/Wordclock-INES/releases/latest)
-[![License](https://img.shields.io/github/license/carsten-walther/Wordclock-INES)](LICENSE.txt)
-[![GitHub All Releases](https://img.shields.io/github/downloads/carsten-walther/Wordclock-INES/total)](https://github.com/carsten-walther/Wordclock-INES/releases/latest)
+[![Issues](https://img.shields.io/github/issues/carsten-walther/wordclock)](https://img.shields.io/github/issues/carsten-walther/wordclock)
+[![Forks](https://img.shields.io/github/forks/carsten-walther/wordclock)](https://github.com/carsten-walther/wordclock/network/members)
+[![Stars](https://img.shields.io/github/stars/carsten-walther/wordclock)](https://github.com/carsten-walther/wordclock/stargazers)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/carsten-walther/wordclock)](https://github.com/carsten-walther/wordclock/releases/latest)
+[![License](https://img.shields.io/github/license/carsten-walther/wordclock)](LICENSE.txt)
+[![GitHub All Releases](https://img.shields.io/github/downloads/carsten-walther/wordclock/total)](https://github.com/carsten-walther/wordclock/releases/latest)
 
 ![Wordclock Plate Model INES](Documentation/img/Plate-INES-de.png)
 
