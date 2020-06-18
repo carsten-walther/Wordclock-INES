@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Night",
+    "value": 0
+  },
+  {
+    "label": "Normal",
+    "value": 1
+  },
+  {
+    "label": "Scanner",
+    "value": 2
+  },
+  {
+    "label": "Test",
+    "value": 3
+  }
+]

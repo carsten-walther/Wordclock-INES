@@ -49,14 +49,13 @@ export class FavoriteServiceController {
   /**
    * get
    */
-  get = async (): Promise<any> => {
+  get = async (): Promise<Favorite[]> => {
     let favorites = await this.localStorageService.get(this.storageKey) || [];
     fetch(this.file)
       .then(response => response.json())
       .then(data => {
         data.map(item => {
-          console.log(this.containsObject(item, favorite));
-          if (this.containsObject(item, favorite)) {
+          if (!this.containsObject(item, favorites)) {
             this.add(item);
           }
         });
@@ -70,9 +69,8 @@ export class FavoriteServiceController {
    * @param list
    */
   containsObject = (obj, list) => {
-    let i;
-    for (i = 0; i < list.length; i++) {
-      if (list[i] === obj) {
+    for (let i = 0; i < list.length; i++) {
+      if (JSON.stringify(list[i]) === JSON.stringify(obj)) {
         return true;
       }
     }

@@ -1,6 +1,9 @@
-import { Component, Element, State, Prop, h } from '@stencil/core';
+import { Component, Element, h, Prop, State } from '@stencil/core';
 import { alertController } from "@ionic/core";
 import { AjaxService } from "../../services/ajax-service";
+import { ModeService } from "../../services/mode-service";
+import { TimezoneService } from "../../services/timezone-service";
+import { LanguageService } from "../../services/language-service";
 import { FavoriteService } from "../../services/favorite-service";
 
 @Component({
@@ -11,19 +14,26 @@ export class AppHome {
 
   @Element() element: HTMLElement;
 
-  @State() settings: Settings;
-  @State() favorites: Favorite[];
+  @State() settings: Settings = {};
+  @State() modes: Mode[] = [];
+  @State() timezones: Timezone[] = [];
+  @State() languages: Language[] = [];
+  @State() favorites: Favorite[] = [];
 
   @Prop() isDisabled: boolean = true;
 
   async componentWillLoad() {
-      this.favorites = [];
-      this.favorites = [...await FavoriteService.get()];
-      this.settings = {...await AjaxService.getSettings()};
+    let settingsData = await AjaxService.getSettings();
+    this.settings = {...settingsData.result};
+    this.modes = [...await ModeService.get()];
+    this.timezones = [...await TimezoneService.get()];
+    this.languages = [...await LanguageService.get()];
+    this.favorites = [...await FavoriteService.get()];
 
-      if (this.settings.time) {
-        this.isDisabled = false;
-      }
+    if (settingsData.success) {
+      this.isDisabled = false;
+    }
+    this.isDisabled = false;
   }
 
   async addFavorite(foregroundColor: Color, backgroundColor: Color, brightness: number) {
@@ -86,6 +96,30 @@ export class AppHome {
     await AjaxService.setSettings(field, this.settings[field]);
   }
 
+  renderModes() {
+    return this.modes.map(mode => {
+      return (
+        <ion-select-option value={mode.value}>{mode.label}</ion-select-option>
+      )
+    });
+  }
+
+  renderTimezones() {
+    return this.timezones.map(timezone => {
+      return (
+        <ion-select-option value={timezone.value}>{timezone.label}</ion-select-option>
+      )
+    });
+  }
+
+  renderLanguages() {
+    return this.languages.map(language => {
+      return (
+        <ion-select-option value={language.value}>{language.label}</ion-select-option>
+      )
+    });
+  }
+
   renderFavorites() {
     return this.favorites.map((favorite: Favorite) => {
       let options = null;
@@ -140,15 +174,85 @@ export class AppHome {
         </ion-toolbar>
       </ion-header>,
 
-      <ion-content class="ion-padding">
+      <ion-content>
         <ion-list>
+
           <ion-item-group>
-            <ion-item-divider>
+            <ion-item-divider color="light" sticky={true}>
+              <ion-label>Colors</ion-label>
+            </ion-item-divider>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Foreground</ion-label>
+              <ion-input type="text" value="333" />
+            </ion-item>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Background</ion-label>
+              <ion-input type="text" value="333" />
+            </ion-item>
+            <ion-item disabled={this.isDisabled}>
+              <ion-range min={1} max={100} value={this.settings.brightness} debounce={500} onIonChange={ev => this.updateSettings('brightness', ev.detail.value)}>
+                <ion-icon slot="start" size="small" name="sunny"/>
+                <ion-icon slot="end" name="sunny"/>
+              </ion-range>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item-divider color="light" sticky={true}>
+              <ion-label>Modes</ion-label>
+            </ion-item-divider>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Mode</ion-label>
+              <ion-select value={this.settings.clockMode} onIonChange={ev => this.updateSettings('clockMode', ev.detail.value)}>
+                {this.renderModes()}
+              </ion-select>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item-divider color="light" sticky={true}>
+              <ion-label>Settings</ion-label>
+            </ion-item-divider>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Sleep time</ion-label>
+              <ion-datetime displayFormat="HH:mm" value={`${this.settings.sleepHour}:${this.settings.sleepMinute}`} onIonChange={ev => this.updateSettings('sleepTime', ev.detail.value)}/>
+            </ion-item>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Wakeup time</ion-label>
+              <ion-datetime displayFormat="HH:mm" value={`${this.settings.wakeupHour}:${this.settings.wakeupMinute}`} onIonChange={ev => this.updateSettings('wakeupTime', ev.detail.value)}/>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Timezone</ion-label>
+              <ion-select value={this.settings.timeZone} onIonChange={ev => this.updateSettings('timeZone', ev.detail.value)}>
+                {this.renderTimezones()}
+              </ion-select>
+            </ion-item>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Daylight savings time</ion-label>
+              <ion-toggle checked={this.settings.daylightSavingsTime} onIonChange={ev => this.updateSettings('daylightSavingsTime', ev.detail.checked)}/>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item disabled={this.isDisabled}>
+              <ion-label>Language</ion-label>
+              <ion-select value={this.settings.language} onIonChange={ev => this.updateSettings('language', ev.detail.value)}>
+                {this.renderLanguages()}
+              </ion-select>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item-divider color="light" sticky={true}>
               <ion-label>Favorites</ion-label>
               {this.renderFavoriteButton()}
             </ion-item-divider>
             {this.renderFavorites()}
           </ion-item-group>
+
         </ion-list>
       </ion-content>
     ];

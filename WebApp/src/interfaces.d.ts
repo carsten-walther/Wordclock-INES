@@ -1,4 +1,28 @@
 /**
+ * interface Mode
+ */
+interface Mode {
+  label: string,
+  value: number
+}
+
+/**
+ * interface Timezone
+ */
+interface Timezone {
+  label: string,
+  value: number
+}
+
+/**
+ * interface Language
+ */
+interface Language {
+  label: string,
+  value: number
+}
+
+/**
  * interface Favorite
  */
 interface Favorite {

@@ -1,29 +1,32 @@
-[{
-  "title": "Black & White",
-  "foregroundColor": {
-    "red": 255,
-    "green": 255,
-    "blue": 255
+[
+  {
+    "title": "Black & White",
+    "foregroundColor": {
+      "red": 255,
+      "green": 255,
+      "blue": 255
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 0,
+      "blue": 0
+    },
+    "brightness": 75,
+    "locked": true
   },
-  "backgroundColor": {
-    "red": 0,
-    "green": 0,
-    "blue": 0
-  },
-  "brightness": 75,
-  "locked": true
-}, {
-  "title": "Red & Blue",
-  "foregroundColor": {
-    "red": 255,
-    "green": 0,
-    "blue": 0
-  },
-  "backgroundColor": {
-    "red": 0,
-    "green": 0,
-    "blue": 255
-  },
-  "brightness": 50,
-  "locked": true
-}]
+  {
+    "title": "Red & Blue",
+    "foregroundColor": {
+      "red": 255,
+      "green": 0,
+      "blue": 0
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 0,
+      "blue": 255
+    },
+    "brightness": 50,
+    "locked": true
+  }
+]

@@ -1,15 +1,18 @@
-{
-  [{
-    "title": "Hochdeutsch",
+[
+  {
+    "label": "Hochdeutsch",
     "value": 0
-  }, {
-    "title": "Schwäbisch",
+  },
+  {
+    "label": "Schwäbisch",
     "value": 1
-  }, {
-    "title": "Bayrisch",
+  },
+  {
+    "label": "Bayrisch",
     "value": 2
-  }, {
-    "title": "Sächsisch",
+  },
+  {
+    "label": "Sächsisch",
     "value": 3
-  }]
-}
+  }
+]
