@@ -1,0 +1,15 @@
+{
+  [{
+    "title": "Hochdeutsch",
+    "value": 0
+  }, {
+    "title": "Schwäbisch",
+    "value": 1
+  }, {
+    "title": "Bayrisch",
+    "value": 2
+  }, {
+    "title": "Sächsisch",
+    "value": 3
+  }]
+}
