@@ -1,0 +1,17 @@
+.color-display {
+  position: relative;
+  width: 100%;
+
+  &:after {
+    content: "";
+    display: block;
+    padding-bottom: 50%;
+  }
+
+  .apply-button {
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

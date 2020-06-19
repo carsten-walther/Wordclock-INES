@@ -1,5 +1,5 @@
 import { Component, Element, h, Prop, State } from '@stencil/core';
-import { alertController } from "@ionic/core";
+import { alertController, modalController } from "@ionic/core";
 import { AjaxService } from "../../services/ajax-service";
 import { ModeService } from "../../services/mode-service";
 import { TimezoneService } from "../../services/timezone-service";
@@ -45,10 +45,10 @@ export class AppHome {
         placeholder: 'My favorite'
       }],
       buttons: [{
-        text: 'Cancel',
+        text: 'Nope',
         role: 'cancel'
       }, {
-        text: 'Ok',
+        text: 'Yay',
         handler: async data => {
           await FavoriteService.add({
             title: data.title,
@@ -83,9 +83,9 @@ export class AppHome {
     this.updateSettings('brightness', this.settings.brightness);
   }
 
-  checkFavorite(favorite: Favorite) {
+  isFavorite(favorite: Favorite) {
     if (this.settings.foregroundColor == favorite.foregroundColor && this.settings.backgroundColor == favorite.backgroundColor && this.settings.brightness == favorite.brightness) {
-      return <ion-icon name="checkmark" slot="end"/>;
+      return true
     } else {
       return null;
     }
@@ -94,6 +94,12 @@ export class AppHome {
   async updateSettings(field: string, value: any) {
     this.settings = {...this.settings, [field]: value};
     await AjaxService.setSettings(field, this.settings[field]);
+  }
+
+  calcTime(hour: number, minute: number) {
+    let hourString = hour < 10 ? '0' + hour : hour;
+    let minuteString = minute < 10 ? '0' + minute : minute;
+    return `${hourString}:${minuteString}`;
   }
 
   renderModes() {
@@ -143,10 +149,8 @@ export class AppHome {
         <ion-item-sliding>
           <ion-item onClick={() => this.setFavorite(favorite)} disabled={this.isDisabled}>
             <div slot="start" class="color-avatar" style={{backgroundImage: `linear-gradient(to bottom right, rgb(${favorite.foregroundColor.red}, ${favorite.foregroundColor.green}, ${favorite.foregroundColor.blue}), rgb(${favorite.backgroundColor.red}, ${favorite.backgroundColor.green}, ${favorite.backgroundColor.blue}))`}}>&nbsp;</div>
-            <ion-label>
-              {favorite.title}
-            </ion-label>
-            {this.checkFavorite(favorite)}
+            <ion-label>{favorite.title}</ion-label>
+            {this.isFavorite(favorite) && <ion-icon name="checkmark" slot="end"/>}
             {locked}
           </ion-item>
           {options}
@@ -155,51 +159,69 @@ export class AppHome {
     });
   }
 
-  renderFavoriteButton() {
-    if (!this.isDisabled) {
-      return (
-        <ion-chip slot="end" onClick={() => this.addFavorite(this.settings.foregroundColor, this.settings.backgroundColor, this.settings.brightness)}>
-          <ion-label>Favorite</ion-label>
-          <ion-icon name="heart" color="danger"/>
-        </ion-chip>
-      );
-    }
+  async presentColorPicker(what: string, color: Color, title: string) {
+    const modal = await modalController.create({
+      component: 'app-color-picker',
+      swipeToClose: true,
+      presentingElement: this.element.closest('ion-router-outlet'),
+      componentProps: {
+        title: title,
+        color: color
+      }
+    });
+
+    await modal.present();
+
+    let data = await modal.onWillDismiss();
+    this.settings[what] = data.data;
+    await this.updateSettings(what, this.settings[what]);
   }
 
   render() {
     return [
-      <ion-header translucent={true}>
+      <ion-header>
         <ion-toolbar>
           <ion-title>Wordclock</ion-title>
         </ion-toolbar>
       </ion-header>,
 
-      <ion-content>
-        <ion-list>
+      <ion-content fullscreen={true}>
+        <ion-header collapse="condense">
+          <ion-toolbar>
+            <ion-title size="large">Wordclock</ion-title>
+          </ion-toolbar>
+        </ion-header>
 
+        <ion-list>
           <ion-item-group>
             <ion-item-divider color="light" sticky={true}>
-              <ion-label>Colors</ion-label>
+              <h3 class="ion-padding-top">Colors</h3>
             </ion-item-divider>
-            <ion-item disabled={this.isDisabled}>
+            <ion-item disabled={this.isDisabled} onClick={() => this.presentColorPicker('foregroundColor', this.settings.foregroundColor, 'Foreground color')}>
+              <ion-icon slot="start" class="color-avatar" name="radio-button-on" style={{color: `rgb(${this.settings.foregroundColor.red}, ${this.settings.foregroundColor.green}, ${this.settings.foregroundColor.blue})`, backgroundColor: `rgb(${this.settings.foregroundColor.red}, ${this.settings.foregroundColor.green}, ${this.settings.foregroundColor.blue})`, borderRadius: '50%'}}/>
               <ion-label>Foreground</ion-label>
-              <ion-input type="text" value="333" />
+              <ion-icon slot="end" name="options"/>
             </ion-item>
-            <ion-item disabled={this.isDisabled}>
+            <ion-item disabled={this.isDisabled} onClick={() => this.presentColorPicker('backgroundColor', this.settings.backgroundColor, 'Background color')}>
+              <ion-icon slot="start" class="color-avatar" name="radio-button-on" style={{color: `rgb(${this.settings.backgroundColor.red}, ${this.settings.backgroundColor.green}, ${this.settings.backgroundColor.blue})`, backgroundColor: `rgb(${this.settings.backgroundColor.red}, ${this.settings.backgroundColor.green}, ${this.settings.backgroundColor.blue})`, borderRadius: '50%'}}/>
               <ion-label>Background</ion-label>
-              <ion-input type="text" value="333" />
+              <ion-icon slot="end" name="options"/>
             </ion-item>
             <ion-item disabled={this.isDisabled}>
-              <ion-range min={1} max={100} value={this.settings.brightness} debounce={500} onIonChange={ev => this.updateSettings('brightness', ev.detail.value)}>
+              <ion-range min={1} max={100} pin value={this.settings.brightness} debounce={500} onIonChange={ev => this.updateSettings('brightness', ev.detail.value)}>
                 <ion-icon slot="start" size="small" name="sunny"/>
                 <ion-icon slot="end" name="sunny"/>
               </ion-range>
+            </ion-item>
+            <ion-item disabled={this.isDisabled} onClick={() => this.addFavorite(this.settings.foregroundColor, this.settings.backgroundColor, this.settings.brightness)}>
+              <ion-label>Add to favorites</ion-label>
+              <ion-icon slot="end" name="heart-outline"/>
             </ion-item>
           </ion-item-group>
 
           <ion-item-group>
             <ion-item-divider color="light" sticky={true}>
-              <ion-label>Modes</ion-label>
+              <h3 class="ion-padding-top">Modes</h3>
             </ion-item-divider>
             <ion-item disabled={this.isDisabled}>
               <ion-label>Mode</ion-label>
@@ -211,15 +233,15 @@ export class AppHome {
 
           <ion-item-group>
             <ion-item-divider color="light" sticky={true}>
-              <ion-label>Settings</ion-label>
+              <h3 class="ion-padding-top">Settings</h3>
             </ion-item-divider>
             <ion-item disabled={this.isDisabled}>
               <ion-label>Sleep time</ion-label>
-              <ion-datetime displayFormat="HH:mm" value={`${this.settings.sleepHour}:${this.settings.sleepMinute}`} onIonChange={ev => this.updateSettings('sleepTime', ev.detail.value)}/>
+              <ion-datetime displayFormat="HH:mm" value={this.calcTime(this.settings.sleepHour, this.settings.sleepMinute)} onIonChange={ev => this.updateSettings('sleepTime', ev.detail.value)}/>
             </ion-item>
             <ion-item disabled={this.isDisabled}>
               <ion-label>Wakeup time</ion-label>
-              <ion-datetime displayFormat="HH:mm" value={`${this.settings.wakeupHour}:${this.settings.wakeupMinute}`} onIonChange={ev => this.updateSettings('wakeupTime', ev.detail.value)}/>
+              <ion-datetime displayFormat="HH:mm" value={this.calcTime(this.settings.wakeupHour, this.settings.wakeupMinute)} onIonChange={ev => this.updateSettings('wakeupTime', ev.detail.value)}/>
             </ion-item>
           </ion-item-group>
 
@@ -247,8 +269,7 @@ export class AppHome {
 
           <ion-item-group>
             <ion-item-divider color="light" sticky={true}>
-              <ion-label>Favorites</ion-label>
-              {this.renderFavoriteButton()}
+              <h3 class="ion-padding-top">Favorites</h3>
             </ion-item-divider>
             {this.renderFavorites()}
           </ion-item-group>

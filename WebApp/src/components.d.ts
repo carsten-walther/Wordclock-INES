@@ -6,6 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AppColorPicker {
+        "color": Color;
+        "title": string;
+    }
     interface AppHome {
         "isDisabled": boolean;
     }
@@ -13,6 +17,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAppColorPickerElement extends Components.AppColorPicker, HTMLStencilElement {
+    }
+    var HTMLAppColorPickerElement: {
+        prototype: HTMLAppColorPickerElement;
+        new (): HTMLAppColorPickerElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
@@ -26,17 +36,23 @@ declare global {
         new (): HTMLAppRootElement;
     };
     interface HTMLElementTagNameMap {
+        "app-color-picker": HTMLAppColorPickerElement;
         "app-home": HTMLAppHomeElement;
         "app-root": HTMLAppRootElement;
     }
 }
 declare namespace LocalJSX {
+    interface AppColorPicker {
+        "color"?: Color;
+        "title"?: string;
+    }
     interface AppHome {
         "isDisabled"?: boolean;
     }
     interface AppRoot {
     }
     interface IntrinsicElements {
+        "app-color-picker": AppColorPicker;
         "app-home": AppHome;
         "app-root": AppRoot;
     }
@@ -45,6 +61,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "app-color-picker": LocalJSX.AppColorPicker & JSXBase.HTMLAttributes<HTMLAppColorPickerElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
         }
