@@ -177,6 +177,16 @@ export class AppHome {
     await this.updateSettings(what, this.settings[what]);
   }
 
+  async presentAbout() {
+    const modal = await modalController.create({
+      component: 'app-about',
+      swipeToClose: true,
+      presentingElement: this.element.closest('ion-router-outlet')
+    });
+
+    await modal.present();
+  }
+
   render() {
     return [
       <ion-header>
@@ -208,15 +218,23 @@ export class AppHome {
               <ion-icon slot="end" name="options"/>
             </ion-item>
             <ion-item disabled={this.isDisabled}>
-              <ion-range min={1} max={100} pin value={this.settings.brightness} debounce={500} onIonChange={ev => this.updateSettings('brightness', ev.detail.value)}>
+              <ion-icon slot="start" name="contrast-outline"/>
+              <ion-range min={1} max={100} value={this.settings.brightness} debounce={500} onIonChange={ev => this.updateSettings('brightness', ev.detail.value)}>
                 <ion-icon slot="start" size="small" name="sunny"/>
                 <ion-icon slot="end" name="sunny"/>
               </ion-range>
             </ion-item>
             <ion-item disabled={this.isDisabled} onClick={() => this.addFavorite(this.settings.foregroundColor, this.settings.backgroundColor, this.settings.brightness)}>
+              <ion-icon slot="start" name="heart-outline"/>
               <ion-label>Add to favorites</ion-label>
-              <ion-icon slot="end" name="heart-outline"/>
             </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item-divider color="light" sticky={true}>
+              <h3 class="ion-padding-top">Favorites</h3>
+            </ion-item-divider>
+            {this.renderFavorites()}
           </ion-item-group>
 
           <ion-item-group>
@@ -224,6 +242,7 @@ export class AppHome {
               <h3 class="ion-padding-top">Modes</h3>
             </ion-item-divider>
             <ion-item disabled={this.isDisabled}>
+              <ion-icon slot="start" name="chatbubble-ellipses-outline"/>
               <ion-label>Mode</ion-label>
               <ion-select value={this.settings.clockMode} onIonChange={ev => this.updateSettings('clockMode', ev.detail.value)}>
                 {this.renderModes()}
@@ -236,10 +255,12 @@ export class AppHome {
               <h3 class="ion-padding-top">Settings</h3>
             </ion-item-divider>
             <ion-item disabled={this.isDisabled}>
+              <ion-icon slot="start" name="alarm-outline"/>
               <ion-label>Sleep time</ion-label>
               <ion-datetime displayFormat="HH:mm" value={this.calcTime(this.settings.sleepHour, this.settings.sleepMinute)} onIonChange={ev => this.updateSettings('sleepTime', ev.detail.value)}/>
             </ion-item>
             <ion-item disabled={this.isDisabled}>
+              <ion-icon slot="start" name="alarm-outline"/>
               <ion-label>Wakeup time</ion-label>
               <ion-datetime displayFormat="HH:mm" value={this.calcTime(this.settings.wakeupHour, this.settings.wakeupMinute)} onIonChange={ev => this.updateSettings('wakeupTime', ev.detail.value)}/>
             </ion-item>
@@ -247,12 +268,14 @@ export class AppHome {
 
           <ion-item-group>
             <ion-item disabled={this.isDisabled}>
+              <ion-icon slot="start" name="timer-outline"/>
               <ion-label>Timezone</ion-label>
               <ion-select value={this.settings.timeZone} onIonChange={ev => this.updateSettings('timeZone', ev.detail.value)}>
                 {this.renderTimezones()}
               </ion-select>
             </ion-item>
             <ion-item disabled={this.isDisabled}>
+              <ion-icon slot="start" name="flashlight-outline"/>
               <ion-label>Daylight savings time</ion-label>
               <ion-toggle checked={this.settings.daylightSavingsTime} onIonChange={ev => this.updateSettings('daylightSavingsTime', ev.detail.checked)}/>
             </ion-item>
@@ -260,6 +283,7 @@ export class AppHome {
 
           <ion-item-group>
             <ion-item disabled={this.isDisabled}>
+              <ion-icon slot="start" name="language-outline"/>
               <ion-label>Language</ion-label>
               <ion-select value={this.settings.language} onIonChange={ev => this.updateSettings('language', ev.detail.value)}>
                 {this.renderLanguages()}
@@ -268,10 +292,19 @@ export class AppHome {
           </ion-item-group>
 
           <ion-item-group>
-            <ion-item-divider color="light" sticky={true}>
-              <h3 class="ion-padding-top">Favorites</h3>
+            <ion-item-divider color="light">
+              &nbsp;
             </ion-item-divider>
-            {this.renderFavorites()}
+            <ion-item onClick={() => this.presentAbout()}>
+              <ion-icon slot="start" name="information-circle-outline"/>
+              <ion-label>About</ion-label>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group>
+            <ion-item-divider color="light">
+              &nbsp;
+            </ion-item-divider>
           </ion-item-group>
 
         </ion-list>
