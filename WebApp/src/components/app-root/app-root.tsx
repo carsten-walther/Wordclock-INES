@@ -12,7 +12,7 @@ export class AppRoot {
         <ion-router useHash={false}>
           <ion-route url="/" component="app-home" />
         </ion-router>
-        <ion-nav />
+        <ion-router-outlet animated={true}/>
       </ion-app>
     );
   }
