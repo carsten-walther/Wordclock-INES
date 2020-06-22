@@ -9,6 +9,7 @@
 
 // global libs
 #include <Adafruit_NeoPixel.h>
+#include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h>
@@ -73,25 +74,12 @@ ParametersType defaults = {
 // Settings
 Settings settings(defaults);
 
-// color RGB
-typedef struct {
-    // Red, Green, Blue color members (0-255) where
-    // (0,0,0) is black and (255,255,255) is white
-    uint8_t R;
-    uint8_t G;
-    uint8_t B;
-} RGB;
-
 // clockMode
 int clockMode = CLOCKMODE_NORMAL;
 int clockModeOverride = -1;
 
-// general timer
-unsigned long previousMillis_HTTP_ticker = 0;
-unsigned long previousMillis_clockMode_ticker = 0;
-unsigned long previousMillis_debugging_ticker = 0;
 // face timer
-unsigned long previousMillis_face = 0;
+unsigned long previousMillis = 0;
 
 // =============================================================================
 
@@ -182,11 +170,6 @@ void setup()
         }
     }
 
-    #ifdef DEBUG
-    Serial.println("EEPROM:");
-    Serial.println(generateSettingsData());
-    #endif
-
     // start the ntp time client
     NTP.begin();
 
@@ -202,13 +185,37 @@ void setup()
 
 void loop()
 {
-    clockMode_ticker();
+    // update the ntp time client
+    NTP.update();
 
-    HTTP_ticker();
+    // update MDNS service
+    MDNS.update();
 
-    #ifdef DEBUG
-    debugging_ticker();
-    #endif
+    // handle HTTP client
+    HTTP.handleClient();
+
+    // Set default clockMode
+    clockMode = CLOCKMODE_NORMAL;
+
+    // if time >= sleepTime or time <= wakeupTime
+    if ((NTP.getHours() == settings.parameters->sleepHour && NTP.getMinutes() >= settings.parameters->sleepMinute) || (NTP.getHours() == settings.parameters->wakeupHour && NTP.getMinutes() < settings.parameters->wakeupMinute)) {
+        clockMode = CLOCKMODE_NIGHT;
+    }
+
+    // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
+    if (settings.parameters->sleepHour < settings.parameters->wakeupHour && NTP.getHours() >= settings.parameters->sleepHour && NTP.getHours() <= settings.parameters->wakeupHour) {
+        clockMode = CLOCKMODE_NIGHT;
+    }
+
+    // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
+    if (settings.parameters->sleepHour > settings.parameters->wakeupHour && (NTP.getHours() >= settings.parameters->sleepHour || NTP.getHours() <= settings.parameters->wakeupHour)) {
+        clockMode = CLOCKMODE_NIGHT;
+    }
+
+    // override clockMode
+    if (clockModeOverride > -1) {
+        clockMode = clockModeOverride;
+    }
 
     // update face
     switch (clockMode) {
@@ -233,89 +240,13 @@ void loop()
 
 // =============================================================================
 
-void clockMode_ticker()
-{
-    unsigned int speedDelay = 125;
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - previousMillis_clockMode_ticker >= speedDelay) {
-
-        previousMillis_clockMode_ticker = currentMillis;
-
-        clockMode = CLOCKMODE_NORMAL;
-
-        // if time >= sleepTime or time <= wakeupTime
-        if ((NTP.getHours() == settings.parameters->sleepHour && NTP.getMinutes() >= settings.parameters->sleepMinute) || (NTP.getHours() == settings.parameters->wakeupHour && NTP.getMinutes() < settings.parameters->wakeupMinute)) {
-            clockMode = CLOCKMODE_NIGHT;
-        }
-
-        // if sleepTime < wakeupTime and hour > sleepHour and hour < wakeupHour
-        if (settings.parameters->sleepHour < settings.parameters->wakeupHour && NTP.getHours() >= settings.parameters->sleepHour && NTP.getHours() <= settings.parameters->wakeupHour) {
-            clockMode = CLOCKMODE_NIGHT;
-        }
-
-        // if sleepTime > wakeupTime and hour > sleepHour or hour < wakeupHour
-        if (settings.parameters->sleepHour > settings.parameters->wakeupHour && (NTP.getHours() >= settings.parameters->sleepHour || NTP.getHours() <= settings.parameters->wakeupHour)) {
-            clockMode = CLOCKMODE_NIGHT;
-        }
-
-        // override clockMode
-        if (clockModeOverride > -1) {
-            clockMode = clockModeOverride;
-        }
-    }
-}
-
-void HTTP_ticker()
-{
-    unsigned int speedDelay = 50;
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - previousMillis_HTTP_ticker >= speedDelay) {
-
-        previousMillis_HTTP_ticker = currentMillis;
-
-        // update the ntp time client
-        NTP.update();
-
-        // update MDNS service
-        MDNS.update();
-
-        // handle HTTP client
-        HTTP.handleClient();
-    }
-}
-
-void debugging_ticker()
-{
-    unsigned int speedDelay = 1000;
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - previousMillis_debugging_ticker >= speedDelay) {
-
-        previousMillis_debugging_ticker = currentMillis;
-
-        Serial.printf("\n");
-        Serial.printf("mode:\t\t\t%i\n", clockMode);
-        Serial.printf("time:\t\t\t%i:%i\n", NTP.getHours(), NTP.getMinutes());
-        Serial.printf("brightness:\t\t%i\n", settings.parameters->brightness);
-        Serial.printf("timeZone:\t\t%i: %f\n", settings.parameters->timeZone, TIMEZONES[settings.parameters->timeZone]);
-        Serial.printf("daylightSavingsTime:\t%i\n", settings.parameters->daylightSavingsTime);
-        Serial.printf("foreground color:\t%i, %i, %i\n", settings.parameters->foregroundColorRed, settings.parameters->foregroundColorGreen, settings.parameters->foregroundColorBlue);
-        Serial.printf("background color:\t%i, %i, %i\n", settings.parameters->backgroundColorRed, settings.parameters->backgroundColorGreen, settings.parameters->backgroundColorBlue);
-    }
-}
-
-// =============================================================================
-
 void faceScanner()
 {
     unsigned int speedDelay = 125;
-    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_face >= speedDelay) {
+    if (millis() - previousMillis >= speedDelay) {
 
-        previousMillis_face = currentMillis;
+        previousMillis = millis();
 
         // set brightness
         ledStrip.setBrightness(settings.parameters->brightness);
@@ -353,11 +284,10 @@ void faceScanner()
 void faceTest()
 {
     unsigned int speedDelay = 125;
-    unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis_face >= speedDelay) {
+    if (millis() - previousMillis >= speedDelay) {
 
-        previousMillis_face = currentMillis;
+        previousMillis = millis();
 
         // set brightness
         ledStrip.setBrightness(settings.parameters->brightness);
@@ -378,12 +308,9 @@ void faceTest()
 
 void faceNormal(uint16_t hours, uint16_t minutes)
 {
-    unsigned int speedDelay = 1000;
-    unsigned long currentMillis = millis();
+    if (millis() - previousMillis >= 1000) {
 
-    if (currentMillis - previousMillis_face >= speedDelay) {
-
-        previousMillis_face = currentMillis;
+        previousMillis = millis();
 
         while (hours < 0) {
             hours += 12;
@@ -587,12 +514,9 @@ void faceNormal(uint16_t hours, uint16_t minutes)
 
 void faceNight()
 {
-    unsigned int speedDelay = 1000;
-    unsigned long currentMillis = millis();
+    if (millis() - previousMillis >= 1000) {
 
-    if (currentMillis - previousMillis_face >= speedDelay) {
-
-        previousMillis_face = currentMillis;
+        previousMillis = millis();
 
         ledStrip.setBrightness(0);
         ledStrip.clear();
@@ -601,28 +525,6 @@ void faceNight()
 }
 
 // =============================================================================
-
-RGB getRGBFromHex(String hex)
-{
-    hex.toUpperCase();
-    char c[7];
-    hex.toCharArray(c, 8);
-    return {
-        hexToInt(c[1], c[2]),
-        hexToInt(c[3], c[4]),
-        hexToInt(c[5], c[6])
-    };
-}
-
-uint8_t hexToInt(char upper, char lower)
-{
-    uint8_t uVal = (uint8_t)upper;
-    uint8_t lVal = (uint8_t)lower;
-    uVal = uVal > 64 ? uVal - 55 : uVal - 48;
-    uVal = uVal << 4;
-    lVal = lVal > 64 ? lVal - 55 : lVal - 48;
-    return uVal + lVal;
-}
 
 String split(String data, char separator, int index)
 {
@@ -662,7 +564,21 @@ void handleNotFound()
 {
     // check if the file exists in the flash memory (SPIFFS), if so, send it
     if (!handleFileRead(HTTP.uri())) {
-        HTTP.send(404, "text/plain", "Error 404: File Not Found");
+
+        String message = "Error 404: File Not Found\n\n";
+    	message += "\nURI: ";
+    	message += HTTP.uri();
+    	message += "\nMethod: ";
+    	message += (HTTP.method() == HTTP_GET) ? "GET" : "POST";
+    	message += "\nArguments: ";
+    	message += HTTP.args();
+    	message += "\n";
+
+    	for (uint8_t i = 0; i < HTTP.args(); i++) {
+    		message += "    " + HTTP.argName(i) + ": " + HTTP.arg(i) + "\n";
+    	}
+
+        HTTP.send(404, "text/plain", message);
     }
 }
 
@@ -702,78 +618,74 @@ bool handleFileRead(String path)
 
 void handleSettingsJson()
 {
-    String result = "";
+    HTTP.sendHeader("Access-Control-Allow-Origin", "*");
+    HTTP.sendHeader("Access-Control-Max-Age", "10000");
+    HTTP.sendHeader("Access-Control-Allow-Methods", "PUT,POST,GET,OPTIONS");
+    HTTP.sendHeader("Access-Control-Allow-Headers", "*");
 
-    result = result + "{";
-    result = result + "\"success\": true,";
-    result = result + "\"result\": {";
-    result = result + generateSettingsData();
-    result = result + "}";
-    result = result + "}";
-
-    HTTP.send(200, "application/json", result);
+    HTTP.send(200, "application/json", settingsWithSuccess(true));
 }
 
 void handleUpdateJson()
 {
-    String result = "";
+    bool success = false;
 
-    bool success = true;
+    // Read JSON from plain
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, HTTP.arg("plain"));
+    JsonObject obj = doc.as<JsonObject>();
 
-    if (
-        !HTTP.hasArg("foregroundColor") ||
-        !HTTP.hasArg("backgroundColor") ||
-        !HTTP.hasArg("brightness") ||
-        !HTTP.hasArg("timeZone") ||
-        !HTTP.hasArg("daylightSavingsTime") ||
-        !HTTP.hasArg("sleepTime") ||
-        !HTTP.hasArg("wakeupTime") ||
-        !HTTP.hasArg("language")
-    ) {
-        success = false;
-    } else {
+    if (obj["foregroundColor"]) {
+        success = true;
+        settings.parameters->foregroundColorRed = obj["foregroundColor"]["red"];
+        settings.parameters->foregroundColorGreen = obj["foregroundColor"]["green"];
+        settings.parameters->foregroundColorBlue = obj["foregroundColor"]["blue"];
+    }
 
-        RGB color;
+    if (obj["backgroundColor"]) {
+        success = true;
+        settings.parameters->backgroundColorRed = obj["backgroundColor"]["red"];
+        settings.parameters->backgroundColorGreen = obj["backgroundColor"]["green"];
+        settings.parameters->backgroundColorBlue = obj["backgroundColor"]["blue"];
+    }
 
-        // foregroundColor
-        color = getRGBFromHex(HTTP.arg("foregroundColor"));
-        settings.parameters->foregroundColorRed = color.R;
-        settings.parameters->foregroundColorGreen = color.G;
-        settings.parameters->foregroundColorBlue = color.B;
+    if (obj["brightness"]) {
+        success = true;
+        settings.parameters->brightness = map(obj["brightness"], 0, 100, 0, 255);
+    }
 
-        // backgroundColor
-        color = getRGBFromHex(HTTP.arg("backgroundColor"));
-        settings.parameters->backgroundColorRed = color.R;
-        settings.parameters->backgroundColorGreen = color.G;
-        settings.parameters->backgroundColorBlue = color.B;
+    if (obj["timeZone"]) {
+        success = true;
+        settings.parameters->timeZone = obj["timeZone"];
+    }
 
-        // brightness
-        settings.parameters->brightness = map(HTTP.arg("brightness").toInt(), 0, 100, 0, 255);
+    if (obj["daylightSavingsTime"]) {
+        success = true;
+        settings.parameters->daylightSavingsTime = obj["daylightSavingsTime"];
+    }
 
-        // timeZone
-        settings.parameters->timeZone = HTTP.arg("timeZone").toInt();
-
-        // daylightSavingsTime
-        if (HTTP.arg("daylightSavingsTime") == String("true"))
-            settings.parameters->daylightSavingsTime = true;
-        else
-            settings.parameters->daylightSavingsTime = false;
-
+    if (obj["sleepTime"]) {
+        success = true;
         // sleepTime (sleepHour, sleepMinute)
-        settings.parameters->sleepHour = split(HTTP.arg("sleepTime"), ':', 0).toInt();
-        settings.parameters->sleepMinute = split(HTTP.arg("sleepTime"), ':', 1).toInt();
+        settings.parameters->sleepHour = split(obj["sleepTime"], ':', 0).toInt();
+        settings.parameters->sleepMinute = split(obj["sleepTime"], ':', 1).toInt();
+    }
 
+    if (obj["wakeupTime"]) {
+        success = true;
         // wakeupTime (wakeupHour, wakeupMinute)
-        settings.parameters->wakeupHour = split(HTTP.arg("wakeupTime"), ':', 0).toInt();
-        settings.parameters->wakeupMinute = split(HTTP.arg("wakeupTime"), ':', 1).toInt();
+        settings.parameters->wakeupHour = split(obj["wakeupTime"], ':', 0).toInt();
+        settings.parameters->wakeupMinute = split(obj["wakeupTime"], ':', 1).toInt();
+    }
 
-        // language
-        settings.parameters->language = HTTP.arg("language").toInt();
+    if (obj["language"]) {
+        success = true;
+        settings.parameters->language = obj["language"];
+    }
 
-        // clockModeOverride
-        if (HTTP.hasArg("clockMode")) {
-            clockModeOverride = HTTP.arg("clockMode").toInt();
-        }
+    if (obj["clockMode"]) {
+        success = true;
+        clockModeOverride = obj["clockMode"];
     }
 
     // save settings
@@ -782,14 +694,12 @@ void handleUpdateJson()
     // process time offsets
     processTimeOffset();
 
-    result = result + "{";
-    result = result + "\"success\": " + (success ? "true" : "false") + ",";
-    result = result + "\"result\": {";
-    result = result + generateSettingsData();
-    result = result + "}";
-    result = result + "}";
+    HTTP.sendHeader("Access-Control-Allow-Origin", "*");
+    HTTP.sendHeader("Access-Control-Max-Age", "10000");
+    HTTP.sendHeader("Access-Control-Allow-Methods", "PUT,POST,GET,OPTIONS");
+    HTTP.sendHeader("Access-Control-Allow-Headers", "*");
 
-    HTTP.send(200, "application/json", result);
+    HTTP.send(200, "application/json", settingsWithSuccess(success));
 }
 
 void handleSSDP()
@@ -797,26 +707,36 @@ void handleSSDP()
     SSDP.schema(HTTP.client());
 }
 
-String generateSettingsData()
+String settingsWithSuccess(bool success)
 {
-    String result = "";
+    DynamicJsonDocument res(1024);
 
-    result = result + "\"foregroundColor\": {\"red\": " + settings.parameters->foregroundColorRed + ", \"green\": " + settings.parameters->foregroundColorGreen + ", \"blue\": " + settings.parameters->foregroundColorBlue + "},";
-    result = result + "\"backgroundColor\": {\"red\": " + settings.parameters->backgroundColorRed + ", \"green\": " + settings.parameters->backgroundColorGreen + ", \"blue\": " + settings.parameters->backgroundColorBlue + "},";
-    result = result + "\"brightness\": " + map(settings.parameters->brightness, 0, 255, 0, 100) + ",";
-    result = result + "\"timeZone\": " + settings.parameters->timeZone + ",";
-    result = result + "\"daylightSavingsTime\": " + (settings.parameters->daylightSavingsTime ? "true" : "false") + ",";
-    result = result + "\"sleepHour\": " + settings.parameters->sleepHour + ",";
-    result = result + "\"sleepMinute\": " + settings.parameters->sleepMinute + ",";
-    result = result + "\"wakeupHour\": " + settings.parameters->wakeupHour + ",";
-    result = result + "\"wakeupMinute\": " + settings.parameters->wakeupMinute + ",";
-    result = result + "\"language\": " + settings.parameters->language + ",";
-    result = result + "\"clockMode\": " + clockMode + ",";
-    result = result + "\"version\": \"" + VERSION + "\",";
-    result = result + "\"eeprom\": \"" + SETTING_VERSION + "\",";
-    result = result + "\"time\": \"" + NTP.getFormattedTime() + "\"";
+    res["success"] = success;
 
-    return result;
+    res["result"]["foregroundColor"]["red"] = settings.parameters->foregroundColorRed;
+    res["result"]["foregroundColor"]["green"] = settings.parameters->foregroundColorGreen;
+    res["result"]["foregroundColor"]["blue"] = settings.parameters->foregroundColorBlue;
+
+    res["result"]["backgroundColor"]["red"] = settings.parameters->backgroundColorRed;
+    res["result"]["backgroundColor"]["green"] = settings.parameters->backgroundColorGreen;
+    res["result"]["backgroundColor"]["blue"] = settings.parameters->backgroundColorBlue;
+
+    res["result"]["brightness"] = map(settings.parameters->brightness, 0, 255, 0, 100);
+    res["result"]["timeZone"] = settings.parameters->timeZone;
+    res["result"]["daylightSavingsTime"] = settings.parameters->daylightSavingsTime;
+    res["result"]["sleepHour"] = settings.parameters->sleepHour;
+    res["result"]["sleepMinute"] = settings.parameters->sleepMinute;
+    res["result"]["wakeupHour"] = settings.parameters->wakeupHour;
+    res["result"]["wakeupMinute"] = settings.parameters->wakeupMinute;
+    res["result"]["language"] = settings.parameters->language;
+    res["result"]["clockMode"] = clockMode;
+    res["result"]["version"] = VERSION;
+    res["result"]["settings"] = SETTING_VERSION;
+    res["result"]["time"] = NTP.getFormattedTime();
+
+    String output;
+    serializeJson(res, output);
+    return output;
 }
 
 String getContentType(String filename)

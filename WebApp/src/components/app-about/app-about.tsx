@@ -41,7 +41,7 @@ export class AppAbout {
       <ion-content>
         <div class="about-header">
           <ion-img src="/assets/icon/icon-512x512.png" alt="infinity logo"/>
-          <h1>Infinity</h1>
+          <h1>Wordclock</h1>
           <h6><span style={{display: this.isDisabled ? 'none' : 'block'}}>Version {this.settings.version}</span></h6>
           <ion-icon name="arrow-down" color="light" class="scroll-down"/>
         </div>

@@ -8,7 +8,7 @@ export class AppColorPicker {
 
   @Element() element: HTMLElement;
 
-  @Prop() title: string;
+  @Prop() header: string;
   @Prop() color: Color;
 
   updateColor(field: string, value: any) {
@@ -30,7 +30,7 @@ export class AppColorPicker {
           <ion-buttons slot="start">
             <ion-button onClick={() => this.dismiss()}>Nope</ion-button>
           </ion-buttons>
-          <ion-title>{this.title}</ion-title>
+          <ion-title>{this.header}</ion-title>
           <ion-buttons slot="end">
             <ion-button onClick={() => this.apply()} strong={true}>Yay</ion-button>
           </ion-buttons>

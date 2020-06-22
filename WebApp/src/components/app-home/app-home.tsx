@@ -148,7 +148,7 @@ export class AppHome {
       return (
         <ion-item-sliding>
           <ion-item onClick={() => this.setFavorite(favorite)} disabled={this.isDisabled}>
-            <div slot="start" class="color-avatar" style={{backgroundImage: `linear-gradient(to bottom right, rgb(${favorite.foregroundColor.red}, ${favorite.foregroundColor.green}, ${favorite.foregroundColor.blue}), rgb(${favorite.backgroundColor.red}, ${favorite.backgroundColor.green}, ${favorite.backgroundColor.blue}))`}}>&nbsp;</div>
+            <div slot="start" class="color-avatar" style={{backgroundImage: `linear-gradient(to bottom right, rgb(${favorite.foregroundColor.red}, ${favorite.foregroundColor.green}, ${favorite.foregroundColor.blue}), rgb(${favorite.backgroundColor.red}, ${favorite.backgroundColor.green}, ${favorite.backgroundColor.blue}))`}}> </div>
             <ion-label>{favorite.title}</ion-label>
             {this.isFavorite(favorite) && <ion-icon name="checkmark" slot="end"/>}
             {locked}
@@ -165,7 +165,7 @@ export class AppHome {
       swipeToClose: true,
       presentingElement: this.element.closest('ion-router-outlet'),
       componentProps: {
-        title: title,
+        header: title,
         color: color
       }
     });
@@ -292,9 +292,7 @@ export class AppHome {
           </ion-item-group>
 
           <ion-item-group>
-            <ion-item-divider color="light">
-              &nbsp;
-            </ion-item-divider>
+            <ion-item-divider color="light"> </ion-item-divider>
             <ion-item onClick={() => this.presentAbout()}>
               <ion-icon slot="start" name="information-circle-outline"/>
               <ion-label>About</ion-label>
@@ -302,9 +300,7 @@ export class AppHome {
           </ion-item-group>
 
           <ion-item-group>
-            <ion-item-divider color="light">
-              &nbsp;
-            </ion-item-divider>
+            <ion-item-divider color="light"> </ion-item-divider>
           </ion-item-group>
 
         </ion-list>

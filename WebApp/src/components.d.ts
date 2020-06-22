@@ -11,7 +11,7 @@ export namespace Components {
     }
     interface AppColorPicker {
         "color": Color;
-        "title": string;
+        "header": string;
     }
     interface AppHome {
         "isDisabled": boolean;
@@ -57,7 +57,7 @@ declare namespace LocalJSX {
     }
     interface AppColorPicker {
         "color"?: Color;
-        "title"?: string;
+        "header"?: string;
     }
     interface AppHome {
         "isDisabled"?: boolean;
