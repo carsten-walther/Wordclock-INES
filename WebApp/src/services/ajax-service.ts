@@ -22,6 +22,10 @@ export class AjaxServiceController {
       })
       .then(data => {
         return data;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        return null;
       });
   };
 
@@ -51,6 +55,10 @@ export class AjaxServiceController {
         })
         .then(data => {
           return data;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          return null;
         });
     }
   };

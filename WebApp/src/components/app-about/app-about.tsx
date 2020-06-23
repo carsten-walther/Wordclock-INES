@@ -1,5 +1,6 @@
 import { Component, Element, Prop, State, h } from '@stencil/core';
 import { AjaxService } from "../../services/ajax-service";
+import { DefaultsService } from "../../services/defaults-service";
 
 @Component({
   tag: 'app-about',
@@ -14,13 +15,19 @@ export class AppAbout {
   @Prop() isDisabled: boolean = true;
 
   async componentWillLoad() {
-    let settingsData = await AjaxService.getSettings();
-    this.settings = {...settingsData.result};
+    this.settings = {...await DefaultsService.get()};
 
-    if (settingsData.success) {
-      this.isDisabled = false;
+    this.isDisabled = true;
+  }
+
+  async componentDidLoad() {
+    let settingsData = await AjaxService.getSettings();
+    if (settingsData != null) {
+      if (settingsData.success) {
+        this.isDisabled = false;
+        this.settings = {...settingsData.result};
+      }
     }
-    this.isDisabled = false;
   }
 
   dismiss() {

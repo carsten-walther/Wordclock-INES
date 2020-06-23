@@ -4,34 +4,38 @@ import { sass } from '@stencil/sass';
 // https://stenciljs.com/docs/config
 
 export const config: Config = {
+  buildEs5: false,
+  bundles: [
+
+  ],
+  enableCache: true,
+  globalScript: 'src/global/app.ts',
+  globalStyle: 'src/global/app.css',
+  hashFileNames: true,
+  hashedFileNameLength: 4,
+  namespace: "App",
+  outputTargets: [{
+    type: 'www',
+    serviceWorker: null
+  }],
   plugins: [
     sass()
   ],
-  outputTargets: [{
-    type: 'www',
-    serviceWorker: {
-      swSrc: 'src/sw.js',
-      globPatterns: [
-        '**/*.{js,css,json,html,ico,png,svg}'
-      ]
-    }
-  }],
-  globalScript: 'src/global/app.ts',
-  globalStyle: 'src/global/app.css',
-  taskQueue: 'async',
-  copy: [{
-    src: "**/*.i18n.*.json",
-    dest: "i18n"
-  }],
   devServer: {
-    reloadStrategy: 'pageReload',
     port: 3333,
+    reloadStrategy: 'pageReload',
     openBrowser: false
   },
-  enableCache: true,
-  hashFileNames: true,
-  hashedFileNameLength: 4,
+  preamble: 'Made with ♥ by Carsten Walther',
+  srcDir: 'src',
+  taskQueue: 'congestionAsync',
   minifyJs: true,
   minifyCss: true,
-  preamble: ""
+  extras: {
+    cssVarsShim: false,
+    dynamicImportShim: false,
+    safari10: false,
+    scriptDataOpts: false,
+    shadowDomShim: false
+  },
 };
