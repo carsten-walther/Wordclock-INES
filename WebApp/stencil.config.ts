@@ -5,9 +5,7 @@ import { sass } from '@stencil/sass';
 
 export const config: Config = {
   buildEs5: false,
-  bundles: [
-
-  ],
+  bundles: [],
   enableCache: true,
   globalScript: 'src/global/app.ts',
   globalStyle: 'src/global/app.css',
@@ -37,5 +35,5 @@ export const config: Config = {
     safari10: false,
     scriptDataOpts: false,
     shadowDomShim: false
-  },
+  }
 };
