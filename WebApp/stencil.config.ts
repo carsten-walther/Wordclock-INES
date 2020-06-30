@@ -14,6 +14,7 @@ export const config: Config = {
   namespace: "App",
   outputTargets: [{
     type: 'www',
+    buildDir: 'b',
     serviceWorker: null
   }],
   plugins: [
@@ -24,7 +25,7 @@ export const config: Config = {
     reloadStrategy: 'pageReload',
     openBrowser: false
   },
-  preamble: 'Made with ♥ by Carsten Walther',
+  preamble: 'Made with ♥ by Carsten Walther and build with Stencil',
   srcDir: 'src',
   taskQueue: 'congestionAsync',
   minifyJs: true,
