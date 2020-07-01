@@ -38,7 +38,7 @@ let updateForm = function (data) {
 let getSettings = function () {
   $.ajax({
     type: 'GET',
-    url: 'settings.json',
+    url: 'settings',
     dataType: 'json',
     beforeSend: function () {
       $('form').find('input, select, button').attr('disabled', '')
@@ -59,7 +59,7 @@ let getSettings = function () {
 let setSettings = function () {
   $.ajax({
     type: 'POST',
-    url: 'update.json',
+    url: 'update',
     data: $('form').serialize(),
     dataType: 'json',
     beforeSend: function () {
