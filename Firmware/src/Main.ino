@@ -14,7 +14,6 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h>
 #include <ESP8266mDNS.h>
-#include <FS.h>
 #include <DNSServer.h>
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
@@ -24,6 +23,31 @@
 #include "Config.h"
 #include "Timezones.h"
 #include "Settings/Settings.h"
+
+#if defined USE_SPIFFS
+
+#include <FS.h>
+const char* fsName = "SPIFFS";
+FS* fileSystem = &SPIFFS;
+SPIFFSConfig fileSystemConfig = SPIFFSConfig();
+
+#elif defined USE_LITTLEFS
+
+#include <LittleFS.h>
+const char* fsName = "LittleFS";
+FS* fileSystem = &LittleFS;
+LittleFSConfig fileSystemConfig = LittleFSConfig();
+
+#elif defined USE_SDFS
+
+#include <SDFS.h>
+const char* fsName = "SDFS";
+FS* fileSystem = &SDFS;
+SDFSConfig fileSystemConfig = SDFSConfig();
+
+#else
+#error Please select a filesystem first by uncommenting one of the "#define USE_xxx" lines at the beginning of the sketch.
+#endif
 
 // WiFiManager
 // Once its business is done, there is no need to keep it around
@@ -81,15 +105,21 @@ int clockModeOverride = -1;
 // face timer
 unsigned long previousMillis = 0;
 
+// file system status
+static bool fsOK;
+
+// auth
+const char* www_username = "admin";
+const char* www_password = "esp8266";
+const char* www_realm = "Wordclock";
+
 // =============================================================================
 
 void setup()
 {
     #ifdef DEBUG
     Serial.begin(BAUD);
-    Serial.printf("\n");
-    Serial.printf("\n");
-    Serial.printf("Starting Wordclock...\n");
+    Serial.println(F("Starting Wordclock..."));
     #endif
 
     // init WS2811 PIN
@@ -121,33 +151,34 @@ void setup()
         // go to function 'handleNotFound' and check if the file exists
         HTTP.onNotFound(handleNotFound);
         // if settings requested return settings
-        HTTP.on("/settings.json", HTTP_GET, handleSettingsJson);
+        HTTP.on("/settings", HTTP_GET, handleSettingsJson);
         // if update requested update settings and return result
-        HTTP.on("/update.json", HTTP_POST, handleUpdateJson);
-        // if ssdp return description
+        HTTP.on("/update", HTTP_POST, handleUpdateJson);
+        // if description.xml return description
         HTTP.on("/description.xml", HTTP_GET, handleSSDP);
+        // if status return fs status
+        HTTP.on("/status", HTTP_GET, handleStatus);
 
         // start the web server
         HTTP.begin();
         #ifdef DEBUG
-        Serial.println("HTTP started");
+        Serial.println(F("HTTP started"));
         #endif
 
         // start the multicast domain name server
         if (MDNS.begin(SERVER_HOST)) {
             MDNS.addService("http", "tcp", SERVER_PORT);
             #ifdef DEBUG
-            Serial.println("MDNS started");
+            Serial.println(F("MDNS started"));
             #endif
         }
 
-        // start the SPI Flash File System (SPIFFS)
-        fs::SPIFFSConfig cfg;
-        cfg.setAutoFormat(false);
-        SPIFFS.setConfig(cfg);
-        if (SPIFFS.begin()) {
+        // start the SPI Flash File System (LittleFS)
+        if (fsOK = fileSystem->begin()) {
+            fileSystemConfig.setAutoFormat(false);
+            fileSystem->setConfig(fileSystemConfig);
             #ifdef DEBUG
-            Serial.println("SPIFFS started");
+            Serial.println(fsOK ? F("Filesystem initialized.") : F("Filesystem init failed!"));
             #endif
         }
 
@@ -165,7 +196,7 @@ void setup()
         SSDP.setDeviceType("upnp:rootdevice");
         if (SSDP.begin()) {
             #ifdef DEBUG
-            Serial.println("SSDP started");
+            Serial.println(F("SSDP started"));
             #endif
         }
     }
@@ -177,7 +208,7 @@ void setup()
     processTimeOffset();
 
     #ifdef DEBUG
-    Serial.println("setup complete");
+    Serial.println(F("Setup complete"));
     #endif
 }
 
@@ -560,9 +591,27 @@ void processTimeOffset()
 
 // =============================================================================
 
+void handleAuth()
+{
+    #ifdef USE_BASIC_AUTH
+    if (!HTTP.authenticate(www_username, www_password)) {
+        //Basic Auth Method with Custom realm and Failure Response
+        //return server.requestAuthentication(BASIC_AUTH, www_realm, authFailResponse);
+        //Digest Auth Method with realm="Login Required" and empty Failure Response
+        //return server.requestAuthentication(DIGEST_AUTH);
+        //Digest Auth Method with Custom realm and empty Failure Response
+        //return server.requestAuthentication(DIGEST_AUTH, www_realm);
+        //Digest Auth Method with Custom realm and Failure Response
+        return HTTP.requestAuthentication(DIGEST_AUTH, www_realm, "Error 401: Authentication Failed");
+    }
+    #endif
+}
+
 void handleNotFound()
 {
-    // check if the file exists in the flash memory (SPIFFS), if so, send it
+    handleAuth();
+
+    // check if the file exists in the flash memory (LittleFS), if so, send it
     if (!handleFileRead(HTTP.uri())) {
 
         String message = "Error 404: File Not Found\n\n";
@@ -584,6 +633,11 @@ void handleNotFound()
 
 bool handleFileRead(String path)
 {
+    if (!fsOK) {
+        HTTP.send(500, "text/plain", "Error 500: File system error\r\n");
+        return true;
+    }
+
     // If a folder is requested, send the index file
     if (path.endsWith("/")) {
         path += "index.html";
@@ -594,16 +648,16 @@ bool handleFileRead(String path)
     String pathWithGz = path + ".gz";
 
     // If the file exists, either as a compressed archive, or normal
-    if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
+    if (fileSystem->exists(pathWithGz) || fileSystem->exists(path)) {
 
         // If there's a compressed version available
-        if (SPIFFS.exists(pathWithGz)) {
+        if (fileSystem->exists(pathWithGz)) {
             // Use the compressed verion
             path += ".gz";
         }
 
         // Open the file
-        File file = SPIFFS.open(path, "r");
+        File file = fileSystem->open(path, "r");
         // Send it to the client
         HTTP.streamFile(file, contentType);
         // Close the file again
@@ -618,6 +672,8 @@ bool handleFileRead(String path)
 
 void handleSettingsJson()
 {
+    handleAuth();
+
     HTTP.sendHeader("Access-Control-Allow-Origin", "*");
     HTTP.sendHeader("Access-Control-Max-Age", "10000");
     HTTP.sendHeader("Access-Control-Allow-Methods", "PUT,POST,GET,OPTIONS");
@@ -628,6 +684,8 @@ void handleSettingsJson()
 
 void handleUpdateJson()
 {
+    handleAuth();
+
     bool success = false;
 
     // Read JSON from plain
@@ -707,6 +765,40 @@ void handleSSDP()
     SSDP.schema(HTTP.client());
 }
 
+void handleStatus()
+{
+    handleAuth();
+
+    DynamicJsonDocument res(1024);
+
+    FSInfo fs_info;
+
+    res["isOk"] = fsOK;
+    res["fileSystemName"] = fsName;
+    res["totalBytes"] = formatBytes(fs_info.totalBytes);
+    res["usedBytes"] = formatBytes(fs_info.usedBytes);
+    res["blockSize"] = fs_info.blockSize;
+    res["pageSize"] = fs_info.pageSize;
+    res["maxOpenFiles"] = fs_info.maxOpenFiles;
+    res["maxPathLength"] = fs_info.maxPathLength;
+
+    Dir dir = fileSystem->openDir("/");
+    // List the file system contents
+    int i = 0;
+    while (dir.next()) {
+        String fileName = dir.fileName();
+        size_t fileSize = dir.fileSize();
+        res["contents"][i]["fileName"] = fileName;
+        res["contents"][i]["fileSize"] = formatBytes(fileSize);
+        i++;
+    }
+
+    String output;
+    serializeJson(res, output);
+
+    HTTP.send(200, "application/json", output);
+}
+
 String settingsWithSuccess(bool success)
 {
     DynamicJsonDocument res(1024);
@@ -751,4 +843,17 @@ String getContentType(String filename)
     else if (filename.endsWith(".json")) return "application/json";
     else if (filename.endsWith(".gz")) return "application/x-gzip";
     return "text/plain";
+}
+
+String formatBytes(size_t bytes)
+{
+    if (bytes < 1024) {
+        return String(bytes) + "B";
+    } else if (bytes < (1024 * 1024)) {
+        return String(bytes / 1024.0) + "KB";
+    } else if (bytes < (1024 * 1024 * 1024)) {
+        return String(bytes / 1024.0 / 1024.0) + "MB";
+    } else {
+        return String("");
+    }
 }
