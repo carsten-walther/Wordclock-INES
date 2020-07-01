@@ -30,7 +30,7 @@
 #define BAUD 115200
 
 //
-// Select the FileSystem by uncommenting one of the lines below
+// Select the FileSystem by uncommenting one of the lines below ================
 //
 
 #define USE_SPIFFS
@@ -75,6 +75,14 @@
 // Time offset?
 // Default: 3600
 #define NTP_TIME_OFFSET 3600
+
+//
+// OTA =========================================================================
+//
+
+#define OTA_PASS "password"
+
+#define OTA_PORT 8266
 
 //
 // WS2811 LED Strip ============================================================

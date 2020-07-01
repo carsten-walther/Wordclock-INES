@@ -10,6 +10,7 @@
 // global libs
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#include <ArduinoOTA.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h>
@@ -199,6 +200,9 @@ void setup()
             Serial.println(F("SSDP started"));
             #endif
         }
+
+        // process OTA
+        initOTA();
     }
 
     // start the ntp time client
@@ -224,6 +228,9 @@ void loop()
 
     // handle HTTP client
     HTTP.handleClient();
+
+    // handle OTA
+    ArduinoOTA.handle();
 
     // Set default clockMode
     clockMode = CLOCKMODE_NORMAL;
@@ -587,6 +594,74 @@ void processTimeOffset()
     NTP.setTimeOffset(offset);
     // uptade time
     NTP.forceUpdate();
+}
+
+// =============================================================================
+
+void initOTA()
+{
+    // init OTA
+
+    // Hostname defaults to esp8266-[ChipID]
+    ArduinoOTA.setHostname(SERVER_HOST);
+
+    // Port defaults to 8266
+    #ifdef OTA_PORT
+    ArduinoOTA.setPort(OTA_PORT);
+    #endif
+
+    // No authentication by default
+    #ifdef OTA_PASS
+    ArduinoOTA.setPassword(OTA_PASS);
+    #endif
+
+    ArduinoOTA.onStart([]() {
+        #ifdef DEBUG
+        String type;
+        if (ArduinoOTA.getCommand() == U_FLASH) {
+            type = "sketch";
+        } else { // U_FS
+            type = "filesystem";
+        }
+
+        // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+        Serial.println(F("Start updating " + type));
+        #endif
+    });
+
+    ArduinoOTA.onEnd([]() {
+        #ifdef DEBUG
+        Serial.println(F("\nEnd"));
+        #endif
+    });
+
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+        #ifdef DEBUG
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        #endif
+    });
+
+    ArduinoOTA.onError([](ota_error_t error) {
+        #ifdef DEBUG
+        Serial.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) {
+            Serial.println(F("Auth Failed"));
+        } else if (error == OTA_BEGIN_ERROR) {
+            Serial.println(F("Begin Failed"));
+        } else if (error == OTA_CONNECT_ERROR) {
+            Serial.println(F("Connect Failed"));
+        } else if (error == OTA_RECEIVE_ERROR) {
+            Serial.println(F("Receive Failed"));
+        } else if (error == OTA_END_ERROR) {
+            Serial.println(F("End Failed"));
+        }
+        #endif
+    });
+
+    ArduinoOTA.begin();
+    #ifdef DEBUG
+    Serial.println(F("ArduinoOTA started"));
+    #endif
 }
 
 // =============================================================================
