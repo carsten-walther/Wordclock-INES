@@ -10,7 +10,9 @@
 // global libs
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#ifdef USE_OTA
 #include <ArduinoOTA.h>
+#endif
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h>
@@ -120,7 +122,7 @@ void setup()
 {
     #ifdef DEBUG
     Serial.begin(BAUD);
-    Serial.println(F("Starting Wordclock..."));
+    Serial.println("Starting Wordclock...");
     #endif
 
     // init WS2811 PIN
@@ -163,14 +165,14 @@ void setup()
         // start the web server
         HTTP.begin();
         #ifdef DEBUG
-        Serial.println(F("HTTP started"));
+        Serial.println("HTTP started");
         #endif
 
         // start the multicast domain name server
         if (MDNS.begin(SERVER_HOST)) {
             MDNS.addService("http", "tcp", SERVER_PORT);
             #ifdef DEBUG
-            Serial.println(F("MDNS started"));
+            Serial.println("MDNS started");
             #endif
         }
 
@@ -179,7 +181,7 @@ void setup()
             fileSystemConfig.setAutoFormat(false);
             fileSystem->setConfig(fileSystemConfig);
             #ifdef DEBUG
-            Serial.println(fsOK ? F("Filesystem initialized.") : F("Filesystem init failed!"));
+            Serial.println(fsOK ? "Filesystem initialized." : "Filesystem init failed!");
             #endif
         }
 
@@ -197,7 +199,7 @@ void setup()
         SSDP.setDeviceType("upnp:rootdevice");
         if (SSDP.begin()) {
             #ifdef DEBUG
-            Serial.println(F("SSDP started"));
+            Serial.println("SSDP started");
             #endif
         }
 
@@ -212,7 +214,7 @@ void setup()
     processTimeOffset();
 
     #ifdef DEBUG
-    Serial.println(F("Setup complete"));
+    Serial.println("Setup complete");
     #endif
 }
 
@@ -230,7 +232,9 @@ void loop()
     HTTP.handleClient();
 
     // handle OTA
+    #ifdef USE_OTA
     ArduinoOTA.handle();
+    #endif
 
     // Set default clockMode
     clockMode = CLOCKMODE_NORMAL;
@@ -601,6 +605,7 @@ void processTimeOffset()
 void initOTA()
 {
     // init OTA
+    #ifdef USE_OTA
 
     // Hostname defaults to esp8266-[ChipID]
     ArduinoOTA.setHostname(SERVER_HOST);
@@ -625,13 +630,13 @@ void initOTA()
         }
 
         // NOTE: if updating FS this would be the place to unmount FS using FS.end()
-        Serial.println(F("Start updating " + type));
+        Serial.println("Start updating " + type);
         #endif
     });
 
     ArduinoOTA.onEnd([]() {
         #ifdef DEBUG
-        Serial.println(F("\nEnd"));
+        Serial.println("\nEnd");
         #endif
     });
 
@@ -645,22 +650,24 @@ void initOTA()
         #ifdef DEBUG
         Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR) {
-            Serial.println(F("Auth Failed"));
+            Serial.println("Auth Failed");
         } else if (error == OTA_BEGIN_ERROR) {
-            Serial.println(F("Begin Failed"));
+            Serial.println("Begin Failed");
         } else if (error == OTA_CONNECT_ERROR) {
-            Serial.println(F("Connect Failed"));
+            Serial.println("Connect Failed");
         } else if (error == OTA_RECEIVE_ERROR) {
-            Serial.println(F("Receive Failed"));
+            Serial.println("Receive Failed");
         } else if (error == OTA_END_ERROR) {
-            Serial.println(F("End Failed"));
+            Serial.println("End Failed");
         }
         #endif
     });
 
     ArduinoOTA.begin();
     #ifdef DEBUG
-    Serial.println(F("ArduinoOTA started"));
+    Serial.println("ArduinoOTA started");
+    #endif
+
     #endif
 }
 

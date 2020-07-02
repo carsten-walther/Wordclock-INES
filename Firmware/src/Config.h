@@ -80,6 +80,8 @@
 // OTA =========================================================================
 //
 
+//#define USE_OTA
+
 #define OTA_PASS "password"
 
 #define OTA_PORT 8266
