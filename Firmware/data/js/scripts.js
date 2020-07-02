@@ -5,9 +5,14 @@ let rgbToHex = function (rgb) {
 }
 
 let hexToRgb = function (hex) {
-    return hex.match(/[A-Za-z0-9]{2}/g).map(function (v) {
+    let rgb = hex.match(/[A-Za-z0-9]{2}/g).map(function (v) {
         return parseInt(v, 16)
     })
+    return {
+        'red': rgb[0],
+        'green': rgb[1],
+        'blue': rgb[2],
+    }
 }
 
 let fullColorHex = function (red, green, blue) {
