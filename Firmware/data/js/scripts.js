@@ -4,6 +4,12 @@ let rgbToHex = function (rgb) {
   return hex
 }
 
+let hexToRgb = function (hex) {
+    return hex.match(/[A-Za-z0-9]{2}/g).map(function (v) {
+        return parseInt(v, 16)
+    })
+}
+
 let fullColorHex = function (red, green, blue) {
   return '#' + rgbToHex(red) + rgbToHex(green) + rgbToHex(blue)
 }
@@ -56,18 +62,25 @@ let getSettings = function () {
   })
 }
 
-let setSettings = function () {
+let setSettings = function (name, value) {
+  let data = {}
+  if (name == 'foregroundColor' || name == 'backgroundColor') {
+      data[name] = hexToRgb(value)
+  } else {
+      data[name] = value
+  }
   $.ajax({
     type: 'POST',
     url: 'update',
-    data: $('form').serialize(),
+    data: JSON.stringify(data),
     dataType: 'json',
+    accepts: 'application/json',
+    contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
     beforeSend: function () {
       $('form').find('input, select, button, [data-toggle="buttons"]').attr('disabled', true)
     },
     success: function (data, textStatus, jqXHR) {
       if (data.success) {
-        updateForm(data)
         $('form').find('input, select, button, [data-toggle="buttons"]').removeAttr('disabled')
       } else {
         overlayError((jqXHR.status === 404 ? 'connection' : ''))
@@ -102,9 +115,8 @@ $(function () {
     }
   })
 
-  $('#submit').click(function (event) {
-    event.preventDefault()
-    setSettings()
+  $('form').find('input, select, button, [data-toggle="buttons"]').on('change', event => {
+      setSettings($(event.target).attr('name'), $(event.target).val())
+      event.preventDefault()
   })
-
 })
