@@ -95,7 +95,10 @@ ParametersType defaults = {
     5,              // wakeupHour
     0,              // wakeupMinute
     0,              // language
-    SETTING_VERSION // Version
+    SETTING_VERSION,// Version
+    USE_BASIC_AUTH, // Auth Use
+    AUTH_USERNAME,  // Auth Username
+    AUTH_PASSWORD   // Auth Password
 };
 
 // Settings
@@ -110,11 +113,6 @@ unsigned long previousMillis = 0;
 
 // file system status
 static bool fsOK;
-
-// auth
-const char* www_username = "admin";
-const char* www_password = "esp8266";
-const char* www_realm = "Wordclock";
 
 // =============================================================================
 
@@ -177,7 +175,7 @@ void setup()
         }
 
         // start the SPI Flash File System (LittleFS)
-        if (fsOK = fileSystem->begin()) {
+        if ((fsOK = fileSystem->begin()) != false) {
             fileSystemConfig.setAutoFormat(false);
             fileSystem->setConfig(fileSystemConfig);
             #ifdef DEBUG
@@ -675,18 +673,11 @@ void initOTA()
 
 void handleAuth()
 {
-    #ifdef USE_BASIC_AUTH
-    if (!HTTP.authenticate(www_username, www_password)) {
-        //Basic Auth Method with Custom realm and Failure Response
-        //return server.requestAuthentication(BASIC_AUTH, www_realm, authFailResponse);
-        //Digest Auth Method with realm="Login Required" and empty Failure Response
-        //return server.requestAuthentication(DIGEST_AUTH);
-        //Digest Auth Method with Custom realm and empty Failure Response
-        //return server.requestAuthentication(DIGEST_AUTH, www_realm);
-        //Digest Auth Method with Custom realm and Failure Response
-        return HTTP.requestAuthentication(DIGEST_AUTH, www_realm, "Error 401: Authentication Failed");
+    if (settings.parameters->useAuth) {
+        if (!HTTP.authenticate(string2char(settings.parameters->authUsername), string2char(settings.parameters->authPassword))) {
+            return HTTP.requestAuthentication(DIGEST_AUTH, AUTH_REALM, "Error 401: Authentication Failed");
+        }
     }
-    #endif
 }
 
 void handleNotFound()
@@ -801,7 +792,7 @@ void handleUpdateJson()
 
     if (obj["daylightSavingsTime"]) {
         success = true;
-        settings.parameters->daylightSavingsTime = obj["daylightSavingsTime"];
+        settings.parameters->daylightSavingsTime = obj["daylightSavingsTime"].as<bool>();
     }
 
     if (obj["sleepTime"]) {
@@ -826,6 +817,21 @@ void handleUpdateJson()
     if (obj["clockMode"]) {
         success = true;
         clockModeOverride = obj["clockMode"];
+    }
+
+    if (obj["useAuth"]) {
+        success = true;
+        settings.parameters->useAuth = obj["useAuth"].as<bool>();
+    }
+
+    if (obj["authUsername"]) {
+        success = true;
+        settings.parameters->authUsername = obj["authUsername"].as<const char*>();
+    }
+
+    if (obj["authPassword"]) {
+        success = true;
+        settings.parameters->authPassword = obj["authPassword"].as<const char*>();
     }
 
     // save settings
@@ -908,6 +914,10 @@ String settingsWithSuccess(bool success)
     res["result"]["settings"] = SETTING_VERSION;
     res["result"]["time"] = NTP.getFormattedTime();
 
+    res["result"]["useAuth"] = settings.parameters->useAuth;
+    res["result"]["authUsername"] = settings.parameters->authUsername;
+    res["result"]["authPassword"] = settings.parameters->authPassword;
+
     String output;
     serializeJson(res, output);
     return output;
@@ -915,16 +925,27 @@ String settingsWithSuccess(bool success)
 
 String getContentType(String filename)
 {
-    if (filename.endsWith(".html")) return "text/html";
-    else if (filename.endsWith(".css")) return "text/css";
-    else if (filename.endsWith(".js")) return "application/javascript";
-    else if (filename.endsWith(".png")) return "image/png";
-    else if (filename.endsWith(".jpg")) return "image/jpeg";
-    else if (filename.endsWith(".svg")) return "image/svg+xml";
-    else if (filename.endsWith(".ico")) return "image/x-icon";
-    else if (filename.endsWith(".json")) return "application/json";
-    else if (filename.endsWith(".gz")) return "application/x-gzip";
-    return "text/plain";
+    if (filename.endsWith(".html")) {
+        return "text/html";
+    } else if (filename.endsWith(".css")) {
+        return "text/css";
+    } else if (filename.endsWith(".js")) {
+        return "application/javascript";
+    } else if (filename.endsWith(".png")) {
+        return "image/png";
+    } else if (filename.endsWith(".jpg")) {
+        return "image/jpeg";
+    } else if (filename.endsWith(".svg")) {
+        return "image/svg+xml";
+    } else if (filename.endsWith(".ico")) {
+        return "image/x-icon";
+    } else if (filename.endsWith(".json")) {
+        return "application/json";
+    } else if (filename.endsWith(".gz")) {
+        return "application/x-gzip";
+    } else {
+        return "text/plain";
+    }
 }
 
 String formatBytes(size_t bytes)
@@ -937,5 +958,13 @@ String formatBytes(size_t bytes)
         return String(bytes / 1024.0 / 1024.0) + "MB";
     } else {
         return String("");
+    }
+}
+
+char* string2char(String str)
+{
+    if (str.length() != 0) {
+        char *p = const_cast<char*>(str.c_str());
+        return p;
     }
 }

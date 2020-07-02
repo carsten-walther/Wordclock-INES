@@ -19,5 +19,9 @@
     "High German": "Hochdeutsch",
     "Swabian": "Schwäbisch",
     "Bavarian": "Bayrisch",
-    "Saxon": "Sächsisch"
+    "Saxon": "Sächsisch",
+    "Access": "Zugriff",
+    "Authentication": "Authentifizierung",
+    "Username": "Benutzername",
+    "Password": "Passwort"
 }

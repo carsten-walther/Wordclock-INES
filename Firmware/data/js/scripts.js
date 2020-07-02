@@ -44,6 +44,10 @@ let updateForm = function (data) {
   $('#wakeupTime').val(((data.result.wakeupHour < 10) ? '0' + data.result.wakeupHour : data.result.wakeupHour) + ':' + ((data.result.wakeupMinute < 10) ? '0' + data.result.wakeupMinute : data.result.wakeupMinute))
   $('#language').val(data.result.language)
   $('#version').html(data.result.version)
+  $('#useAuth').val(data.result.useAuth)
+  $('#useAuthHelper').prop('checked', data.result.useAuth)
+  $('#authUsername').val(data.result.authUsername)
+  $('#authPassword').val(data.result.authPassword)
 }
 
 let getSettings = function () {
@@ -120,8 +124,32 @@ $(function () {
     }
   })
 
+  $('#useAuthHelper').change(function (event) {
+    if ($(this).is(':checked')) {
+      $('#useAuth').val(true)
+      $('#authUsername').removeAttr('disabled')
+      $('#authPassword').removeAttr('disabled')
+    } else {
+      $('#useAuth').val(false)
+      $('#authUsername').attr('disabled', true)
+      $('#authPassword').attr('disabled', true)
+    }
+  })
+
   $('form').find('input, select, button, [data-toggle="buttons"]').on('change', event => {
-      setSettings($(event.target).attr('name'), $(event.target).val())
+      let name = $(event.target).attr('name')
+      let value = $(event.target).val()
+
+      if ($(event.target).attr('type', 'checkbox')) {
+          if ($(event.target).is(':checked')) {
+              value = 'true'
+          } else {
+              value = 'false'
+          }
+      }
+
+      setSettings(name, value)
+
       event.preventDefault()
   })
 })

@@ -37,6 +37,10 @@ typedef struct {
     int language;
     // version
     char version[sizeof(SETTING_VERSION)];
+    // access
+    bool useAuth;
+    String authUsername;
+    String authPassword;
 } ParametersType;
 
 class Settings

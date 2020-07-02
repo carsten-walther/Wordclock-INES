@@ -176,7 +176,7 @@
                                 <div class="form-group">
                                     <div class="custom-control custom-switch">
 										<input type="hidden" id="daylightSavingsTime" name="daylightSavingsTime" value="false">
-										<input type="checkbox" class="custom-control-input" id="daylightSavingsTimeHelper" disabled>
+										<input type="checkbox" class="custom-control-input" id="daylightSavingsTimeHelper" name="daylightSavingsTime" disabled>
                                         <label class="custom-control-label" for="daylightSavingsTimeHelper" data-langkey="Daylight savings time">Daylight savings time</label>
                                     </div>
                                 </div>
@@ -188,6 +188,24 @@
                                         <option value="2" data-langkey="Bavarian">Bayrisch</option>
                                         <option value="3" data-langkey="Saxon">Sächsisch</option>
                                     </select>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend data-langkey="Access">Access</legend>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+										<input type="hidden" id="useAuth" name="useAuth" value="false">
+										<input type="checkbox" class="custom-control-input" id="useAuthHelper" name="useAuth" disabled>
+                                        <label class="custom-control-label" for="useAuthHelper" data-langkey="Authentication">Authentication</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="authUsername" data-langkey="Username">Username</label>
+									<input class="form-control" type="text" id="authUsername" name="authUsername" value="" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="authPassword" data-langkey="Password">Password</label>
+									<input class="form-control" type="password" id="authPassword" name="authPassword" value="" disabled>
                                 </div>
                             </fieldset>
                         </form>

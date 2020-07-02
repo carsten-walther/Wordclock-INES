@@ -87,6 +87,16 @@
 #define OTA_PORT 8266
 
 //
+// AUTH ========================================================================
+//
+
+#define USE_BASIC_AUTH true
+
+#define AUTH_REALM "Wordclock"
+#define AUTH_USERNAME "admin"
+#define AUTH_PASSWORD "esp8266"
+
+//
 // WS2811 LED Strip ============================================================
 //
 

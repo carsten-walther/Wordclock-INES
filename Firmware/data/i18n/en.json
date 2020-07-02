@@ -19,5 +19,9 @@
     "High German": "High German",
     "Swabian": "Swabian",
     "Bavarian": "Bavarian",
-    "Saxon": "Saxon"
+    "Saxon": "Saxon",
+    "Access": "Access",
+    "Authentication": "Authentication",
+    "Username": "Username",
+    "Password": "Password"
 }
