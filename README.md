@@ -11,9 +11,17 @@ This clock shows the time in words.
 [![License](https://img.shields.io/github/license/carsten-walther/wordclock)](LICENSE.txt)
 [![GitHub All Releases](https://img.shields.io/github/downloads/carsten-walther/wordclock/total)](https://github.com/carsten-walther/wordclock/releases/latest)
 
-![Wordclock Plate Model INES](Documentation/img/Plate-INES-de.png)
+![Wordclock Plate Model INES](Documentation/img/Plate-INES-de.svg)
 
 _Image: Wordclock Plate Model INES_
+
+![Wordclock Plate Model NINA](Documentation/img/Plate-NINA-de.svg)
+
+_Image: Wordclock Plate Model NINA
+
+![Wordclock Plate Model MARIA](Documentation/img/Plate-MARIA-de.svg)
+
+_Image: Wordclock Plate Model MARIA
 
 A detailed [**build**](Documentation/BUILD.md) and [**operation**](Documentation/README.md) manual can be found in [**Documentation**](Documentation) folder.
 
@@ -24,7 +32,7 @@ The following is necessary to build this clock:
 | amount | item |
 |-:|:-|
 | 1 | ESP8266 module |
-| 25 | WS2812 RGB LED Strip |
+| 24/25 | WS2812 RGB LED Strip |
 | 1 | voltage regulator 3,3V |
 | 1 | voltage regulator 5,0V |
 | 1 | power supply |

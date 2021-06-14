@@ -10,68 +10,68 @@
                 <g id="Hours" transform="translate(0.000000, 230.000000)">
                     <g id="Group" transform="translate(25.360352, 120.000000)">
                         <text id="ZWÖLF">
-                            <tspan x="283" y="24">ZWÖLF</tspan>
+                            <tspan x="283" y="24" fill="#333333">ZWÖLF</tspan>
                         </text>
                         <text id="ELF">
-                            <tspan x="205" y="24">ELF</tspan>
+                            <tspan x="205" y="24" fill="#333333">ELF</tspan>
                         </text>
                         <text id="ZEHN">
-                            <tspan x="104" y="24">ZEHN</tspan>
+                            <tspan x="104" y="24" fill="#333333">ZEHN</tspan>
                         </text>
                         <text id="NEUN">
-                            <tspan x="0" y="24">NEUN</tspan>
+                            <tspan x="0" y="24" fill="#333333">NEUN</tspan>
                         </text>
                     </g>
                     <g id="Group" transform="translate(0.000000, 60.000000)">
                         <text id="FÜNF">
-                            <tspan x="354" y="24">FÜNF</tspan>
+                            <tspan x="354" y="24" fill="#333333">FÜNF</tspan>
                         </text>
                         <text id="SECHS">
-                            <tspan x="234" y="24">SECHS</tspan>
+                            <tspan x="234" y="24" fill="#333333">SECHS</tspan>
                         </text>
                         <text id="SIEBEN">
-                            <tspan x="101" y="24">SIEBEN</tspan>
+                            <tspan x="101" y="24" fill="#333333">SIEBEN</tspan>
                         </text>
                         <text id="ACHT">
-                            <tspan x="0" y="24">ACHT</tspan>
+                            <tspan x="0" y="24" fill="#333333">ACHT</tspan>
                         </text>
                     </g>
                     <g id="Group" transform="translate(42.479492, 0.000000)">
                         <text id="VIER">
-                            <tspan x="279" y="24">VIER</tspan>
+                            <tspan x="279" y="24" fill="#333333">VIER</tspan>
                         </text>
                         <text id="DREI">
-                            <tspan x="186" y="24">DREI</tspan>
+                            <tspan x="186" y="24" fill="#333333">DREI</tspan>
                         </text>
                         <text id="ZWEI">
                             <tspan x="91" y="24">ZWEI</tspan>
                         </text>
                         <text id="EINS">
-                            <tspan x="0" y="24">EINS</tspan>
+                            <tspan x="0" y="24" fill="#333333">EINS</tspan>
                         </text>
                     </g>
                 </g>
                 <g id="Minutes" transform="translate(7.774902, 0.000000)">
                     <g id="Group" transform="translate(0.000000, 120.000000)">
                         <text id="HALB">
-                            <tspan x="340" y="24">HALB</tspan>
+                            <tspan x="340" y="24" fill="#333333">HALB</tspan>
                         </text>
                         <text id="VOR">
-                            <tspan x="253" y="24">VOR</tspan>
+                            <tspan x="253" y="24" fill="#333333">VOR</tspan>
                         </text>
                         <text id="NACH">
                             <tspan x="149" y="24">NACH</tspan>
                         </text>
                         <text id="ZWANZIG">
-                            <tspan x="0" y="24">ZWANZIG</tspan>
+                            <tspan x="0" y="24" fill="#333333">ZWANZIG</tspan>
                         </text>
                     </g>
                     <g id="Group" transform="translate(59.475586, 60.000000)">
                         <text id="VIERTEL">
-                            <tspan x="181" y="24">VIERTEL</tspan>
+                            <tspan x="181" y="24" fill="#333333">VIERTEL</tspan>
                         </text>
                         <text id="ZEHN">
-                            <tspan x="90" y="24">ZEHN</tspan>
+                            <tspan x="90" y="24" fill="#333333">ZEHN</tspan>
                         </text>
                         <text id="FÜNF">
                             <tspan x="0" y="24">FÜNF</tspan>
@@ -79,10 +79,10 @@
                     </g>
                     <g id="Group" transform="translate(111.598145, 0.000000)">
                         <text id="DREI-">
-                            <tspan x="113" y="24">DREI-</tspan>
+                            <tspan x="113" y="24" fill="#333333">DREI-</tspan>
                         </text>
                         <text id="GENAU">
-                            <tspan x="0" y="24">GENAU</tspan>
+                            <tspan x="0" y="24" fill="#333333">GENAU</tspan>
                         </text>
                     </g>
                 </g>
