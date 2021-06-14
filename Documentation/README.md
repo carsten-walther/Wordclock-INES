@@ -4,9 +4,17 @@
 
 This clock shows the time in words.
 
-![Wordclock Plate Model INES](img/Plate-INES-de.png)
+![Wordclock Plate Model INES](img/Plate-INES-de.svg)
 
 _Image: Wordclock Plate Model INES_
+
+![Wordclock Plate Model NINA](img/Plate-NINA-de.svg)
+
+_Image: Wordclock Plate Model NINA_
+
+![Wordclock Plate Model MARIA](img/Plate-MARIA-de.svg)
+
+_Image: Wordclock Plate Model MARIA_
 
 ## Table of contents
 
