@@ -17,11 +17,11 @@ _Image: Wordclock Plate Model INES_
 
 ![Wordclock Plate Model NINA](Documentation/img/Plate-NINA-de.svg)
 
-_Image: Wordclock Plate Model NINA
+_Image: Wordclock Plate Model NINA_
 
 ![Wordclock Plate Model MARIA](Documentation/img/Plate-MARIA-de.svg)
 
-_Image: Wordclock Plate Model MARIA
+_Image: Wordclock Plate Model MARIA_
 
 A detailed [**build**](Documentation/BUILD.md) and [**operation**](Documentation/README.md) manual can be found in [**Documentation**](Documentation) folder.
 
@@ -32,7 +32,7 @@ The following is necessary to build this clock:
 | amount | item |
 |-:|:-|
 | 1 | ESP8266 module |
-| 24/25 | WS2812 RGB LED Strip |
+| 24 or 25 | WS2812 RGB LED Strip (INES = 25; NINA = 24; MARIA = 24) |
 | 1 | voltage regulator 3,3V |
 | 1 | voltage regulator 5,0V |
 | 1 | power supply |
