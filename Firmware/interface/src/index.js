@@ -7,7 +7,6 @@ import Captive from './Captive'
 import App from './App'
 
 import './assets/css/tailwind.css'
-import './assets/css/override.css'
 
 let isCaptivePortal = false
 

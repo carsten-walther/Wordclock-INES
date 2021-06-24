@@ -9,13 +9,15 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
+    target: 'web',
     devServer: {
         historyApiFallback: true,
         contentBase: path.join(__dirname, 'public'),
-        open: false,
-        compress: true,
+        open: true,
+        compress: false,
         hot: true,
         port: 3000,
+        watchContentBase: true
     },
     entry: {
         index: path.join(__dirname, 'src/index.js'),

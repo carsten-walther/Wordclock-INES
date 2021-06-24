@@ -41,16 +41,28 @@ export default class Sidebar extends React.Component {
                     </h1>
                     <ul className="list-reset py-2 md:py-0">
                         <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
-                            <NavItem to={'dashboard'} title="Dashboard" />
+                            <NavItem to={'color-and-brightness'} title="Color & Brightness" />
+                        </li>
+                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                            <NavItem to={'mode-and-language'} title="Mode & Language" />
                         </li>
                         <li className="text-base font-bold py-2 lg:pt-4 lg:pb-2 text-gray-700">
                             <span className="pl-6 lg:pl-0 pb-1 md:pb-0 text-sm">Settings</span>
                         </li>
                         <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
-                            <NavItem to={'time'} title="Time" />
+                            <NavItem to={'time-settings'} title="Time Settings" />
+                        </li>
+                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                            <NavItem to={'on-off-time'} title="On/Off Time" />
                         </li>
                         <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
                             <NavItem to={'network'} title="Network" />
+                        </li>
+                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                            <NavItem to={'accessibility'} title="Accessibility" />
+                        </li>
+                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                            <NavItem to={'security'} title="Security" />
                         </li>
                         <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
                             <NavItem to={'firmware'} title="Firmware" />

@@ -3,12 +3,15 @@ import { Link } from 'react-scroll'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import Sidebar from './components/Sidebar'
-import Divider from './components/Divider'
 import Loader from './components/Loader'
 
-import Dashboard from './pages/Dashboard'
-import Time from './pages/Time'
+import ColorAndBrightness from './pages/ColorAndBrightness'
+import ModeAndLanguage from './pages/ModeAndLanguage'
+import TimeSettings from './pages/TimeSettings'
+import OnOffTime from './pages/OnOffTime'
 import Network from './pages/Network'
+import Accessibility from './pages/Accessibility'
+import Security from './pages/Security'
 import Firmware from './pages/Firmware'
 import System from './pages/System'
 import Licences from './pages/Licences'
@@ -20,7 +23,7 @@ import Utility from './utilities/Utility'
 
 export default class App extends React.Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props)
         this.state = {
             showScrollToTop: false,
@@ -75,14 +78,14 @@ export default class App extends React.Component {
         }
     }
 
-    async componentDidMount () {
+    async componentDidMount() {
         document.addEventListener('scroll', this.onScroll.bind(this))
         await this.getConfig()
         await this.getInfo()
         await this.scanWifi()
     }
 
-    async getConfig () {
+    async getConfig() {
         await Api.getConfig().then(result => {
             let data = {}
             for (const [key, value] of Object.entries(result.payload)) {
@@ -111,7 +114,7 @@ export default class App extends React.Component {
         })
     }
 
-    async setConfig () {
+    async setConfig() {
         await Api.setConfig(this.state.data).then(async (result) => {
             this.setState({
                 isLoading: false
@@ -120,7 +123,7 @@ export default class App extends React.Component {
         })
     }
 
-    async getInfo () {
+    async getInfo() {
         await Api.info().then((result) => {
             this.setState({
                 isLoading: false,
@@ -129,7 +132,7 @@ export default class App extends React.Component {
         })
     }
 
-    async scanWifi () {
+    async scanWifi() {
         await Api.scanWifi().then((result) => {
             this.setState({
                 isLoading: false,
@@ -138,7 +141,7 @@ export default class App extends React.Component {
         })
     }
 
-    async resetWifi () {
+    async resetWifi() {
         await Api.resetWifi().then((result) => {
             this.setState({
                 isLoading: true
@@ -146,7 +149,7 @@ export default class App extends React.Component {
         })
     }
 
-    handleChange (event) {
+    handleChange(event) {
         let fieldName = event.target.name ? event.target.name : event.target.id
         let fieldValue = null
         switch (event.target.type) {
@@ -205,7 +208,7 @@ export default class App extends React.Component {
         console.log(fieldName, fieldValue)
     }
 
-    async handleSubmit (event) {
+    async handleSubmit(event) {
         event.preventDefault()
         this.setState({
             isLoading: true
@@ -213,7 +216,7 @@ export default class App extends React.Component {
         await this.setConfig()
     }
 
-    async handleNetworkScan (event) {
+    async handleNetworkScan(event) {
         event.preventDefault()
         this.setState({
             isLoading: true
@@ -221,7 +224,7 @@ export default class App extends React.Component {
         await this.scanWifi()
     }
 
-    async handleNetworkReset (event) {
+    async handleNetworkReset(event) {
         event.preventDefault()
         this.setState({
             isLoading: false
@@ -235,23 +238,39 @@ export default class App extends React.Component {
         })
     }
 
-    render () {
+    render() {
         return (
             <BrowserRouter>
+
                 <div id="top" className="container w-full flex flex-wrap mx-auto px-2 pt-8 lg:pt-16 mt-0 lg:mt-16">
+
                     <Sidebar />
+
                     <section className="w-full lg:w-3/5 mt-1 pb-12">
+
                         <Switch>
                             <Route>
                                 <Route path="/" exact>
-                                    <div id="dashboard">
-                                        <Dashboard data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                    <div id="color-and-brightness">
+                                        <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
                                     </div>
-                                    <div id="time">
-                                        <Time data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                    <div id="mode-and-language">
+                                        <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                    </div>
+                                    <div id="time-settings">
+                                        <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                    </div>
+                                    <div id="on-off-time">
+                                        <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
                                     </div>
                                     <div id="network">
                                         <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
+                                    </div>
+                                    <div id="accessibility">
+                                        <Accessibility data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
+                                    </div>
+                                    <div id="security">
+                                        <Security data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
                                     </div>
                                     <div id="firmware">
                                         <Firmware />
@@ -260,16 +279,21 @@ export default class App extends React.Component {
                                         <System info={this.state.info} />
                                     </div>
                                     <div id="licences">
+                                        <Licences />
                                     </div>
                                 </Route>
                             </Route>
                         </Switch>
+
                     </section>
                 </div>
+
                 <Link to="top" smooth className={`fixed bottom-4 right-4 rounded-full h-10 w-10 flex items-center justify-center shadow-lg z-50 bg-gray-700 text-white cursor-pointer ${!this.state.showScrollToTop ? 'hidden' : ''}`}>
                     <ChevronUp className="h-5 w-5" />
                 </Link>
-                <Loader isBusy={this.state.isLoading}/>
+
+                <Loader isBusy={this.state.isLoading} />
+
             </BrowserRouter>
         )
     }

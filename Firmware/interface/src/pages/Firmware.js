@@ -1,9 +1,7 @@
 import React from 'react'
 
 import Api from '../utilities/Api'
-import SectionHeader from '../components/SectionHeader'
 import Loader from '../components/Loader'
-import Label from '../components/Form/Label'
 
 export default class Firmware extends React.Component {
 
@@ -45,27 +43,30 @@ export default class Firmware extends React.Component {
     render () {
         return (
             <>
-                <SectionHeader header="Firmware" />
+                
                 <div className="card">
-                    <form onSubmit={this.handleSubmit.bind(this)}>
+                    <h2 className="card-header">Firmware</h2>
+                    <div className="card-text">
                         <div className="md:flex mb-6">
                             <div className="md:w-1/3">
-                                <Label htmlFor="file">Firmware File</Label>
+                                <label className="form-label" htmlFor="file">Firmware File</label>
                             </div>
                             <div className="md:w-2/3">
-                                <input type="file" name="file" id="file" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" placeholder={(this.state.file ? this.state.file.name : null) || 'Choose file'} onChange={this.handleChange.bind(this)} />
+                                <input type="file" name="file" id="file" className="form-input" placeholder={(this.state.file ? this.state.file.name : null) || 'Choose file'} onChange={this.handleChange.bind(this)} />
                                 <p className="help-text">Please select the firmware file (BIN up to 500kB).</p>
                             </div>
                         </div>
                         <div className="md:flex md:items-center">
                             <div className="md:w-1/3" />
                             <div className="md:w-2/3">
-                                <button type="submit" className="shadow bg-red-600 hover:bg-red-500 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded">Upload and Update Firmware</button>
+                                <button type="submit" className="w-full form-btn-red">Upload and Update Firmware</button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
+
                 <Loader isBusy={this.state.isLoading}/>
+                
             </>
         )
     }
