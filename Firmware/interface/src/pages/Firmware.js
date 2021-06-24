@@ -46,7 +46,7 @@ export default class Firmware extends React.Component {
         return (
             <>
                 <SectionHeader header="Firmware" />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <form onSubmit={this.handleSubmit.bind(this)}>
                         <div className="md:flex mb-6">
                             <div className="md:w-1/3">
@@ -54,7 +54,7 @@ export default class Firmware extends React.Component {
                             </div>
                             <div className="md:w-2/3">
                                 <input type="file" name="file" id="file" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" placeholder={(this.state.file ? this.state.file.name : null) || 'Choose file'} onChange={this.handleChange.bind(this)} />
-                                <p className="py-2 text-sm text-gray-600">Please select the firmware file (BIN up to 500kB).</p>
+                                <p className="help-text">Please select the firmware file (BIN up to 500kB).</p>
                             </div>
                         </div>
                         <div className="md:flex md:items-center">

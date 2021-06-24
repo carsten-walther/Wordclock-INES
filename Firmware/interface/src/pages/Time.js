@@ -10,15 +10,15 @@ export default class Time extends React.Component {
         return (
             <>
                 <SectionHeader header="Time" />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
-                    <form onSubmit={this.props.onSubmit.bind(this)}>
+                <form onSubmit={this.props.onSubmit.bind(this)}>
+                    <div className="card">
                         <div className="md:flex mb-6">
                             <div className="md:w-1/3">
                                 <Label htmlFor="ntpServer">Network Time Server</Label>
                             </div>
                             <div className="md:w-2/3">
-                                <input type="text" name="ntpServer" id="ntpServer" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" placeholder="0.pool.ntp.org" value={this.props.data.ntpServer} onChange={this.props.onChange.bind(this)} />
-                                <p className="m-0 m-0 py-2 text-sm text-gray-500">Please select your preferred time server.</p>
+                                <input type="text" name="ntpServer" id="ntpServer" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpServer} onChange={this.props.onChange.bind(this)} />
+                                <p className="help-text">Please select your preferred time server.</p>
                             </div>
                         </div>
                         <div className="md:flex mb-6">
@@ -26,8 +26,8 @@ export default class Time extends React.Component {
                                 <Label htmlFor="ntpSyncInterval">Time Update Interval</Label>
                             </div>
                             <div className="md:w-2/3">
-                                <input type="number" name="ntpSyncInterval" id="ntpSyncInterval" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" placeholder="0.pool.ntp.org" value={this.props.data.ntpSyncInterval} onChange={this.props.onChange.bind(this)} />
-                                <p className="m-0 py-2 text-sm text-gray-500">Enter the time in seconds, when a time sync should be done.</p>
+                                <input type="number" name="ntpSyncInterval" id="ntpSyncInterval" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpSyncInterval} onChange={this.props.onChange.bind(this)} />
+                                <p className="help-text">Enter the time in seconds, when a time sync should be done.</p>
                             </div>
                         </div>
                         <div className="md:flex mb-6">
@@ -36,7 +36,7 @@ export default class Time extends React.Component {
                             </div>
                             <div className="md:w-2/3">
                                 <div className="relative">
-                                    <select name="timezone" id="timezone" value={this.props.data.timezone} className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4 pr-7" onChange={this.props.onChange.bind(this)}>
+                                    <select name="timezone" id="timezone" value={this.props.data.timezone} className="form-input pr-7" onChange={this.props.onChange.bind(this)}>
                                         <option key={0} value="0">(GMT-12:00) International Date Line West</option>
                                         <option key={1} value="1">(GMT-11:00) Mvalueway Island, Samoa</option>
                                         <option key={2} value="2">(GMT-10:00) Hawaii</option>
@@ -124,7 +124,7 @@ export default class Time extends React.Component {
                                         <ChevronDown className="h-5 w-5 float-right" />
                                     </div>
                                 </div>
-                                <p className="m-0 py-2 text-sm text-gray-500">Please select your local timezone.</p>
+                                <p className="help-text">Please select your local timezone.</p>
                             </div>
                         </div>
                         <div className="md:flex mb-6">
@@ -138,17 +138,18 @@ export default class Time extends React.Component {
                                         <span className="ml-2">Daylight Saving Time</span>
                                     </label>
                                 </div>
-                                <p className="m-0 py-2 text-sm text-gray-500">Are you using daylight saving time?</p>
+                                <p className="help-text">Are you using daylight saving time?</p>
                             </div>
                         </div>
-                        <Divider className="bg-gray-300 my-6" />
+                    </div>
+                    <div className="card">
                         <div className="md:flex mb-6">
                             <div className="md:w-1/3">
                                 <Label htmlFor="sleepTime">Sleep Time</Label>
                             </div>
                             <div className="md:w-2/3">
-                                <input type="time" name="sleepTime" id="sleepTime" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" placeholder="02:00" value={this.props.data.sleepTime} onChange={this.props.onChange.bind(this)} />
-                                <p className="m-0 m-0 py-2 text-sm text-gray-500">When should wordclock go to sleep?</p>
+                                <input type="time" name="sleepTime" id="sleepTime" className="form-input" placeholder="02:00" value={this.props.data.sleepTime} onChange={this.props.onChange.bind(this)} />
+                                <p className="help-text">When should wordclock go to sleep?</p>
                             </div>
                         </div>
                         <div className="md:flex mb-6">
@@ -156,8 +157,8 @@ export default class Time extends React.Component {
                                 <Label htmlFor="wakeupTime">Wakeup Time</Label>
                             </div>
                             <div className="md:w-2/3">
-                                <input type="time" name="wakeupTime" id="wakeupTime" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" placeholder="06:00" value={this.props.data.wakeupTime} onChange={this.props.onChange.bind(this)} />
-                                <p className="m-0 m-0 py-2 text-sm text-gray-500">When should wordclock go to wakeup?</p>
+                                <input type="time" name="wakeupTime" id="wakeupTime" className="form-input" placeholder="06:00" value={this.props.data.wakeupTime} onChange={this.props.onChange.bind(this)} />
+                                <p className="help-text">When should wordclock go to wakeup?</p>
                             </div>
                         </div>
                         <div className="md:flex md:items-center">
@@ -166,8 +167,8 @@ export default class Time extends React.Component {
                                 <button type="submit" className="shadow bg-red-600 hover:bg-red-500 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded">Save</button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </>
         )
     }

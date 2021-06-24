@@ -8,7 +8,7 @@ export default class Licences extends React.Component {
         return (
             <>
                 <SectionHeader header="Licences" />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <h6 className="text-gray-700 text-xl font-bold mb-4">WordClock</h6>
                     <p>Carsten Walther<br/>Triftweg 1<br/>04277 Leipzig</p>
                     <p>Copyright (C) Carsten Walther.</p>
@@ -17,7 +17,7 @@ export default class Licences extends React.Component {
                     <p>Copyright (C) 2007 Free Software Foundation, Inc. <a href="http://fsf.org" target="_blank" rel="noreferrer">fsf.org</a><br/>Everyone is permitted to copy and distribute verbatim copies<br/>of this license document, but changing it is not allowed.</p>
                 </div>
                 <Divider />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <h6 className="text-gray-700 text-xl font-bold mb-4">React</h6>
                     <p>MIT License</p>
                     <p>Copyright (C) Facebook, Inc. and its affiliates.</p>
@@ -26,7 +26,7 @@ export default class Licences extends React.Component {
                     <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
                 </div>
                 <Divider />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <h6 className="text-gray-700 text-xl font-bold mb-4">React Dom</h6>
                     <p>The MIT License (MIT)</p>
                     <p>Copyright (C) 2017 Tylor Steinberger</p>
@@ -35,7 +35,7 @@ export default class Licences extends React.Component {
                     <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
                 </div>
                 <Divider />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <h6 className="text-gray-700 text-xl font-bold mb-4">React Router</h6>
                     <p>The MIT License (MIT)</p>
                     <p>Copyright (C) React Training 2016-2018</p>

@@ -8,7 +8,7 @@ export default class System extends React.Component {
         return (
             <>
                 <SectionHeader header="System" />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <h6 className="text-gray-700 text-xl font-bold mb-4">Software</h6>
                     <dl>
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -18,7 +18,7 @@ export default class System extends React.Component {
                     </dl>
                 </div>
                 <hr className="bg-gray-300 my-12" />
-                <div className="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                <div className="card">
                     <h6 className="text-gray-700 text-xl font-bold mb-4">Hardware</h6>
                     <dl>
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

@@ -246,26 +246,20 @@ export default class App extends React.Component {
                                 <Route path="/" exact>
                                     <div id="dashboard">
                                         <Dashboard data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                        <Divider />
                                     </div>
                                     <div id="time">
                                         <Time data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                        <Divider />
                                     </div>
                                     <div id="network">
                                         <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
-                                        <Divider />
                                     </div>
                                     <div id="firmware">
                                         <Firmware />
-                                        <Divider />
                                     </div>
                                     <div id="system">
                                         <System info={this.state.info} />
-                                        <Divider />
                                     </div>
                                     <div id="licences">
-                                        <Licences />
                                     </div>
                                 </Route>
                             </Route>
