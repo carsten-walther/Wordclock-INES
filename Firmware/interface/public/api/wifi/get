@@ -1,0 +1,13 @@
+{
+    "success": true,
+    "payload": {
+        "ssid": "NetConnection",
+        "mac": "de:dw:3d:dv:23:33",
+        "localIp": "192.168.178.33",
+        "gatewayIp": "192.168.1.1",
+        "dnsIp": "192.168.1.0",
+        "subnetMask": "255.255.255.0",
+        "hostname": "wordclock-two.local",
+        "captivePortal": false
+    }
+}

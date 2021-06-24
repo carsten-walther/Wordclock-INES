@@ -1,0 +1,4 @@
+/* These styles will all be purged */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -1,0 +1,19 @@
+{
+    "success": true,
+    "payload": {
+        "networks": [
+            {
+                "ssid": "NetConnection",
+                "rssi": -67,
+                "encryptionType": 1,
+                "channel": 10
+            },
+            {
+                "ssid": "Other WLAN",
+                "rssi": -47,
+                "encryptionType": 0,
+                "channel": 9
+            }
+        ]
+    }
+}

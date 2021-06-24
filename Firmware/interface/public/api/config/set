@@ -1,0 +1,17 @@
+{
+    "success": true,
+    "payload": {
+        "ntpServer": "0.pool.ntp.de",
+        "ntpSyncInterval": 84600,
+        "timezone": 30,
+        "daylightSavingTime": true,
+        "language": 3,
+        "ssid": "NetConnection",
+        "pass": "carwal81",
+        "hostname": "wordclock-two.local",
+        "foregroundColor": "#ff0000",
+        "backgroundColor": "#0000ff",
+        "brightness": 33.33,
+        "clockMode": 1
+    }
+}

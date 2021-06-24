@@ -1,0 +1,14 @@
+.idea
+.pio
+.DS_Store
+
+CMakeLists.txt
+CMakeListsPrivate.txt
+cmake-build-*/
+
+interface*/api/
+interface*/data/
+interface/node_modules/
+
+data/*
+!data/.gitkeep
