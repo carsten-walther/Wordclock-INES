@@ -337,6 +337,7 @@ void WebServer::bindAll()
         configurationManager.data.backgroundColorGreen = (int)request->getParam("backgroundColor", true)->value().toInt();
         configurationManager.data.backgroundColorBlue = (int)request->getParam("backgroundColor", true)->value().toInt();
 
+        /*
         configurationManager.data.clockMode = (int)request->getParam("clockMode", true)->value().toInt();
         configurationManager.data.brightness = (int)request->getParam("brightness", true)->value().toInt();
         configurationManager.data.sleepHour = (int)request->getParam("sleepHour", true)->value().toInt();
@@ -348,14 +349,17 @@ void WebServer::bindAll()
         configurationManager.data.daylightSavingTime = (bool)request->getParam("daylightSavingTime", true)->value();
         configurationManager.data.ntpSyncInterval = (int)request->getParam("ntpSyncInterval", true)->value().toInt();
         strcpy(configurationManager.data.ntpServer, request->getParam("ntpServer", true)->value().c_str());
-
+        */
+        /*
         strcpy(configurationManager.data.ssid, request->getParam("ssid", true)->value().c_str());
         strcpy(configurationManager.data.pass, request->getParam("pass", true)->value().c_str());
         strcpy(configurationManager.data.hostname, request->getParam("hostname", true)->value().c_str());
-
+        */
+        /*
         configurationManager.data.useAuth = (bool)request->getParam("useAuth", true)->value();
         strcpy(configurationManager.data.authUsername, request->getParam("authUsername", true)->value().c_str());
         strcpy(configurationManager.data.authPassword, request->getParam("authPassword", true)->value().c_str());
+        */
 
         configurationManager.save();
 

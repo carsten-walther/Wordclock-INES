@@ -44,9 +44,9 @@ export default class Firmware extends React.Component {
         return (
             <>
                 
-                <div className="card">
+                <div id="firmware" className="card">
                     <h2 className="card-header">Firmware</h2>
-                    <div className="card-text">
+                    <div className="card-body">
                         <div className="md:flex mb-6">
                             <div className="md:w-1/3">
                                 <label className="form-label" htmlFor="file">Firmware File</label>

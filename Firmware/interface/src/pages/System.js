@@ -5,42 +5,44 @@ import Utility from '../utilities/Utility'
 export default class System extends React.Component {
     render () {
         return (
-            <div className="card">
+            <div id="system" className="card">
                 <h6 className="card-header">Software & Hardware</h6>
-                <dl>
-                    <div className="bg-gray-50">
-                        <dt>Firmware Version</dt>
-                        <dd>{this.props.info.version}</dd>
-                    </div>
-                    <div className="bg-white">
-                        <dt>Chip ID</dt>
-                        <dd>{this.props.info.chipId}</dd>
-                    </div>
-                    <div className="bg-gray-50">
-                        <dt>SDK Version</dt>
-                        <dd>{this.props.info.sdkVersion}</dd>
-                    </div>
-                    <div className="bg-white">
-                        <dt>CPU Frequency</dt>
-                        <dd>{this.props.info.cpuFreqMHz}</dd>
-                    </div>
-                    <div className="bg-gray-50">
-                        <dt>Flash chip speed</dt>
-                        <dd>{this.props.info.flashChipSpeed / 1000 / 1000} MHz</dd>
-                    </div>
-                    <div className="bg-white">
-                        <dt>Flash chip size</dt>
-                        <dd>{Utility.formatBytes(this.props.info.flashChipSize)}</dd>
-                    </div>
-                    <div className="bg-gray-50">
-                        <dt>Free heap space</dt>
-                        <dd>{Utility.formatBytes(this.props.info.freeHeap)}</dd>
-                    </div>
-                    <div className="bg-white">
-                        <dt>MAC Address</dt>
-                        <dd>{this.props.info.mac}</dd>
-                    </div>
-                </dl>
+                <table className="table-auto w-full">
+                <tbody>
+                    <tr className="bg-gray-100">
+                        <th>Firmware Version</th>
+                        <td>{this.props.info.version}</td>
+                    </tr>
+                    <tr>
+                        <th>Chip ID</th>
+                        <td>{this.props.info.chipId}</td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <th>SDK Version</th>
+                        <td>{this.props.info.sdkVersion}</td>
+                    </tr>
+                    <tr>
+                        <th>CPU Frequency</th>
+                        <td>{this.props.info.cpuFreqMHz}</td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <th>Flash Chip Speed</th>
+                        <td>{this.props.info.flashChipSpeed / 1000 / 1000} MHz</td>
+                    </tr>
+                    <tr>
+                        <th>Flash Chip Size</th>
+                        <td>{Utility.formatBytes(this.props.info.flashChipSize)}</td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <th>Free Heap Space</th>
+                        <td>{Utility.formatBytes(this.props.info.freeHeap)}</td>
+                    </tr>
+                    <tr>
+                        <th>MAC Address</th>
+                        <td>{this.props.info.mac}</td>
+                    </tr>
+                </tbody>
+                </table>
             </div>
         )
     }

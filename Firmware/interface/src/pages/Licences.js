@@ -5,9 +5,9 @@ export default class Licences extends React.Component {
         return (
             <>
                 
-                <div className="card">
+                <div id="licences" className="card">
                     <h6 className="card-header">WordClock</h6>
-                    <div className="card-text">
+                    <div className="card-body">
                         <p>Carsten Walther<br/>Triftweg 1<br/>04277 Leipzig</p>
                         <p>Copyright (C) Carsten Walther.</p>
                         <p>GPL-3.0 License</p>
@@ -18,7 +18,7 @@ export default class Licences extends React.Component {
 
                 <div className="card">
                     <h6 className="card-header">React</h6>
-                    <div className="card-text">
+                    <div className="card-body">
                         <p>MIT License</p>
                         <p>Copyright (C) Facebook, Inc. and its affiliates.</p>
                         <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
@@ -29,7 +29,7 @@ export default class Licences extends React.Component {
 
                 <div className="card">
                     <h6 className="card-header">React Dom</h6>
-                    <div className="card-text">
+                    <div className="card-body">
                         <p>The MIT License (MIT)</p>
                         <p>Copyright (C) 2017 Tylor Steinberger</p>
                         <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
@@ -40,7 +40,7 @@ export default class Licences extends React.Component {
 
                 <div className="card">
                     <h6 className="card-header">React Router</h6>
-                    <div className="card-text">
+                    <div className="card-body">
                         <p>The MIT License (MIT)</p>
                         <p>Copyright (C) React Training 2016-2018</p>
                         <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>

@@ -14,7 +14,7 @@ module.exports = {
         historyApiFallback: true,
         contentBase: path.join(__dirname, 'public'),
         open: true,
-        compress: false,
+        compress: true,
         hot: true,
         port: 3000,
         watchContentBase: true

@@ -10,8 +10,8 @@ export default class NavItem extends React.Component {
     render() {
         return(
             <>
-                <Link to={this.props.to} spy hashSpy smooth offset={-10} className="block pl-6 align-middle text-gray-700 no-underline hover:text-red-600" activeClass="text-red-600">
-                    <span className="pb-1 md:pb-0 text-sm">{this.props.title}</span>
+                <Link to={this.props.to} spy hashSpy smooth offset={-145} className="sidebar-navitem" activeClass="text-red-600">
+                    {this.props.title}
                 </Link>
             </>
         )

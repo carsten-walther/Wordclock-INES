@@ -21,9 +21,9 @@ export default class Sidebar extends React.Component {
 
     render() {
         return (
-            <div className="w-full lg:w-1/5 px-6 text-xl text-gray-800 leading-normal">
+            <>
                 <div className="block lg:hidden inset-0">
-                    <h1 className="font-bold py-2 lg:pb-6 text-center text-gray-700 mx-auto mb-6">
+                    <h1 className="font-bold py-2 lg:pb-6 text-center text-gray-700 mx-auto mt-6 mb-6">
                         <Logo width={24} height={24} className="text-gray-700 inline -mt-1 mr-1" /> WordClock
                     </h1>
                     <div className="relative">
@@ -36,49 +36,49 @@ export default class Sidebar extends React.Component {
                     </div>
                 </div>
                 <div className={`w-full sticky inset-0 ${!this.state.menuOpen ? 'hidden' : ''} lg:h-auto lg:block mt-0 my-2 lg:my-0 border border-gray-400 lg:border-transparent bg-white shadow rounded lg:shadow-none lg:bg-transparent z-20`} id="menu-content">
-                    <h1 className="font-bold py-2 lg:pb-6 text-gray-700 hidden lg:block">
-                        <Logo width={24} height={24} className="text-gray-700 inline -mt-1 -ml-2 mr-1" /> WordClock
-                    </h1>
-                    <ul className="list-reset py-2 md:py-0">
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                    <Logo width={100} height={100} className="text-gray-700 ml-auto my-7 hidden lg:block"/>
+                    <h1 className="text-right text-gray-700 text-xl font-bold pt-1.5 pb-4 hidden lg:block">WordClock</h1>
+                    <hr className="mb-8 hidden lg:block"/>
+                    <ul className="sidebar-list">
+                        <li className="sidebar-list-item">
                             <NavItem to={'color-and-brightness'} title="Color & Brightness" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'mode-and-language'} title="Mode & Language" />
                         </li>
-                        <li className="text-base font-bold py-2 lg:pt-4 lg:pb-2 text-gray-700">
-                            <span className="pl-6 lg:pl-0 pb-1 md:pb-0 text-sm">Settings</span>
+                        <li className="sidebar-list-header">
+                            <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Settings</span>
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'time-settings'} title="Time Settings" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'on-off-time'} title="On/Off Time" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'network'} title="Network" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'accessibility'} title="Accessibility" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'security'} title="Security" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'firmware'} title="Firmware" />
                         </li>
-                        <li className="text-base font-bold py-2 lg:pt-4 lg:pb-2 text-gray-700">
-                            <span className="pl-6 lg:pl-0 pb-1 md:pb-0 text-sm">Info</span>
+                        <li className="sidebar-list-header">
+                            <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Info</span>
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'system'} title="System" />
                         </li>
-                        <li className="py-1 md:my-2 lg:border-l-2 border-transparent border-gray-700">
+                        <li className="sidebar-list-item">
                             <NavItem to={'licences'} title="Licences" />
                         </li>
                     </ul>
                 </div>
-            </div>
+            </>
         )
     }
 }

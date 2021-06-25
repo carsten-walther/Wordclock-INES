@@ -5,9 +5,12 @@ import ColorPicker from '../components/ColorPicker'
 export default class ColorAndBrightness extends React.Component {
     render () {
         return (
-            <div className="card">
-                <h2 className="card-header">Colors & Brightness</h2>
-                <div className="card-text">
+            <div id="color-and-brightness" className="card">
+                <h2 className="card-header">
+                    Colors & Brightness
+                    <button type="button" className="float-right form-btn-red text-sm py-1 px-2" onClick={this.props.onSubmit.bind(this)}>Save</button>
+                </h2>
+                <div className="card-body">
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
                             <label className="form-label" htmlFor="foregroundColor">Foreground color</label>

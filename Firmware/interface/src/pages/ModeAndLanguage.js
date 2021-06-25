@@ -5,9 +5,12 @@ import ChevronDown from '../components/icons/ChevronDown'
 export default class Dashboard extends React.Component {
     render () {
         return (
-            <div className="card">
-                <h2 className="card-header">Mode & Language</h2>
-                <div className="card-text">
+            <div id="mode-and-language" className="card">
+                <h2 className="card-header">
+                    Mode & Language
+                    <button type="button" className="float-right form-btn-red text-sm py-1 px-2" onClick={this.props.onSubmit.bind(this)}>Save</button>
+                </h2>
+                <div className="card-body">
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
                             <label className="form-label" htmlFor="clockMode">Mode</label>

@@ -6,62 +6,87 @@
 @layer components {
 
     body {
-        @apply bg-gray-100 text-gray-900;
+        @apply bg-gray-50 text-gray-900;
     }
-
     p {
         @apply mb-4;
     }
 
-    .card {
-        @apply p-4 lg:p-8 mb-12 rounded shadow bg-white;
-    }
-    .card-header {
-        @apply text-gray-700 text-xl font-bold mb-4 -mt-3;
-    }
-    .card-text {
-        @apply bg-gray-50 p-4 lg:p-8 -mx-4 lg:-mx-8 -mb-4 lg:-mb-8;
+
+    .sidebar-list {
+        @apply list-none py-2 md:py-0;
+
+        .sidebar-list-item {
+            @apply py-1 md:my-2 lg:border-r-2 border-transparent border-gray-700 lg:text-right;
+            
+            .sidebar-navitem {
+                @apply block pl-6 lg:pr-6 text-gray-700 no-underline hover:text-red-600 cursor-pointer;
+            }
+        }
+
+        .sidebar-list-header {
+            @apply text-base font-bold py-2 lg:pt-4 lg:pb-2 text-gray-700 lg:text-right;
+        }
     }
 
+
+    .link-to-top {
+        @apply fixed bottom-4 right-4 rounded-full h-10 w-10 flex items-center justify-center shadow-lg z-50 bg-gray-700 text-white cursor-pointer;
+    }
+
+
+    .card {
+        @apply mx-4 mb-12 rounded-lg shadow-lg bg-white;
+
+        .card-header {
+            @apply text-gray-700 text-xl px-6 py-4;
+        }
+
+        .card-body {
+            @apply bg-gray-100 p-6 rounded-b-lg;
+        }
+    }
+
+
     .form-label {
-        @apply block text-gray-600 font-bold md:text-left mb-3 md:mb-0 pr-4;
+        @apply block text-gray-600 md:text-left mb-3 md:mb-0 pr-4;
     }
     .form-label-inline {
         @apply inline-flex items-center mr-6;
     }
     .form-input {
-        @apply appearance-none block leading-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4;
+        @apply appearance-none block leading-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-3 px-4;
     }
     .form-input-chevron {
         @apply pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700;
     }
 
     .form-btn-red {
-        @apply shadow bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded;
+        @apply shadow bg-red-600 hover:bg-red-500 text-white py-3 px-4 rounded-md;
     }
     .form-btn-green {
-        @apply shadow bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded;
+        @apply shadow bg-green-600 hover:bg-green-500 text-white py-3 px-4 rounded-md;
     }
+
 
     .help-text {
         @apply py-2 m-0 text-sm text-gray-400 italic;
     }
 
-    dl {
-        @apply -mb-4 lg:-mb-8;
-
-        div {
-            @apply px-4 lg:px-8 py-5 sm:grid sm:grid-cols-3 sm:gap-4 -mx-4 lg:-mx-8;
-        }
-        dt {
-            @apply text-sm font-medium text-gray-500;
-        }
-        dd {
-            @apply mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2;
-        }
-    }
 
     .cursor-ew-resize {
         cursor: ew-resize;
+    }
+
+
+    table {
+
+        th {
+            @apply text-left;
+        }
+        
+        th, td {
+            @apply px-6 py-4;
+        }
     }
 }

@@ -25,7 +25,7 @@
         "ssid": "Wordclock",
         "pass": "password",
         "hostname": "wordclock-two",
-        "useAuth": true,
+        "useAuth": false,
         "authUsername": "admin",
         "authPassword": "password"
     }

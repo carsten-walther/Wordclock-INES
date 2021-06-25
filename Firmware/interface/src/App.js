@@ -2,9 +2,7 @@ import React from 'react'
 import { Link } from 'react-scroll'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-import Sidebar from './components/Sidebar'
-import Loader from './components/Loader'
-
+import Captive from './pages/Captive'
 import ColorAndBrightness from './pages/ColorAndBrightness'
 import ModeAndLanguage from './pages/ModeAndLanguage'
 import TimeSettings from './pages/TimeSettings'
@@ -18,14 +16,19 @@ import Licences from './pages/Licences'
 
 import Api from './utilities/Api'
 import Color from './utilities/Color'
-import ChevronUp from './components/icons/ChevronUp'
 import Utility from './utilities/Utility'
+
+import Sidebar from './components/Sidebar'
+import Loader from './components/Loader'
+
+import ChevronUp from './components/icons/ChevronUp'
 
 export default class App extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
+            isCaptivePortal: false,
             showScrollToTop: false,
             isLoading: true,
             // data
@@ -80,6 +83,7 @@ export default class App extends React.Component {
 
     async componentDidMount() {
         document.addEventListener('scroll', this.onScroll.bind(this))
+        await this.getWifi()
         await this.getConfig()
         await this.getInfo()
         await this.scanWifi()
@@ -132,6 +136,15 @@ export default class App extends React.Component {
         })
     }
 
+    async getWifi() {
+        await Api.getWifi().then((result) => {
+            this.setState({
+                isLoading: false,
+                isCaptivePortal: result.payload.captivePortal
+            })
+        })
+    }
+
     async scanWifi() {
         await Api.scanWifi().then((result) => {
             this.setState({
@@ -149,7 +162,7 @@ export default class App extends React.Component {
         })
     }
 
-    handleChange(event) {
+    async handleChange(event) {
         let fieldName = event.target.name ? event.target.name : event.target.id
         let fieldValue = null
         switch (event.target.type) {
@@ -204,8 +217,6 @@ export default class App extends React.Component {
                 data: { ...this.state.data, [fieldName]: fieldValue }
             })
         }
-
-        console.log(fieldName, fieldValue)
     }
 
     async handleSubmit(event) {
@@ -240,61 +251,45 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <BrowserRouter>
-
-                <div id="top" className="container w-full flex flex-wrap mx-auto px-2 pt-8 lg:pt-16 mt-0 lg:mt-16">
-
-                    <Sidebar />
-
-                    <section className="w-full lg:w-3/5 mt-1 pb-12">
-
-                        <Switch>
-                            <Route>
-                                <Route path="/" exact>
-                                    <div id="color-and-brightness">
-                                        <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                    </div>
-                                    <div id="mode-and-language">
-                                        <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                    </div>
-                                    <div id="time-settings">
-                                        <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                    </div>
-                                    <div id="on-off-time">
-                                        <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                    </div>
-                                    <div id="network">
-                                        <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
-                                    </div>
-                                    <div id="accessibility">
-                                        <Accessibility data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
-                                    </div>
-                                    <div id="security">
-                                        <Security data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
-                                    </div>
-                                    <div id="firmware">
-                                        <Firmware />
-                                    </div>
-                                    <div id="system">
-                                        <System info={this.state.info} />
-                                    </div>
-                                    <div id="licences">
-                                        <Licences />
-                                    </div>
-                                </Route>
+            <div id="top" className="container w-full flex flex-wrap mx-auto">
+                <BrowserRouter>
+                    <Switch>
+                        <Route>
+                            <Route path="/" exact>
+                                {this.state.isCaptivePortal ? (
+                                    <>
+                                        <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
+                                            <Captive data={this.state.data} />
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="w-full lg:w-1/5 px-6">
+                                            <Sidebar/>
+                                        </div>
+                                        <div className="w-full lg:w-3/5 pb-12 mt-16 lg:mt-36">
+                                            <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                            <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                            <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                            <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                            <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)}/>
+                                            <Accessibility data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)}/>
+                                            <Security data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)}/>
+                                            <Firmware/>
+                                            <System info={this.state.info}/>
+                                            <Licences/>
+                                        </div>
+                                    </>
+                                )}
                             </Route>
-                        </Switch>
-
-                    </section>
-                </div>
-
-                <Link to="top" smooth className={`fixed bottom-4 right-4 rounded-full h-10 w-10 flex items-center justify-center shadow-lg z-50 bg-gray-700 text-white cursor-pointer ${!this.state.showScrollToTop ? 'hidden' : ''}`}>
-                    <ChevronUp className="h-5 w-5" />
+                        </Route>
+                    </Switch>
+                </BrowserRouter>
+                <Link to="top" smooth className={`link-to-top ${!this.state.showScrollToTop ? 'hidden' : ''}`}>
+                    <ChevronUp className="h-5 w-5"/>
                 </Link>
-
-                <Loader isBusy={this.state.isLoading} />
-
-            </BrowserRouter>
+                <Loader isBusy={this.state.isLoading}/>
+            </div>
         )
     }
 }

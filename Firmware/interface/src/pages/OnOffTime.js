@@ -3,9 +3,12 @@ import React from 'react'
 export default class OnOffTime extends React.Component {
     render () {
         return (
-            <div className="card">
-                <h2 className="card-header">On/Off Time</h2>
-                <div className="card-text">
+            <div id="on-off-time" className="card">
+                <h2 className="card-header">
+                    On/Off Time
+                    <button type="button" className="float-right form-btn-red text-sm py-1 px-2" onClick={this.props.onSubmit.bind(this)}>Save</button>
+                </h2>
+                <div className="card-body">
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
                             <label className="form-label" htmlFor="sleepTime">Sleep Time</label>
