@@ -29,7 +29,7 @@ export default class Network extends React.Component {
                                     <ChevronDown className="h-5 w-5 float-right" />
                                 </div>
                             </div>
-                            <p className="help-text">Please select your preferred WLAN name.</p>
+                            <p className="help-text">Please select the Wi-Fi network you want the clock to connect to.</p>
                         </div>
                     </div>
                     <div className="md:flex mb-6">
@@ -38,7 +38,7 @@ export default class Network extends React.Component {
                         </div>
                         <div className="md:w-2/3">
                             <input type="password" name="pass" id="pass" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.pass} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Please enter your WLAN password.</p>
+                            <p className="help-text">Please enter the password for the selected Wi-Fi network.</p>
                         </div>
                     </div>
                     <div className="md:flex md:items-center">
@@ -52,6 +52,7 @@ export default class Network extends React.Component {
                                     <button type="button" className="float-right form-btn-red" onClick={this.props.onNetworkReset.bind(this)}>Reset network</button>
                                 </div>
                             </div>
+                            <p className="help-text">If your desired Wi-Fi network is not listed, you can initiate a new search with "Scan networks". To set the clock to the Capitve mode, press "Reset network". Finally, the clock is reset.</p>
                         </div>
                     </div>
                 </div>

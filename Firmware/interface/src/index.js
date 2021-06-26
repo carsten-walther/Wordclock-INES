@@ -3,6 +3,6 @@ import ReactDOM from 'react-dom'
 
 import App from './App'
 
-import './assets/css/tailwind.css'
+import './assets/css/tailwind.scss'
 
-ReactDOM.render(<App/>, document.getElementById('wrapper'))
+ReactDOM.render(<React.StrictMode><App/></React.StrictMode>, document.getElementById('wrapper'))

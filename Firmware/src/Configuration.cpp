@@ -5,7 +5,7 @@
 #include "Configuration.h"
 #include "main.h"
 
-unsigned long version = 1623781070;
+unsigned long version = 1624639216;
 
 const Configuration defaults PROGMEM = {
     // foreground color

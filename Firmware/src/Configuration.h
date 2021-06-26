@@ -10,17 +10,17 @@
 struct Configuration
 {
     // foreground color
-    int foregroundColorRed;
-    int foregroundColorGreen;
-    int foregroundColorBlue;
+    int foregroundRed;
+    int foregroundGreen;
+    int foregroundBlue;
 
     // background color
-    int backgroundColorRed;
-    int backgroundColorGreen;
-    int backgroundColorBlue;
+    int backgroundRed;
+    int backgroundGreen;
+    int backgroundBlue;
 
     // settings
-    int clockMode;
+    int mode;
     int brightness;
     int sleepHour;
     int sleepMinute;

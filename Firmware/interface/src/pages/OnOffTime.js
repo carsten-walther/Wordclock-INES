@@ -1,4 +1,5 @@
 import React from 'react'
+import Utility from '../utilities/Utility'
 
 export default class OnOffTime extends React.Component {
     render () {
@@ -11,20 +12,20 @@ export default class OnOffTime extends React.Component {
                 <div className="card-body">
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="sleepTime">Sleep Time</label>
+                            <label className="form-label" htmlFor="sleep">Sleep Time</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="time" name="sleepTime" id="sleepTime" className="form-input" placeholder="02:00" value={this.props.data.sleepTime} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">When should wordclock go to sleep?</p>
+                            <input type="time" name="sleep" id="sleep" className="form-input" placeholder="02:00" value={Utility.combineHourAndMinute(this.props.data.sleep.h, this.props.data.sleep.m)} onChange={this.props.onChange.bind(this)} />
+                            <p className="help-text">Specify the time from which the clock is to be switched to sleep mode. The display is deactivated from this time.</p>
                         </div>
                     </div>
                     <div className="md:flex">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="wakeupTime">Wakeup Time</label>
+                            <label className="form-label" htmlFor="wakeup">Wakeup Time</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="time" name="wakeupTime" id="wakeupTime" className="form-input" placeholder="06:00" value={this.props.data.wakeupTime} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">When should wordclock go to wakeup?</p>
+                            <input type="time" name="wakeup" id="wakeup" className="form-input" placeholder="06:00" value={Utility.combineHourAndMinute(this.props.data.wakeup.h, this.props.data.wakeup.m)} onChange={this.props.onChange.bind(this)} />
+                            <p className="help-text">Specify the time from which the clock is to be reactivated.</p>
                         </div>
                     </div>
                 </div>

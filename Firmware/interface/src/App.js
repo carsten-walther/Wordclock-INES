@@ -35,30 +35,32 @@ export default class App extends React.Component {
             file: null,
             data: {
                 // dashboard
-                foregroundColor: {
+                foreground: {
                     r: 0,
                     g: 0,
                     b: 0
                 },
-                backgroundColor: {
+                background: {
                     r: 0,
                     g: 0,
                     b: 0
                 },
                 brightness: 0,
-                clockMode: 0,
+                mode: 0,
                 language: 0,
                 // time
                 ntpServer: '',
                 ntpSyncInterval: 0,
                 timezone: 0,
                 daylightSavingTime: false,
-                sleepHour: 0,
-                sleepMinute: 0,
-                wakeupHour: 0,
-                wakeupMinute: 0,
-                sleepTime: '00:00',
-                wakeupTime: '06:00',
+                sleep: {
+                    h: 0,
+                    m: 0
+                },
+                wakeup: {
+                    h: 0,
+                    m: 0
+                },
                 // network
                 ssid: '',
                 pass: '',
@@ -91,35 +93,42 @@ export default class App extends React.Component {
 
     async getConfig() {
         await Api.getConfig().then(result => {
-            let data = {}
-            for (const [key, value] of Object.entries(result.payload)) {
-
-                let dataResult = value
-                if (key === 'foregroundColor' || key === 'backgroundColor') {
-                    dataResult = Color.rgb2hex(value.r, value.g, value.b)
-                    data = { ...data, [key]: dataResult }
-                }
-                else if (key === 'sleepHour' || key === 'sleepMinute') {
-                    dataResult = Utility.combineHourAndMinute(result.payload.sleepHour, result.payload.sleepMinute)
-                    data = { ...data, 'sleepTime': dataResult }
-                }
-                else if (key === 'wakeupHour' || key === 'wakeupMinute') {
-                    dataResult = Utility.combineHourAndMinute(result.payload.wakeupHour, result.payload.wakeupMinute)
-                    data = { ...data, 'wakeupTime': dataResult }
-                }
-                else {
-                    data = { ...data, [key]: dataResult }
-                }
-            }
             this.setState({
                 isLoading: false,
-                data: data
+                data: result.payload
             })
         })
     }
 
     async setConfig() {
-        await Api.setConfig(this.state.data).then(async (result) => {
+        let returnVal = []
+
+        Object.keys(this.state.data).map((key) => {
+            if (key === 'foreground') {
+                returnVal['foregroundRed'] = this.state.data[key].r
+                returnVal['foregroundGreen'] = this.state.data[key].g
+                returnVal['foregroundBlue'] = this.state.data[key].b
+            }
+            else if (key === 'background') {
+                returnVal['backgroundRed'] = this.state.data[key].r
+                returnVal['backgroundGreen'] = this.state.data[key].g
+                returnVal['backgroundBlue'] = this.state.data[key].b
+            }
+            else if (key === 'sleep') {
+                returnVal['sleepHour'] = this.state.data[key].h
+                returnVal['sleepMinute'] = this.state.data[key].m
+            }
+            else if (key === 'wakeup') {
+                returnVal['wakeupHour'] = this.state.data[key].h
+                returnVal['wakeupMinute'] = this.state.data[key].m
+            }
+            else {
+                returnVal[key] = this.state.data[key]
+            }
+            return null
+        })
+
+        await Api.setConfig(returnVal).then(async (result) => {
             this.setState({
                 isLoading: false
             })
@@ -175,40 +184,18 @@ export default class App extends React.Component {
             case "checkbox":
                 fieldValue = event.target.checked ? "true" : "false"
                 break
+            case "radio":
+                fieldValue = event.target.value
+                break
         }
 
-        if (fieldName === 'foregroundColor' || fieldName === 'backgroundColor') {
+        if (fieldName === 'foreground' || fieldName === 'background') {
             fieldValue = Color.hex2rgb(fieldValue)
             this.setState({
                 data: { ...this.state.data, [fieldName]: fieldValue }
             })
-        } else if (fieldName === 'sleepTime') {
-            this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
-            })
-            let sleepTime = Utility.separateHourAndMinute(fieldValue)
-            fieldName = 'sleepHour'
-            fieldValue = sleepTime[0]
-            this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
-            })
-            fieldName = 'sleepMinute'
-            fieldValue = sleepTime[1]
-            this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
-            })
-        } else if (fieldName === 'wakeupTime') {
-            this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
-            })
-            let wakeupTime = Utility.separateHourAndMinute(fieldValue)
-            fieldName = 'wakeupHour'
-            fieldValue = wakeupTime[0]
-            this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
-            })
-            fieldName = 'wakeupMinute'
-            fieldValue = wakeupTime[1]
+        } else if (fieldName === 'sleep' || fieldName === 'wakeup') {
+            fieldValue = Utility.separateHourAndMinute(fieldValue)
             this.setState({
                 data: { ...this.state.data, [fieldName]: fieldValue }
             })

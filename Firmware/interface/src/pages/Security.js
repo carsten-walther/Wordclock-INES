@@ -1,7 +1,5 @@
 import React from 'react'
 
-import ChevronDown from '../components/icons/ChevronDown'
-
 export default class Security extends React.Component {
     render () {
         return (
@@ -22,7 +20,7 @@ export default class Security extends React.Component {
                                     <span className="ml-2">Use basic authentication for access.</span>
                                 </label>
                             </div>
-                            <p className="help-text">Would you like to active a basic authentication?</p>
+                            <p className="help-text">To protect the clock from unwanted manipulation you can activate basic authentication.</p>
                         </div>
                     </div>
                     <div className="md:flex mb-6">
@@ -31,7 +29,7 @@ export default class Security extends React.Component {
                         </div>
                         <div className="md:w-2/3">
                             <input type="text" name="authUsername" id="authUsername" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.authUsername} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Choose an username for authentication.</p>
+                            <p className="help-text">Please enter a username for authentication.</p>
                         </div>
                     </div>
                     <div className="md:flex">
@@ -40,7 +38,7 @@ export default class Security extends React.Component {
                         </div>
                         <div className="md:w-2/3">
                             <input type="password" name="authPassword" id="authPassword" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.authPassword} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Enter the password for authentication.</p>
+                            <p className="help-text">Please enter a password for authentication.</p>
                         </div>
                     </div>
                 </div>

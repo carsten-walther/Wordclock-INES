@@ -1,17 +1,36 @@
 {
     "success": true,
     "payload": {
-        "ntpServer": "0.pool.ntp.de",
-        "ntpSyncInterval": 84600,
-        "timezone": 30,
+        "foreground": {
+            "r": 12,
+            "g": 23,
+            "b": 34
+        },
+        "background": {
+            "r": 123,
+            "g": 0,
+            "b": 123
+        },
+        "mode": 1,
+        "brightness": 33,
+        "sleep": {
+            "h": 22,
+            "m": 30
+        },
+        "wakeup": {
+            "h": 6,
+            "m": 30
+        },
+        "language": 81,
+        "timezone": 49,
         "daylightSavingTime": true,
-        "language": 3,
-        "ssid": "NetConnection",
-        "pass": "carwal81",
-        "hostname": "wordclock-two.local",
-        "foregroundColor": "#ff0000",
-        "backgroundColor": "#0000ff",
-        "brightness": 33.33,
-        "clockMode": 1
+        "ntpSyncInterval": 84600,
+        "ntpServer": "europe.pool.ntp.org",
+        "ssid": "Wordclock",
+        "pass": "password",
+        "hostname": "wordclock-two",
+        "useAuth": false,
+        "authUsername": "admin",
+        "authPassword": "password"
     }
 }

@@ -60,10 +60,14 @@ export default class Utility {
      * separateHourAndMinute
      *
      * @param timeString
-     * @returns {string}
+     * @returns {{h, m}}
      */
     static separateHourAndMinute(timeString) {
-        return timeString.split(':').map(Number)
+        let timeArray = timeString.split(':').map(Number)
+        return {
+            h: timeArray[0],
+            m: timeArray[1]
+        }
     }
 
     /**

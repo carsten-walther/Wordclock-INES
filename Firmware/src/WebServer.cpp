@@ -293,20 +293,20 @@ void WebServer::bindAll()
 
         doc["success"] = true;
 
-        doc["payload"]["foregroundColor"]["r"] = configurationManager.data.foregroundColorRed;
-        doc["payload"]["foregroundColor"]["g"] = configurationManager.data.foregroundColorGreen;
-        doc["payload"]["foregroundColor"]["b"] = configurationManager.data.foregroundColorBlue;
+        doc["payload"]["foreground"]["r"] = configurationManager.data.foregroundRed;
+        doc["payload"]["foreground"]["g"] = configurationManager.data.foregroundGreen;
+        doc["payload"]["foreground"]["b"] = configurationManager.data.foregroundBlue;
 
-        doc["payload"]["backgroundColor"]["r"] = configurationManager.data.backgroundColorRed;
-        doc["payload"]["backgroundColor"]["g"] = configurationManager.data.backgroundColorGreen;
-        doc["payload"]["backgroundColor"]["b"] = configurationManager.data.backgroundColorBlue;
+        doc["payload"]["background"]["r"] = configurationManager.data.backgroundRed;
+        doc["payload"]["background"]["g"] = configurationManager.data.backgroundGreen;
+        doc["payload"]["background"]["b"] = configurationManager.data.backgroundBlue;
 
-        doc["payload"]["clockMode"] = configurationManager.data.clockMode;
+        doc["payload"]["mode"] = configurationManager.data.mode;
         doc["payload"]["brightness"] = configurationManager.data.brightness;
-        doc["payload"]["sleepHour"] = configurationManager.data.sleepHour;
-        doc["payload"]["sleepMinute"] = configurationManager.data.sleepMinute;
-        doc["payload"]["wakeupHour"] = configurationManager.data.wakeupHour;
-        doc["payload"]["wakeupMinute"] = configurationManager.data.wakeupMinute;
+        doc["payload"]["sleep"]["h"] = configurationManager.data.sleepHour;
+        doc["payload"]["sleep"]["m"] = configurationManager.data.sleepMinute;
+        doc["payload"]["wakeup"]["h"] = configurationManager.data.wakeupHour;
+        doc["payload"]["wakeup"]["m"] = configurationManager.data.wakeupMinute;
         doc["payload"]["language"] = configurationManager.data.language;
         doc["payload"]["timezone"] = configurationManager.data.timezone;
         doc["payload"]["daylightSavingTime"] = configurationManager.data.daylightSavingTime;
@@ -329,37 +329,34 @@ void WebServer::bindAll()
     // receive configuration data from body
     server.on(PSTR("/api/config/set"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
-        configurationManager.data.foregroundColorRed = (int)request->getParam("foregroundColor", true)->value().toInt();
-        configurationManager.data.foregroundColorGreen = (int)request->getParam("foregroundColor", true)->value().toInt();
-        configurationManager.data.foregroundColorBlue = (int)request->getParam("foregroundColor", true)->value().toInt();
+        configurationManager.data.foregroundRed = (int)request->getParam("foregroundRed", true)->value().toInt();
+        configurationManager.data.foregroundGreen = (int)request->getParam("foregroundGreen", true)->value().toInt();
+        configurationManager.data.foregroundBlue = (int)request->getParam("foregroundBlue", true)->value().toInt();
 
-        configurationManager.data.backgroundColorRed = (int)request->getParam("backgroundColor", true)->value().toInt();
-        configurationManager.data.backgroundColorGreen = (int)request->getParam("backgroundColor", true)->value().toInt();
-        configurationManager.data.backgroundColorBlue = (int)request->getParam("backgroundColor", true)->value().toInt();
+        configurationManager.data.backgroundRed = (int)request->getParam("backgroundRed", true)->value().toInt();
+        configurationManager.data.backgroundGreen = (int)request->getParam("backgroundGreen", true)->value().toInt();
+        configurationManager.data.backgroundBlue = (int)request->getParam("backgroundBlue", true)->value().toInt();
 
-        /*
-        configurationManager.data.clockMode = (int)request->getParam("clockMode", true)->value().toInt();
+        configurationManager.data.mode = (int)request->getParam("mode", true)->value().toInt();
         configurationManager.data.brightness = (int)request->getParam("brightness", true)->value().toInt();
         configurationManager.data.sleepHour = (int)request->getParam("sleepHour", true)->value().toInt();
         configurationManager.data.sleepMinute = (int)request->getParam("sleepMinute", true)->value().toInt();
         configurationManager.data.wakeupHour = (int)request->getParam("wakeupHour", true)->value().toInt();
         configurationManager.data.wakeupMinute = (int)request->getParam("wakeupMinute", true)->value().toInt();
+        
         configurationManager.data.language = (int)request->getParam("language", true)->value().toInt();
         configurationManager.data.timezone = (int)request->getParam("timezone", true)->value().toInt();
         configurationManager.data.daylightSavingTime = (bool)request->getParam("daylightSavingTime", true)->value();
         configurationManager.data.ntpSyncInterval = (int)request->getParam("ntpSyncInterval", true)->value().toInt();
         strcpy(configurationManager.data.ntpServer, request->getParam("ntpServer", true)->value().c_str());
-        */
-        /*
+        
         strcpy(configurationManager.data.ssid, request->getParam("ssid", true)->value().c_str());
         strcpy(configurationManager.data.pass, request->getParam("pass", true)->value().c_str());
         strcpy(configurationManager.data.hostname, request->getParam("hostname", true)->value().c_str());
-        */
-        /*
+        
         configurationManager.data.useAuth = (bool)request->getParam("useAuth", true)->value();
         strcpy(configurationManager.data.authUsername, request->getParam("authUsername", true)->value().c_str());
         strcpy(configurationManager.data.authPassword, request->getParam("authPassword", true)->value().c_str());
-        */
 
         configurationManager.save();
 
