@@ -3,7 +3,8 @@
  */
 export default class Api {
 
-    static baseUrl = '/' //'http://wordclock-two.local/'
+    static baseUrl = '/'
+    //static baseUrl = 'http://wordclock-two.local/'
 
     // Resource: /api/wifi
 

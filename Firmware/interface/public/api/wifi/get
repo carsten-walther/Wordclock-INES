@@ -8,6 +8,6 @@
         "dnsIp": "192.168.1.0",
         "subnetMask": "255.255.255.0",
         "hostname": "wordclock-two.local",
-        "captivePortal": false
+        "captivePortal": true
     }
 }

@@ -53,7 +53,7 @@ export default class Firmware extends React.Component {
                             </div>
                             <div className="md:w-2/3">
                                 <input type="file" name="file" id="file" className="form-input" placeholder={(this.state.file ? this.state.file.name : null) || 'Choose file'} onChange={this.handleChange.bind(this)} />
-                                <p className="help-text">Please select the firmware file (BIN up to 500kB).</p>
+                                <p className="help-text">Select the firmware file (BIN up to 500kB).</p>
                             </div>
                         </div>
                         <div className="md:flex md:items-center">

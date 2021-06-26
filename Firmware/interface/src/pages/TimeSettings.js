@@ -17,7 +17,7 @@ export default class TimeSettings extends React.Component {
                         </div>
                         <div className="md:w-2/3">
                             <input type="text" name="ntpServer" id="ntpServer" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpServer} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Please specify the desired NTP time server. Normally no change is necessary. The default value is: 0.pool.ntp.org.</p>
+                            <p className="help-text">Specify the desired NTP time server. Normally no change is necessary. The default value is: 0.pool.ntp.org.</p>
                         </div>
                     </div>
                     <div className="md:flex mb-6">
@@ -26,7 +26,7 @@ export default class TimeSettings extends React.Component {
                         </div>
                         <div className="md:w-2/3">
                             <input type="number" name="ntpSyncInterval" id="ntpSyncInterval" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpSyncInterval} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Define the interval (in seconds) at which the time should be synchronized with the NTP time server. The default value is: 84600.</p>
+                            <p className="help-text">Specify the interval (in seconds) at which the time should be synchronized with the NTP time server. The default value is: 84600.</p>
                         </div>
                     </div>
                     <div className="md:flex mb-6">
@@ -123,7 +123,7 @@ export default class TimeSettings extends React.Component {
                                     <ChevronDown className="h-5 w-5 float-right" />
                                 </div>
                             </div>
-                            <p className="help-text">Please specify the desired time zone that corresponds to the location of the clock.</p>
+                            <p className="help-text">Specify the desired time zone that corresponds to the location of the clock.</p>
                         </div>
                     </div>
                     <div className="md:flex">
@@ -137,7 +137,7 @@ export default class TimeSettings extends React.Component {
                                     <span className="ml-2">Daylight Saving Time</span>
                                 </label>
                             </div>
-                            <p className="help-text">Please indicate if your location switches between daylight saving and standard time.</p>
+                            <p className="help-text">Indicate if your location switches between daylight saving and standard time.</p>
                         </div>
                     </div>
                 </div>

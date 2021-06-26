@@ -18,15 +18,15 @@ export default class Dashboard extends React.Component {
                         <div className="md:w-2/3">
                             <div className="mt-2">
                                 <label className="form-label-inline" htmlFor="mode-1">
-                                    <input type="radio" name="mode" id="mode-1" value="1" className="form-radio text-indigo-600" checked={this.props.data.mode === "1"} onChange={this.props.onChange.bind(this)}/>
+                                    <input type="radio" name="mode" id="mode-1" value={1} className="form-radio text-indigo-600" checked={parseInt(this.props.data.mode) === 1} onChange={this.props.onChange.bind(this)}/>
                                     <span className="ml-2">Normal</span>
                                 </label>
                                 <label className="form-label-inline" htmlFor="mode-2">
-                                    <input type="radio" name="mode" id="mode-2" value="2" className="form-radio text-indigo-600" checked={this.props.data.mode === "2"} onChange={this.props.onChange.bind(this)}/>
+                                    <input type="radio" name="mode" id="mode-2" value={2} className="form-radio text-indigo-600" checked={parseInt(this.props.data.mode) === 2} onChange={this.props.onChange.bind(this)}/>
                                     <span className="ml-2">Scanner</span>
                                 </label>
                                 <label className="form-label-inline" htmlFor="mode-3">
-                                    <input type="radio" name="mode" id="mode-3" value="3" className="form-radio text-indigo-600" checked={this.props.data.mode === "3"} onChange={this.props.onChange.bind(this)}/>
+                                    <input type="radio" name="mode" id="mode-3" value={3} className="form-radio text-indigo-600" checked={parseInt(this.props.data.mode) === 3} onChange={this.props.onChange.bind(this)}/>
                                     <span className="ml-2">Test</span>
                                 </label>
                             </div>

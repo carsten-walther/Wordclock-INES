@@ -28,8 +28,8 @@ export default class Security extends React.Component {
                             <label className="form-label" htmlFor="authUsername">Username</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="text" name="authUsername" id="authUsername" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.authUsername} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Please enter a username for authentication.</p>
+                            <input type="text" name="authUsername" id="authUsername" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.authUsername} onChange={this.props.onChange.bind(this)} disabled={!this.props.data.useAuth} />
+                            <p className="help-text">Enter a username for authentication.</p>
                         </div>
                     </div>
                     <div className="md:flex">
@@ -37,8 +37,8 @@ export default class Security extends React.Component {
                             <label className="form-label" htmlFor="authPassword">Password</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="password" name="authPassword" id="authPassword" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.authPassword} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Please enter a password for authentication.</p>
+                            <input type="password" name="authPassword" id="authPassword" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.authPassword} onChange={this.props.onChange.bind(this)} disabled={!this.props.data.useAuth} />
+                            <p className="help-text">Enter a password for authentication.</p>
                         </div>
                     </div>
                 </div>

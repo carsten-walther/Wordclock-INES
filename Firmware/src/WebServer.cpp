@@ -20,7 +20,6 @@ void WebServer::begin()
 {
     // to enable testing and debugging of the interface.old
     DefaultHeaders::Instance().addHeader(PSTR("Access-Control-Allow-Origin"), PSTR("*"));
-    DefaultHeaders::Instance().addHeader(PSTR("Server"), PSTR("ESP Async Web Server"));
 
     // start the SPI Flash File System (LittleFS)
     if (LittleFS.begin() != false)
@@ -64,7 +63,19 @@ void WebServer::loop()
 void WebServer::bindAll()
 {
     // serve static
-    server.serveStatic(PSTR("/"), LittleFS, PSTR("/")).setDefaultFile("index.html");
+    if (configurationManager.data.useAuth)
+    {
+        server
+            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
+            .setDefaultFile("index.html")
+            .setAuthentication(configurationManager.data.authUsername, configurationManager.data.authPassword);
+    }
+    else
+    {
+        server
+            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
+            .setDefaultFile("index.html");
+    }
 
     // handle not found and captive portal
     server.onNotFound(handleNotFound);
@@ -79,6 +90,8 @@ void WebServer::bindAll()
     // get WiFi details
     server.on(PSTR("/api/wifi/get"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(4096);
 
         doc["success"] = true;
@@ -100,10 +113,14 @@ void WebServer::bindAll()
     // update WiFi details
     server.on(PSTR("/api/wifi/set"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(128);
 
-        strcpy(configurationManager.data.ssid, request->getParam("ssid", true)->value().c_str());
-        strcpy(configurationManager.data.pass, request->getParam("pass", true)->value().c_str());
+        if (request->hasParam("ssid", true))
+            strcpy(configurationManager.data.ssid, request->getParam("ssid", true)->value().c_str());
+        if (request->hasParam("pass", true))
+            strcpy(configurationManager.data.pass, request->getParam("pass", true)->value().c_str());
 
         configurationManager.save();
 
@@ -119,6 +136,8 @@ void WebServer::bindAll()
     // scan WiFi networks
     server.on(PSTR("/api/wifi/scan"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(4096);
 
         doc["success"] = true;
@@ -142,6 +161,8 @@ void WebServer::bindAll()
     // reset WiFi details
     server.on(PSTR("/api/wifi/reset"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(128);
 
         doc["success"] = true;
@@ -160,6 +181,8 @@ void WebServer::bindAll()
     // get file listing
     server.on(PSTR("/api/files/get"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(4096);
 
         doc["success"] = true;
@@ -192,6 +215,8 @@ void WebServer::bindAll()
     // remove file
     server.on(PSTR("/api/files/remove"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(128);
 
         String filename = request->getParam("filename", true)->value().c_str();
@@ -223,6 +248,8 @@ void WebServer::bindAll()
     // restart the ESP
     server.on(PSTR("/api/restart"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(128);
 
         doc["success"] = true;
@@ -237,6 +264,8 @@ void WebServer::bindAll()
     // info
     server.on(PSTR("/api/info"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(1024);
 
         doc["success"] = true;
@@ -258,6 +287,8 @@ void WebServer::bindAll()
     // update from FS
     server.on(PSTR("/api/update"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(128);
 
         doc["success"] = true;
@@ -272,6 +303,8 @@ void WebServer::bindAll()
     // update status
     server.on(PSTR("/api/update-status"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(128);
 
         doc["success"] = true;
@@ -289,6 +322,8 @@ void WebServer::bindAll()
     // send configuration data
     server.on(PSTR("/api/config/get"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
+        webServer.handleAuth(request);
+
         DynamicJsonDocument doc(2048);
 
         doc["success"] = true;
@@ -329,34 +364,54 @@ void WebServer::bindAll()
     // receive configuration data from body
     server.on(PSTR("/api/config/set"), HTTP_POST, [](AsyncWebServerRequest *request)
     {
-        configurationManager.data.foregroundRed = (int)request->getParam("foregroundRed", true)->value().toInt();
-        configurationManager.data.foregroundGreen = (int)request->getParam("foregroundGreen", true)->value().toInt();
-        configurationManager.data.foregroundBlue = (int)request->getParam("foregroundBlue", true)->value().toInt();
+        webServer.handleAuth(request);
 
-        configurationManager.data.backgroundRed = (int)request->getParam("backgroundRed", true)->value().toInt();
-        configurationManager.data.backgroundGreen = (int)request->getParam("backgroundGreen", true)->value().toInt();
-        configurationManager.data.backgroundBlue = (int)request->getParam("backgroundBlue", true)->value().toInt();
-
-        configurationManager.data.mode = (int)request->getParam("mode", true)->value().toInt();
-        configurationManager.data.brightness = (int)request->getParam("brightness", true)->value().toInt();
-        configurationManager.data.sleepHour = (int)request->getParam("sleepHour", true)->value().toInt();
-        configurationManager.data.sleepMinute = (int)request->getParam("sleepMinute", true)->value().toInt();
-        configurationManager.data.wakeupHour = (int)request->getParam("wakeupHour", true)->value().toInt();
-        configurationManager.data.wakeupMinute = (int)request->getParam("wakeupMinute", true)->value().toInt();
-        
-        configurationManager.data.language = (int)request->getParam("language", true)->value().toInt();
-        configurationManager.data.timezone = (int)request->getParam("timezone", true)->value().toInt();
-        configurationManager.data.daylightSavingTime = (bool)request->getParam("daylightSavingTime", true)->value();
-        configurationManager.data.ntpSyncInterval = (int)request->getParam("ntpSyncInterval", true)->value().toInt();
-        strcpy(configurationManager.data.ntpServer, request->getParam("ntpServer", true)->value().c_str());
-        
-        strcpy(configurationManager.data.ssid, request->getParam("ssid", true)->value().c_str());
-        strcpy(configurationManager.data.pass, request->getParam("pass", true)->value().c_str());
-        strcpy(configurationManager.data.hostname, request->getParam("hostname", true)->value().c_str());
-        
-        configurationManager.data.useAuth = (bool)request->getParam("useAuth", true)->value();
-        strcpy(configurationManager.data.authUsername, request->getParam("authUsername", true)->value().c_str());
-        strcpy(configurationManager.data.authPassword, request->getParam("authPassword", true)->value().c_str());
+        if (request->hasParam("foregroundRed", true))
+            configurationManager.data.foregroundRed = (int)request->getParam("foregroundRed", true)->value().toInt();
+        if (request->hasParam("foregroundGreen", true))
+            configurationManager.data.foregroundGreen = (int)request->getParam("foregroundGreen", true)->value().toInt();
+        if (request->hasParam("foregroundBlue", true))
+            configurationManager.data.foregroundBlue = (int)request->getParam("foregroundBlue", true)->value().toInt();
+        if (request->hasParam("backgroundRed", true))
+            configurationManager.data.backgroundRed = (int)request->getParam("backgroundRed", true)->value().toInt();
+        if (request->hasParam("backgroundGreen", true))
+            configurationManager.data.backgroundGreen = (int)request->getParam("backgroundGreen", true)->value().toInt();
+        if (request->hasParam("backgroundBlue", true))
+            configurationManager.data.backgroundBlue = (int)request->getParam("backgroundBlue", true)->value().toInt();
+        if (request->hasParam("mode", true))
+            configurationManager.data.mode = (int)request->getParam("mode", true)->value().toInt();
+        if (request->hasParam("brightness", true))
+            configurationManager.data.brightness = (int)request->getParam("brightness", true)->value().toInt();
+        if (request->hasParam("sleepHour", true))
+            configurationManager.data.sleepHour = (int)request->getParam("sleepHour", true)->value().toInt();
+        if (request->hasParam("sleepMinute", true))
+            configurationManager.data.sleepMinute = (int)request->getParam("sleepMinute", true)->value().toInt();
+        if (request->hasParam("wakeupHour", true))
+            configurationManager.data.wakeupHour = (int)request->getParam("wakeupHour", true)->value().toInt();
+        if (request->hasParam("wakeupMinute", true))
+            configurationManager.data.wakeupMinute = (int)request->getParam("wakeupMinute", true)->value().toInt();
+        if (request->hasParam("language", true))
+            configurationManager.data.language = (int)request->getParam("language", true)->value().toInt();
+        if (request->hasParam("timezone", true))
+            configurationManager.data.timezone = (int)request->getParam("timezone", true)->value().toInt();
+        if (request->hasParam("daylightSavingTime", true))
+            configurationManager.data.daylightSavingTime = (request->getParam("daylightSavingTime", true)->value() == "true") ? true : false;
+        if (request->hasParam("ntpSyncInterval", true))
+            configurationManager.data.ntpSyncInterval = (int)request->getParam("ntpSyncInterval", true)->value().toInt();
+        if (request->hasParam("ntpServer", true))
+            strcpy(configurationManager.data.ntpServer, request->getParam("ntpServer", true)->value().c_str());
+        if (request->hasParam("ssid", true))
+            strcpy(configurationManager.data.ssid, request->getParam("ssid", true)->value().c_str());
+        if (request->hasParam("pass", true))
+            strcpy(configurationManager.data.pass, request->getParam("pass", true)->value().c_str());
+        if (request->hasParam("hostname", true))
+            strcpy(configurationManager.data.hostname, request->getParam("hostname", true)->value().c_str());
+        if (request->hasParam("useAuth", true))
+            configurationManager.data.useAuth = (request->getParam("useAuth", true)->value() == "true") ? true : false;
+        if (request->hasParam("authUsername", true))
+            strcpy(configurationManager.data.authUsername, request->getParam("authUsername", true)->value().c_str());
+        if (request->hasParam("authPassword", true))
+            strcpy(configurationManager.data.authPassword, request->getParam("authPassword", true)->value().c_str());
 
         configurationManager.save();
 
@@ -368,6 +423,14 @@ void WebServer::bindAll()
         serializeJson(doc, JSON);
         request->send(200, PSTR("application/json"), JSON);
     });
+}
+
+void WebServer::handleAuth(AsyncWebServerRequest *request)
+{
+    if (configurationManager.data.useAuth && !request->authenticate(configurationManager.data.authUsername, configurationManager.data.authPassword))
+    {
+        return request->requestAuthentication(AUTH_REALM);
+    }
 }
 
 String WebServer::getContentType(const String &path)
@@ -417,6 +480,8 @@ String WebServer::getContentType(const String &path)
 
 void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
 {
+    webServer.handleAuth(request);
+
     if (!index)
     {
         Serial.println(PSTR("> starting file upload"));
@@ -451,6 +516,8 @@ void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename
 
 void WebServer::handleNotFound(AsyncWebServerRequest *request)
 {
+    webServer.handleAuth(request);
+
     request->send(404, "text/plain", "Not found");
 }
 

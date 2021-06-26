@@ -15,6 +15,7 @@ private:
     AsyncWebServer server = AsyncWebServer(80);
 
     void bindAll();
+    void handleAuth(AsyncWebServerRequest *request);
     static String getContentType(const String &filename);
     static void handleFileUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
     static void handleNotFound(AsyncWebServerRequest *request);

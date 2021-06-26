@@ -30,6 +30,7 @@ export default class App extends React.Component {
         this.state = {
             isCaptivePortal: false,
             showScrollToTop: false,
+            showExpertMode: false,
             isLoading: true,
             // data
             file: null,
@@ -154,6 +155,14 @@ export default class App extends React.Component {
         })
     }
 
+    async setWifi () {
+        await Api.setWifi(this.state.data).then((result) => {
+            this.setState({
+                isLoading: false
+            })
+        })
+    }
+
     async scanWifi() {
         await Api.scanWifi().then((result) => {
             this.setState({
@@ -182,7 +191,7 @@ export default class App extends React.Component {
                 fieldValue = event.target.files[0]
                 break
             case "checkbox":
-                fieldValue = event.target.checked ? "true" : "false"
+                fieldValue = !!event.target.checked
                 break
             case "radio":
                 fieldValue = event.target.value
@@ -230,6 +239,12 @@ export default class App extends React.Component {
         await this.resetWifi()
     }
 
+    toggleExpertMode() {
+        this.setState({
+            showExpertMode: !this.state.showExpertMode
+        })
+    }
+
     onScroll() {
         this.setState({
             showScrollToTop: (document.documentElement.scrollTop > 300)
@@ -246,25 +261,31 @@ export default class App extends React.Component {
                                 {this.state.isCaptivePortal ? (
                                     <>
                                         <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
-                                            <Captive data={this.state.data} />
+                                            <Captive data={this.state.data} networks={this.state.networks} onNetworkScan={this.handleNetworkScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.setWifi.bind(this)} />
                                         </div>
                                     </>
                                 ) : (
                                     <>
                                         <div className="w-full lg:w-1/5 px-6">
-                                            <Sidebar/>
+                                            <Sidebar showExpertMode={this.state.showExpertMode} onToggleExpertMode={this.toggleExpertMode.bind(this)} />
                                         </div>
                                         <div className="w-full lg:w-3/5 pb-12 mt-16 lg:mt-36">
-                                            <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)}/>
-                                            <Accessibility data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)}/>
-                                            <Security data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)}/>
-                                            <Firmware/>
-                                            <System info={this.state.info}/>
-                                            <Licences/>
+                                            <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                            <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                            {this.state.showExpertMode && (
+                                                <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                            )}
+                                            <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                            {this.state.showExpertMode && (
+                                                <>
+                                                    <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
+                                                    <Accessibility data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                                    <Security data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                                    <Firmware />
+                                                    <System info={this.state.info} />
+                                                    <Licences />
+                                                </>
+                                            )}
                                         </div>
                                     </>
                                 )}

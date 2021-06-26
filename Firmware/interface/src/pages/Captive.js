@@ -1,77 +1,17 @@
 import React from 'react'
 
-import Api from '../utilities/Api'
-import Loader from '../components/Loader'
+import Backdrop from '../components/Backdrop'
 import ChevronDown from '../components/icons/ChevronDown'
+import Close from '../components/icons/Close'
 
 export default class Captive extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            isLoading: true,
             modalShow: false,
-            gtcAccepted: false,
-            // data
-            data: {
-                ssid: '',
-                pass: ''
-            },
-            networks: []
+            gtcAccepted: false
         }
-    }
-
-    async componentDidMount () {
-        await this.scanWifi()
-    }
-
-    async scanWifi () {
-        await Api.scanWifi().then((result) => {
-            this.setState({
-                isLoading: false,
-                networks: result.payload.networks
-            })
-        })
-    }
-
-    async setWifi () {
-        await Api.setWifi(this.state.data).then((result) => {
-            this.setState({
-                isLoading: false
-            })
-        })
-    }
-
-    async handleScan (event) {
-        event.preventDefault()
-        this.setState({
-            isLoading: true
-        })
-        await this.scanWifi()
-    }
-
-    handleChange (event) {
-        let fieldName = event.target.name ? event.target.name : event.target.id
-        let fieldValue = null
-        switch (event.target.type) {
-            default:
-                fieldValue = event.target.value
-                break
-            case "checkbox":
-                fieldValue = event.target.checked
-                break
-        }
-        this.setState({
-            data: { ...this.state.data, [fieldName]: fieldValue }
-        })
-    }
-
-    async handleSubmit (event) {
-        event.preventDefault()
-        this.setState({
-            isLoading: true
-        })
-        await this.setWifi()
     }
 
     handleGTC (event) {
@@ -90,17 +30,21 @@ export default class Captive extends React.Component {
     render () {
         return (
             <div className="card">
-                <h2 className="card-header">WiFi Settings</h2>
+                <h2 className="card-header">
+                    WiFi Settings
+                </h2>
                 <div className="card-body">
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="ssid">SSID</label>
+                            <label className="form-label" htmlFor="ssid">
+                                SSID
+                            </label>
                         </div>
                         <div className="md:w-2/3">
                             <div className="relative">
-                                <select id="ssid" className="form-input" onChange={this.handleChange.bind(this)}>
+                                <select id="ssid" className="form-input" onChange={this.props.onChange.bind(this)}>
                                     <option value="">SSID</option>
-                                    {this.state.networks && this.state.networks.map((network, index) => (
+                                    {this.props.networks && this.props.networks.map((network, index) => (
                                         <option value={network.ssid} key={index}>
                                             {(network.encryptionType > 0) ? '🔒 ' : '🔓 '} {network.ssid} {(network.encryptionType > 0) ? '(closed)' : '(open)'}
                                         </option>
@@ -114,23 +58,27 @@ export default class Captive extends React.Component {
                     </div>
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="pass">Password</label>
+                            <label className="form-label" htmlFor="pass">
+                                Password
+                            </label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="password" name="pass" id="pass" className="form-input" placeholder="Password" onChange={this.handleChange.bind(this)}/>
+                            <input type="password" name="pass" id="pass" className="form-input" placeholder="Password" onChange={this.props.onChange.bind(this)}/>
                         </div>
                     </div>
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3"/>
                         <div className="md:w-2/3">
-                            <button type="button" className="float-left text-sm cursor-pointer" onClick={this.handleScan.bind(this)}>Scan for networks!</button>
+                            <button type="button" className="form-btn-green cursor-pointer" onClick={this.props.onNetworkScan.bind(this)}>
+                                Scan networks
+                            </button>
                         </div>
                     </div>
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3"/>
                         <div className="md:w-2/3">
                             <label className="flex items-center">
-                                <input type="checkbox" name="gtc" id="gtc" className="form-checkbox" checked={this.state.data.gtc} onChange={this.handleChange.bind(this)}/>
+                                <input type="checkbox" name="gtc" id="gtc" className="form-checkbox" checked={this.state.gtcAccepted} onChange={this.handleGTC.bind(this)}/>
                                 <span className="ml-2">I accept the <span className="cursor-pointer underline" onClick={this.handleToggleModal.bind(this)}>general terms and conditions</span>.</span>
                             </label>
                         </div>
@@ -138,10 +86,29 @@ export default class Captive extends React.Component {
                     <div className="md:flex md:items-center">
                         <div className="md:w-1/3"/>
                         <div className="md:w-2/3">
-                            <button type="submit" className="form-btn-red" disabled={!this.state.gtcAccepted || !this.state.data.ssid.length > 0}>Save</button>
+                            <button type="submit" className="form-btn-red" disabled={!this.state.gtcAccepted || !this.props.data.ssid.length > 0} onClick={this.props.onSubmit.bind(this)}>
+                                Save
+                            </button>
                         </div>
                     </div>
                 </div>
+                {this.state.modalShow && (
+                    <Backdrop>
+                        <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
+                            <div className="card">
+                                <h2 className="card-header">
+                                    General Terms and Conditions
+                                    <button type="button" className="float-right  py-1" onClick={this.handleToggleModal.bind(this)}>
+                                        <Close className="h-5 w-5" />
+                                    </button>
+                                </h2>
+                                <div className="card-body py-8 h-96 overscroll-contain overflow-auto">
+                                    <p>...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </Backdrop>
+                )}
             </div>
         )
     }
