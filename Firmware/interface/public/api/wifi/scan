@@ -3,16 +3,28 @@
     "payload": {
         "networks": [
             {
+                "rssi": -50,
                 "ssid": "NetConnection",
-                "rssi": -67,
-                "encryptionType": 1,
-                "channel": 10
+                "bssid": "C8:0E:14:BF:01:73",
+                "channel": 13,
+                "encryptionType": 8,
+                "hidden": false
             },
             {
-                "ssid": "Other WLAN",
-                "rssi": -47,
-                "encryptionType": 0,
-                "channel": 9
+                "rssi": -66,
+                "ssid": "SEC_LinkShare_d0518f",
+                "bssid": "E4:E0:C5:0D:E1:F5",
+                "channel": 13,
+                "encryptionType": 4,
+                "hidden": false
+            },
+            {
+                "rssi": -69,
+                "ssid": "KJO20112013",
+                "bssid": "C0:4A:00:2D:44:4C",
+                "channel": 6,
+                "encryptionType": 8,
+                "hidden": false
             }
         ]
     }

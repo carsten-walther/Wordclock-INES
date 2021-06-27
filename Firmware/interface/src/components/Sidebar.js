@@ -75,9 +75,11 @@ export default class Sidebar extends React.Component {
                                 <li className="sidebar-list-item">
                                     <NavItem to={'security'} title="Security" />
                                 </li>
+                                {/*}
                                 <li className="sidebar-list-item">
                                     <NavItem to={'firmware'} title="Firmware" />
                                 </li>
+                                {*/}
                             </>
                         )}
                         {this.props.showExpertMode && (

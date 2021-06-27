@@ -14,12 +14,12 @@ export default class Firmware extends React.Component {
     }
 
     async uploadAndUpdate () {
-        await Api.uploadFile(this.state.file, true).then(async (result) => {
+        await Api.filesUpload(this.state.file, true).then(async (result) => {
             this.setState({
                 isLoading: false
             })
-            await Api.update()
-            await Api.updateStatus()
+            await Api.systemUpdate()
+            await Api.systemUpdateStatus()
             this.setState({
                 data: { ...this.state, file: null }
             })

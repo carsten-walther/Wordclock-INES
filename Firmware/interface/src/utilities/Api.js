@@ -4,28 +4,29 @@
 export default class Api {
 
     static baseUrl = '/'
-    //static baseUrl = 'http://wordclock-two.local/'
 
     // Resource: /api/wifi
+    //
+    //
 
     /**
-     * getWifi
+     * wifiGet
      *
      * @returns {Promise<*>}
      */
-    static async getWifi() {
+    static async wifiGet() {
         return await fetch(this.baseUrl + "api/wifi/get")
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * setWifi
+     * wifiSet
      *
      * @param data
      * @returns {Promise<*>}
      */
-    static async setWifi (data) {
+    static async wifiSet (data) {
         let formData = new FormData()
 
         Object.keys(data).map(key => formData.append(key, data[key]))
@@ -41,51 +42,74 @@ export default class Api {
     }
 
     /**
-     * scanWifi
+     * wifiSetStatic
+     *
+     * @param data
+     * @returns {Promise<*>}
+     */
+    static async wifiSetStatic (data) {
+        let formData = new FormData()
+
+        Object.keys(data).map(key => formData.append(key, data[key]))
+
+        let init = {
+            method: 'POST',
+            body: formData
+        }
+
+        return await fetch(this.baseUrl + "api/wifi/setStatic", init)
+          .then(response => response.json())
+          .then(result => result, error => error)
+    }
+
+    /**
+     * wifiScan
      *
      * @returns {Promise<*>}
      */
-    static async scanWifi () {
+    static async wifiScan () {
         return await fetch(this.baseUrl + "api/wifi/scan")
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * resetWifi
+     * wifiForget
      *
      * @returns {Promise<*>}
      */
-    static async resetWifi () {
+    static async wifiForget () {
         let init = {
             method: 'POST'
         }
 
-        return await fetch(this.baseUrl + "api/wifi/reset", init)
+        return await fetch(this.baseUrl + "api/wifi/forget", init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     // Resource: /api/files
+    //
+    //
 
     /**
-     * getFiles
+     * filesGet
      *
      * @returns {Promise<*>}
      */
-    static async getFiles() {
+    static async filesGet() {
         return await fetch(this.baseUrl + "api/files/get")
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * removeFile
+     * filesRemove
      *
      * @param filename
      * @returns {Promise<*>}
      */
-    static async removeFile (filename) {
+    static async filesRemove (filename) {
         let formData = new FormData()
 
         formData.append('filename', filename)
@@ -107,7 +131,7 @@ export default class Api {
      * @param overwrite
      * @returns {Promise<*>}
      */
-    static async uploadFile (data, overwrite) {
+    static async filesUpload (data, overwrite) {
         let formData = new FormData()
 
         formData.append('file', data)
@@ -124,90 +148,83 @@ export default class Api {
     }
 
     // Resource: /api
+    //
+    //
 
     /**
-     * restart
+     * systemRestart
      *
      * @returns {Promise<*>}
      */
-    static async restart () {
+    static async systemRestart () {
         let init = {
             method: 'POST'
         }
 
-        return await fetch(this.baseUrl + "api/restart", init)
+        return await fetch(this.baseUrl + "api/system/restart", init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * update
+     * systemUpdate
      *
      * @returns {Promise<*>}
      */
-    static async update () {
+    static async systemUpdate () {
         let init = {
             method: 'POST'
         }
 
-        return await fetch(this.baseUrl + "api/update", init)
+        return await fetch(this.baseUrl + "api/system/update", init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * updateStatus
+     * systemUpdateStatus
      *
      * @returns {Promise<*>}
      */
-    static async updateStatus () {
-        return await fetch(this.baseUrl + "api/update-status")
+    static async systemUpdateStatus () {
+        return await fetch(this.baseUrl + "api/system/update-status")
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * loadTimers
+     * systemInfo
      *
      * @returns {Promise<*>}
      */
-    static async loadTimers () {
-        return await fetch(this.baseUrl + "api/load-timers")
-            .then(response => response.json())
-            .then(result => result, error => error)
-    }
-
-    /**
-     * info
-     *
-     * @returns {Promise<*>}
-     */
-    static async info () {
-        return await fetch(this.baseUrl + "api/info")
+    static async systemInfo () {
+        return await fetch(this.baseUrl + "api/system/info")
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     // Resource: /api/config
+    //
+    //
 
     /**
-     * getConfig
+     * configGet
      *
      * @returns {Promise<*>}
      */
-    static async getConfig() {
+    static async configGet() {
         return await fetch(this.baseUrl + "api/config/get")
             .then(response => response.json())
             .then(result => result, error => error)
     }
 
     /**
-     * setConfig
+     * configSet
      *
      * @param data
      * @returns {Promise<*>}
      */
-    static async setConfig (data) {
+    static async configSet (data) {
         let formData = new FormData()
 
         Object.keys(data).map(key => formData.append(key, data[key]))
@@ -219,20 +236,6 @@ export default class Api {
 
         return await fetch(this.baseUrl + "api/config/set", init)
             .then(response => response.json())
-            .then(result => result, error => error)
-    }
-
-    /**
-     * getData
-     *
-     * @param filename
-     * @returns {Promise<*>}
-     */
-    static async getData (filename) {
-        return await fetch(this.baseUrl + "data/" + filename)
-            .then(response => {
-                if (response.status === 200) return response.json()
-            })
             .then(result => result, error => error)
     }
 }

@@ -12,6 +12,17 @@
 #include "WiFiManager.h"
 #include "ConfigurationManager.h"
 
+struct task
+{
+    unsigned long rate;
+    unsigned long previous;
+};
+
+task taskA = {
+    .rate = 1000,
+    .previous = 0
+};
+
 void saveCallback() {
     Serial.println(PSTR("> configuration saved"));
 }
@@ -35,18 +46,9 @@ void setup()
     Serial.println(PSTR("> starting configuration manager"));
     configurationManager.begin();
     configurationManager.setConfigSaveCallback(saveCallback);
-
-    String ssid = AP_SSID;
-    ssid.concat(" (" + String(ESP.getChipId()) + ")");
-    int ssid_str_len = ssid.length() + 1;
-    char ssid_char_array[ssid_str_len];
-    ssid.toCharArray(ssid_char_array, ssid_str_len);
     
-    Serial.print(PSTR("> using ssid: "));
-    Serial.println(ssid_char_array);
-
     Serial.println(PSTR("> starting wifi manager"));
-    wiFiManager.begin(ssid_char_array);
+    wiFiManager.begin(AP_SSID);
 
     Serial.println(PSTR("> starting web server"));
     webServer.begin();
@@ -98,7 +100,14 @@ void loop()
 
     if (!wiFiManager.isCaptivePortal())
     {
+        if (taskA.previous == 0 || (millis() - taskA.previous > taskA.rate))
+        {
+            taskA.previous = millis();
 
-        // ...
+            //do task
+            Serial.println(TimeSync::getTimestamp());
+
+            // ...
+        }
     }
 }

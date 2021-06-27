@@ -5,7 +5,7 @@
 #include "Configuration.h"
 #include "main.h"
 
-unsigned long version = 1624639216;
+unsigned long version = 1624816104;
 
 const Configuration defaults PROGMEM = {
     // foreground color
@@ -32,8 +32,6 @@ const Configuration defaults PROGMEM = {
     NTP_HOST_NAME,
 
     // network
-    AP_SSID,
-    AP_PASS,
     SERVER_HOST,
 
     // access

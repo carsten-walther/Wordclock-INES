@@ -39,7 +39,7 @@
 //
 
 // Access Point Hostname (.local is attached to the domain automatically by mDNS) char[32]
-#define SERVER_HOST "wordclock-two"
+#define SERVER_HOST "wordclock"
 
 // Web Server Ports
 #define SERVER_PORT 80

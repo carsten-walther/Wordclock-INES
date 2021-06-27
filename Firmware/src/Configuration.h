@@ -33,8 +33,6 @@ struct Configuration
     char ntpServer[64];
 
     // network
-    char ssid[32];
-    char pass[32];
     char hostname[32];
 
     // access

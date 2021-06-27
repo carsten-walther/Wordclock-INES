@@ -14,7 +14,7 @@ export default class Accessibility extends React.Component {
                             <label className="form-label" htmlFor="hostname">Hostname</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="text" name="hostname" id="hostname" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.hostname} onChange={this.props.onChange.bind(this)} />
+                            <input type="text" name="hostname" id="hostname" className="form-input" value={this.props.data.hostname} onChange={this.props.onChange.bind(this)} />
                             <p className="help-text">Enter the host name under which WordClock should be accessible. Changing the host name requires a reset. (.local will be added automatically)</p>
                         </div>
                     </div>

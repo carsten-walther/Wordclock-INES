@@ -1,7 +1,5 @@
 import React from 'react'
 
-import Utility from '../utilities/Utility'
-
 export default class System extends React.Component {
     render () {
         return (
@@ -14,32 +12,16 @@ export default class System extends React.Component {
                         <td>{this.props.info.version}</td>
                     </tr>
                     <tr>
-                        <th>Chip ID</th>
-                        <td>{this.props.info.chipId}</td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                        <th>SDK Version</th>
-                        <td>{this.props.info.sdkVersion}</td>
-                    </tr>
-                    <tr>
-                        <th>CPU Frequency</th>
-                        <td>{this.props.info.cpuFreqMHz}</td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                        <th>Flash Chip Speed</th>
-                        <td>{this.props.info.flashChipSpeed / 1000 / 1000} MHz</td>
-                    </tr>
-                    <tr>
-                        <th>Flash Chip Size</th>
-                        <td>{Utility.formatBytes(this.props.info.flashChipSize)}</td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                        <th>Free Heap Space</th>
-                        <td>{Utility.formatBytes(this.props.info.freeHeap)}</td>
-                    </tr>
-                    <tr>
                         <th>MAC Address</th>
                         <td>{this.props.info.mac}</td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <th>Restart WordClock</th>
+                        <td>
+                            <button type="button" className="form-btn-red text-sm py-1 px-2" onClick={this.props.onSystemRestart.bind(this)}>
+                                Restart
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
                 </table>

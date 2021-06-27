@@ -26,12 +26,12 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
     dns = IPAddress(configurationManager.internal.dns);
 
     // start the multicast domain name server
-    if (MDNS.begin(SERVER_HOST))
+    if (MDNS.begin(configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST))
     {
         MDNS.addService("http", "tcp", SERVER_PORT);
         
         Serial.print(PSTR("> mdns started at with domain "));
-        Serial.print(SERVER_HOST + String(".local"));
+        Serial.print((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
         Serial.print(PSTR(" on port "));
         Serial.println(SERVER_PORT);
     }
@@ -68,6 +68,7 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
 void WiFiManager::forget()
 {
     WiFi.disconnect();
+    
     startCaptivePortal(captivePortalName);
 
     // remove IP address from EEPROM
@@ -79,7 +80,7 @@ void WiFiManager::forget()
     // make EEPROM empty
     storeToEEPROM();
 
-    Serial.println(PSTR("> requested to forget WiFi, started captive portal."));
+    Serial.println(PSTR("> requested to forget WiFi, started captive portal"));
 }
 
 void WiFiManager::setNewWifi(String newSSID, String newPass)

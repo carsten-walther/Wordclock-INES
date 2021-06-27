@@ -1,8 +1,20 @@
 import React from 'react'
 
-import ChevronDown from '../components/icons/ChevronDown'
-
 export default class Network extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            static: false
+        }
+    }
+
+    toggleStatic() {
+        this.setState({
+            static: !this.state.static
+        })
+    }
+
     render () {
         return (
             <div id="network" className="card">
@@ -13,52 +25,85 @@ export default class Network extends React.Component {
                 <div className="card-body">
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="ssid">SSID</label>
+                            <label className="form-label">
+                                Captive Mode
+                            </label>
                         </div>
                         <div className="md:w-2/3">
-                            <div className="relative">
-                                <select name="ssid" id="ssid" value={this.props.data.ssid} className="form-input" onChange={this.props.onChange.bind(this)}>
-                                    <option value="">SSID</option>
-                                    {this.props.networks && this.props.networks.map((network, index) => (
-                                        <option value={network.ssid} key={index}>
-                                            {(network.encryptionType > 0) ? '🔒 ' : '🔓 '} {network.ssid} {(network.encryptionType > 0) ? '(closed)' : '(open)'}
-                                        </option>
-                                    ))}
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <ChevronDown className="h-5 w-5 float-right" />
-                                </div>
-                            </div>
-                            <p className="help-text">Select the Wi-Fi network you want the clock to connect to.</p>
+                            <button type="button" className="form-btn-red text-sm py-1 px-2" onClick={this.props.onWifiForget.bind(this)}>
+                                Reset WiFi
+                            </button>
+                            <p className="help-text">To set the clock to the capitve mode, press "Reset network". Finally, the clock resets.</p>
                         </div>
                     </div>
+                    <hr className="my-6" />
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="pass">Password</label>
+                            <label className="form-label" htmlFor="useStatic">
+                                Static settings
+                            </label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="password" name="pass" id="pass" className="appearance-none block leading-none w-full text-gray-700 border border-gray-300 rounded py-3 px-4" value={this.props.data.pass} onChange={this.props.onChange.bind(this)} />
-                            <p className="help-text">Enter the password for the selected Wi-Fi network.</p>
+                            <div>
+                                <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                    <input type="checkbox" name="useStatic" id="useStatic" className="toggle-checkbox" checked={this.state.static} onChange={this.toggleStatic.bind(this)} />
+                                    <label htmlFor="useStatic" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" />
+                                </div>
+                                <label htmlFor="static" className="inline-flex items-center">
+                                    <span className="ml-2">Use static network settings</span>
+                                </label>
+                            </div>
+                            <p className="help-text">Use static network settings.</p>
                         </div>
                     </div>
-                    <div className="md:flex md:items-center">
-                        <div className="md:w-1/3" />
-                        <div className="md:w-2/3">
-                            <div className="flex">
-                                <div className="w-1/2">
-                                    <button type="button" className="float-left form-btn-green" onClick={this.props.onNetworkScan.bind(this)}>
-                                        Scan networks
-                                    </button>
+                    {this.state.static && (
+                        <>
+                            <div className="md:flex mb-6">
+                                <div className="md:w-1/3">
+                                    <label className="form-label" htmlFor="ip">
+                                        IP Address
+                                    </label>
                                 </div>
-                                <div className="w-1/2">
-                                    <button type="button" className="float-right form-btn-red" onClick={this.props.onNetworkReset.bind(this)}>
-                                        Reset network
-                                    </button>
+                                <div className="md:w-2/3">
+                                    <input type="text" name="ip" id="ip" className="form-input" value={this.props.wifi.ip} onChange={this.props.onChange.bind(this)} />
+                                    <p className="help-text">Enter the static IP address.</p>
                                 </div>
                             </div>
-                            <p className="help-text">If your desired Wi-Fi network is not listed, you can initiate a new search with "Scan networks". To set the clock to the Capitve mode, press "Reset network". Finally, the clock is reset.</p>
-                        </div>
-                    </div>
+                            <div className="md:flex mb-6">
+                                <div className="md:w-1/3">
+                                    <label className="form-label" htmlFor="sub">
+                                        Subnet mask
+                                    </label>
+                                </div>
+                                <div className="md:w-2/3">
+                                    <input type="text" name="sub" id="sub" className="form-input" value={this.props.wifi.sub} onChange={this.props.onChange.bind(this)} />
+                                    <p className="help-text">Enter the Subnet mask.</p>
+                                </div>
+                            </div>
+                            <div className="md:flex mb-6">
+                                <div className="md:w-1/3">
+                                    <label className="form-label" htmlFor="gw">
+                                        Gateway
+                                    </label>
+                                </div>
+                                <div className="md:w-2/3">
+                                    <input type="text" name="gw" id="gw" className="form-input" value={this.props.wifi.gw} onChange={this.props.onChange.bind(this)} />
+                                    <p className="help-text">Enter the Gateway.</p>
+                                </div>
+                            </div>
+                            <div className="md:flex mb-6">
+                                <div className="md:w-1/3">
+                                    <label className="form-label" htmlFor="dns">
+                                        DNS Server
+                                    </label>
+                                </div>
+                                <div className="md:w-2/3">
+                                    <input type="text" name="dns" id="dns" className="form-input" value={this.props.wifi.gw} onChange={this.props.onChange.bind(this)} />
+                                    <p className="help-text">Enter the DNS server.</p>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         )

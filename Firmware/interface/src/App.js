@@ -28,14 +28,14 @@ export default class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isCaptivePortal: false,
             showScrollToTop: false,
             showExpertMode: false,
             isLoading: true,
-            // data
+            static: false,
+
             file: null,
+
             data: {
-                // dashboard
                 foreground: {
                     r: 0,
                     g: 0,
@@ -49,7 +49,6 @@ export default class App extends React.Component {
                 brightness: 0,
                 mode: 0,
                 language: 0,
-                // time
                 ntpServer: '',
                 ntpSyncInterval: 0,
                 timezone: 0,
@@ -62,38 +61,94 @@ export default class App extends React.Component {
                     h: 0,
                     m: 0
                 },
-                // network
-                ssid: '',
-                pass: '',
                 hostname: '',
                 useAuth: false,
                 authUsername: '',
                 authPassword: ''
             },
+
+            wifi: {
+                ssid: '',
+                ip: '',
+                sub: '',
+                gw: '',
+                dns: '',
+                captivePortal: false
+            },
+
             info: {
                 version: '',
-                chipId: '',
-                sdkVersion: '',
-                cpuFreqMHz: 0,
-                flashChipSpeed: 0,
-                flashChipSize: 0,
-                freeHeap: 0,
                 mac: ''
             },
+
             networks: []
         }
     }
 
     async componentDidMount() {
         document.addEventListener('scroll', this.onScroll.bind(this))
-        await this.getWifi()
-        await this.getConfig()
-        await this.getInfo()
-        await this.scanWifi()
+
+        await this.wifiGet()
+        await this.configGet()
+        await this.systemInfo()
+
+        if (this.state.wifi.captivePortal) {
+            await this.wifiScan()
+        }
     }
 
-    async getConfig() {
-        await Api.getConfig().then(result => {
+    // api/wifi
+    //
+    //
+
+    async wifiGet() {
+        await Api.wifiGet().then((result) => {
+            this.setState({
+                isLoading: false,
+                wifi: result.payload
+            })
+        })
+    }
+
+    async wifiSet () {
+        if (this.state.static) {
+            await Api.wifiSetStatic(this.state.data).then((result) => {
+                this.setState({
+                    isLoading: false
+                })
+            })
+        } else {
+            await Api.wifiSet(this.state.data).then((result) => {
+                this.setState({
+                    isLoading: false
+                })
+            })
+        }
+    }
+
+    async wifiScan() {
+        await Api.wifiScan().then((result) => {
+            this.setState({
+                isLoading: false,
+                networks: result.payload.networks
+            })
+        })
+    }
+
+    async wifiForget() {
+        await Api.wifiForget().then((result) => {
+            this.setState({
+                isLoading: true
+            })
+        })
+    }
+
+    // api/config
+    //
+    //
+
+    async configGet() {
+        await Api.configGet().then(result => {
             this.setState({
                 isLoading: false,
                 data: result.payload
@@ -101,7 +156,7 @@ export default class App extends React.Component {
         })
     }
 
-    async setConfig() {
+    async configSet() {
         let returnVal = []
 
         Object.keys(this.state.data).map((key) => {
@@ -129,16 +184,20 @@ export default class App extends React.Component {
             return null
         })
 
-        await Api.setConfig(returnVal).then(async (result) => {
+        await Api.configSet(returnVal).then(async (result) => {
             this.setState({
                 isLoading: false
             })
-            await this.getConfig()
+            await this.configGet()
         })
     }
 
-    async getInfo() {
-        await Api.info().then((result) => {
+    // api/system
+    //
+    //
+
+    async systemInfo() {
+        await Api.systemInfo().then((result) => {
             this.setState({
                 isLoading: false,
                 info: { ...result.payload }
@@ -146,39 +205,15 @@ export default class App extends React.Component {
         })
     }
 
-    async getWifi() {
-        await Api.getWifi().then((result) => {
-            this.setState({
-                isLoading: false,
-                isCaptivePortal: result.payload.captivePortal
-            })
-        })
-    }
-
-    async setWifi () {
-        await Api.setWifi(this.state.data).then((result) => {
-            this.setState({
-                isLoading: false
-            })
-        })
-    }
-
-    async scanWifi() {
-        await Api.scanWifi().then((result) => {
-            this.setState({
-                isLoading: false,
-                networks: result.payload.networks
-            })
-        })
-    }
-
-    async resetWifi() {
-        await Api.resetWifi().then((result) => {
+    async systemRestart() {
+        await Api.systemRestart().then((result) => {
             this.setState({
                 isLoading: true
             })
         })
     }
+
+    // ...
 
     async handleChange(event) {
         let fieldName = event.target.name ? event.target.name : event.target.id
@@ -220,23 +255,23 @@ export default class App extends React.Component {
         this.setState({
             isLoading: true
         })
-        await this.setConfig()
+        await this.configSet()
     }
 
-    async handleNetworkScan(event) {
+    async handleWifiScan(event) {
         event.preventDefault()
         this.setState({
             isLoading: true
         })
-        await this.scanWifi()
+        await this.wifiScan()
     }
 
-    async handleNetworkReset(event) {
+    async handleWifiForget(event) {
         event.preventDefault()
         this.setState({
             isLoading: false
         })
-        await this.resetWifi()
+        await this.wifiForget()
     }
 
     toggleExpertMode() {
@@ -258,10 +293,10 @@ export default class App extends React.Component {
                     <Switch>
                         <Route>
                             <Route path="/" exact>
-                                {this.state.isCaptivePortal ? (
+                                {this.state.wifi.captivePortal ? (
                                     <>
                                         <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
-                                            <Captive data={this.state.data} networks={this.state.networks} onNetworkScan={this.handleNetworkScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.setWifi.bind(this)} />
+                                            <Captive data={this.state.data} networks={this.state.networks} onWifiScan={this.handleWifiScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.wifiSet.bind(this)} />
                                         </div>
                                     </>
                                 ) : (
@@ -278,11 +313,13 @@ export default class App extends React.Component {
                                             <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
                                             {this.state.showExpertMode && (
                                                 <>
-                                                    <Network data={this.state.data} networks={this.state.networks} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onNetworkScan={this.handleNetworkScan.bind(this)} onNetworkReset={this.handleNetworkReset.bind(this)} />
+                                                    <Network data={this.state.data} wifi={this.state.wifi} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onWifiForget={this.handleWifiForget.bind(this)} />
                                                     <Accessibility data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
                                                     <Security data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                                    {/*}
                                                     <Firmware />
-                                                    <System info={this.state.info} />
+                                                    {*/}
+                                                    <System info={this.state.info} onSystemRestart={this.systemRestart.bind(this)} />
                                                     <Licences />
                                                 </>
                                             )}
