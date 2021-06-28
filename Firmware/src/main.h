@@ -29,10 +29,7 @@
 //
 
 // Access Point SSID char[32]
-#define AP_SSID "Wordclock"
-
-// Access Point Passwort char[32]
-#define AP_PASS "password"
+#define AP_SSID "WordClock"
 
 //
 // Webserver ===================================================================
@@ -79,7 +76,7 @@
 
 #define USE_BASIC_AUTH true
 
-#define AUTH_REALM "Wordclock"
+#define AUTH_REALM "WordClock"
 
 // char[32]
 #define AUTH_USERNAME "admin"

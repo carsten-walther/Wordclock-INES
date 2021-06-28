@@ -30,9 +30,26 @@ void WebServer::begin()
         Serial.println(PSTR("> filesystem init failed"));
     }
 
-    bindAll();
-
     server.begin();
+
+    if (configurationManager.data.useAuth)
+    {
+        server
+            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
+            .setDefaultFile("index.html")
+            .setAuthentication(configurationManager.data.authUsername, configurationManager.data.authPassword);
+    }
+    else
+    {
+        server
+            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
+            .setDefaultFile("index.html");
+    }
+
+    // handle not found and captive portal
+    // server.onNotFound(handleNotFound);
+
+    bindAll();
 
     if (!wiFiManager.isCaptivePortal())
     {
@@ -53,6 +70,9 @@ void WebServer::begin()
         {
             Serial.println(PSTR("> ssdp started"));
         }
+
+        // handle SSDP
+        server.on(PSTR("/description.xml"), HTTP_GET, handleSimpleServiceDiscoveryProtocol);
     }
 }
 
@@ -67,30 +87,7 @@ void WebServer::loop()
 
 void WebServer::bindAll()
 {
-    // handle not found and captive portal
-    server.onNotFound(handleNotFound);
-
-    // serve static
-    if (!wiFiManager.isCaptivePortal())
-    {
-        if (configurationManager.data.useAuth)
-        {
-            server
-                .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
-                .setDefaultFile("index.html")
-                .setAuthentication(configurationManager.data.authUsername, configurationManager.data.authPassword);
-        }
-        else
-        {
-            server
-                .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
-                .setDefaultFile("index.html");
-        }
-
-        // handle SSDP
-        server.on(PSTR("/description.xml"), HTTP_GET, handleSimpleServiceDiscoveryProtocol);
-    }
-
+    
     //
     // WIFI
     //
@@ -455,14 +452,18 @@ void WebServer::handleNotFound(AsyncWebServerRequest *request)
     Serial.print(PSTR("> requested URL: "));
     Serial.println(request->url().c_str());
 
-    if (wiFiManager.isCaptivePortal())
+    if (request->method() == HTTP_GET || request->method() == HTTP_POST)
     {
-        AsyncWebServerResponse *response = request->beginResponse(302);
-        response->addHeader("Location", "/index.html");
-        request->send(response);
+        request->send(LittleFS, "index.html");
     }
-
-    request->send(404, "text/html", "<h1>Not found</h1><p>The requested URL " + String(request->url().c_str()) + " was not found on this server.</p>");
+    else if (request->method() == HTTP_OPTIONS)
+    {
+        request->send(200);
+    }
+    else
+    {
+        request->send(404, "text/html", "<h1>Not found</h1><p>The requested URL " + String(request->url().c_str()) + " was not found on this server.</p>");
+    }
 }
 
 void WebServer::handleSimpleServiceDiscoveryProtocol(AsyncWebServerRequest *request)

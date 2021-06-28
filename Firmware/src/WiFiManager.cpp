@@ -80,7 +80,7 @@ void WiFiManager::forget()
     // make EEPROM empty
     storeToEEPROM();
 
-    Serial.println(PSTR("> requested to forget WiFi, started captive portal"));
+    Serial.println(PSTR("> requested to forget wifi, started captive portal"));
 }
 
 void WiFiManager::setNewWifi(String newSSID, String newPass)
@@ -195,6 +195,8 @@ void WiFiManager::startCaptivePortal(char const *apName)
 void WiFiManager::stopCaptivePortal()
 {
     WiFi.mode(WIFI_STA);
+
+    dnsServer->stop();
     delete dnsServer;
 
     inCaptivePortal = false;
@@ -209,8 +211,11 @@ void WiFiManager::loop()
 {
     if (inCaptivePortal)
     {
-        //captive portal loop
-        dnsServer->processNextRequest();
+        if (dnsServer)
+        {
+            // captive portal loop
+            dnsServer->processNextRequest();
+        }
     }
 
     if (reconnect)

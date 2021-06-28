@@ -100,7 +100,7 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin({
-            cleanStaleWebpackAssets: false,
+            cleanStaleWebpackAssets: true,
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'public/index.html'),
@@ -113,7 +113,7 @@ module.exports = {
             compressionOptions: {
                 level: 9
             },
-            deleteOriginalAssets: false
+            deleteOriginalAssets: true
         })
     ],
     optimization: {
