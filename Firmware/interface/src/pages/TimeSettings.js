@@ -7,8 +7,7 @@ export default class TimeSettings extends React.Component {
         return (
             <div id="time-settings" className="card">
                 <h2 className="card-header">
-                    Time Settings
-                    <button type="button" className="float-right form-btn-red text-sm py-1 px-2" onClick={this.props.onSubmit.bind(this)}>Save</button>
+                    Time Settings <button type="button" className="float-right form-btn-green " onClick={this.props.onSubmit.bind(this)}>Save</button>
                 </h2>
                 <div className="card-body">
                     <div className="md:flex mb-6">
@@ -16,7 +15,7 @@ export default class TimeSettings extends React.Component {
                             <label className="form-label" htmlFor="ntpServer">Network Time Server</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="text" name="ntpServer" id="ntpServer" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpServer} onChange={this.props.onChange.bind(this)} />
+                            <input type="text" name="ntpServer" id="ntpServer" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpServer} onChange={this.props.onChange.bind(this)}/>
                             <p className="help-text">Specify the desired NTP time server. Normally no change is necessary. The default value is: 0.pool.ntp.org.</p>
                         </div>
                     </div>
@@ -25,7 +24,10 @@ export default class TimeSettings extends React.Component {
                             <label className="form-label" htmlFor="ntpSyncInterval">Time Update Interval</label>
                         </div>
                         <div className="md:w-2/3">
-                            <input type="number" name="ntpSyncInterval" id="ntpSyncInterval" className="form-input" placeholder="0.pool.ntp.org" value={this.props.data.ntpSyncInterval} onChange={this.props.onChange.bind(this)} />
+                            <div className="flex rounded-md shadow-sm">
+                                <input type="number" name="ntpSyncInterval" id="ntpSyncInterval" className="form-input rounded-none rounded-l-md" value={this.props.data.ntpSyncInterval} onChange={this.props.onChange.bind(this)}/>
+                                <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Seconds</span>
+                            </div>
                             <p className="help-text">Specify the interval (in seconds) at which the time should be synchronized with the NTP time server. The default value is: 84600.</p>
                         </div>
                     </div>
@@ -120,7 +122,7 @@ export default class TimeSettings extends React.Component {
                                     <option key={81} value="81">(GMT+13:00) Nuku'alofa</option>
                                 </select>
                                 <div className="form-input-chevron">
-                                    <ChevronDown className="h-5 w-5 float-right" />
+                                    <ChevronDown className="h-5 w-5 float-right"/>
                                 </div>
                             </div>
                             <p className="help-text">Specify the desired time zone that corresponds to the location of the clock.</p>
@@ -132,10 +134,11 @@ export default class TimeSettings extends React.Component {
                         </div>
                         <div className="md:w-2/3">
                             <div>
-                                <label className="inline-flex items-center">
-                                    <input type="checkbox" name="daylightSavingTime" id="daylightSavingTime" className="form-checkbox text-indigo-600" checked={this.props.data.daylightSavingTime} onChange={this.props.onChange.bind(this)} />
-                                    <span className="ml-2">Daylight Saving Time</span>
-                                </label>
+                                <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                    <input type="checkbox" name="daylightSavingTime" id="daylightSavingTime" className="toggle-checkbox" checked={this.props.data.daylightSavingTime} onChange={this.props.onChange.bind(this)}/>
+                                    <label htmlFor="daylightSavingTime" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"/>
+                                </div>
+                                <label htmlFor="static" className="inline-flex items-center"><span className="ml-2">Daylight Saving Time</span></label>
                             </div>
                             <p className="help-text">Indicate if your location switches between daylight saving and standard time.</p>
                         </div>

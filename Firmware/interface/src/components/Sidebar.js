@@ -9,29 +9,29 @@ export default class Sidebar extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            menuOpen: false
+            menuOpen: false,
         }
     }
 
-    toggleMenu() {
+    toggleMenu () {
         this.setState({
-            menuOpen: !this.state.menuOpen
+            menuOpen: !this.state.menuOpen,
         })
     }
 
-    render() {
+    render () {
         return (
             <>
                 <div className="block lg:hidden inset-0">
                     <h1 className="font-bold py-2 lg:pb-6 text-center text-gray-700 mx-auto mt-6 mb-6">
-                        <Logo width={24} height={24} className="text-gray-700 inline -mt-1 mr-1" /> WordClock
+                        <Logo width={24} height={24} className="text-gray-700 inline -mt-1 mr-1"/> WordClock
                     </h1>
                     <div className="relative">
                         <button id="menu-toggle" className="flex w-full justify-start px-3 py-3 bg-white lg:bg-transparent border rounded border-gray-600 hover:border-gray-700 appearance-none focus:outline-none" onClick={this.toggleMenu.bind(this)}>
                             <span className="text-sm text-gray-600">Menu</span>
                         </button>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <ChevronDown className="h-5 w-5 float-right" />
+                            <ChevronDown className="h-5 w-5 float-right"/>
                         </div>
                     </div>
                 </div>
@@ -43,37 +43,35 @@ export default class Sidebar extends React.Component {
                     <hr className="mb-8 hidden lg:block"/>
                     <ul className="sidebar-list">
                         <li>
-                            <span className="expert-toggle" onClick={this.props.onToggleExpertMode.bind(this)}>
-                                Mode: {this.props.showExpertMode ? 'Expert' : 'Normal'}
-                            </span>
+                            <span className="expert-toggle" onClick={this.props.onToggleExpertMode.bind(this)}>{this.props.showExpertMode ? 'Expert Mode' : 'Normal Mode'}</span>
                         </li>
                         <li className="sidebar-list-item">
-                            <NavItem to={'color-and-brightness'} title="Color & Brightness" />
+                            <NavItem to={'color-and-brightness'} title="Color & Brightness"/>
                         </li>
                         <li className="sidebar-list-item">
-                            <NavItem to={'mode-and-language'} title="Mode & Language" />
+                            <NavItem to={'mode-and-language'} title="Mode & Language"/>
                         </li>
                         <li className="sidebar-list-header">
                             <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Settings</span>
                         </li>
                         {this.props.showExpertMode && (
                             <li className="sidebar-list-item">
-                                <NavItem to={'time-settings'} title="Time Settings" />
+                                <NavItem to={'time-settings'} title="Time Settings"/>
                             </li>
                         )}
                         <li className="sidebar-list-item">
-                            <NavItem to={'on-off-time'} title="On/Off Time" />
+                            <NavItem to={'on-off-time'} title="On/Off Time"/>
                         </li>
                         {this.props.showExpertMode && (
                             <>
                                 <li className="sidebar-list-item">
-                                    <NavItem to={'network'} title="Network" />
+                                    <NavItem to={'network'} title="Network"/>
                                 </li>
                                 <li className="sidebar-list-item">
-                                    <NavItem to={'accessibility'} title="Accessibility" />
+                                    <NavItem to={'accessibility'} title="Accessibility"/>
                                 </li>
                                 <li className="sidebar-list-item">
-                                    <NavItem to={'security'} title="Security" />
+                                    <NavItem to={'security'} title="Security"/>
                                 </li>
                                 {/*}
                                 <li className="sidebar-list-item">
@@ -88,10 +86,10 @@ export default class Sidebar extends React.Component {
                                     <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Info</span>
                                 </li>
                                 <li className="sidebar-list-item">
-                                    <NavItem to={'system'} title="System" />
+                                    <NavItem to={'system'} title="System"/>
                                 </li>
                                 <li className="sidebar-list-item">
-                                    <NavItem to={'licences'} title="Licences" />
+                                    <NavItem to={'licences'} title="Licences"/>
                                 </li>
                             </>
                         )}

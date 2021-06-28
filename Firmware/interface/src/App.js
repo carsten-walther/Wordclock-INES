@@ -10,7 +10,6 @@ import OnOffTime from './pages/OnOffTime'
 import Network from './pages/Network'
 import Accessibility from './pages/Accessibility'
 import Security from './pages/Security'
-import Firmware from './pages/Firmware'
 import System from './pages/System'
 import Licences from './pages/Licences'
 
@@ -25,13 +24,12 @@ import ChevronUp from './components/icons/ChevronUp'
 
 export default class App extends React.Component {
 
-    constructor(props) {
+    constructor (props) {
         super(props)
         this.state = {
             showScrollToTop: false,
             showExpertMode: false,
             isLoading: true,
-            static: false,
 
             file: null,
 
@@ -39,12 +37,12 @@ export default class App extends React.Component {
                 foreground: {
                     r: 0,
                     g: 0,
-                    b: 0
+                    b: 0,
                 },
                 background: {
                     r: 0,
                     g: 0,
-                    b: 0
+                    b: 0,
                 },
                 brightness: 0,
                 mode: 0,
@@ -55,16 +53,16 @@ export default class App extends React.Component {
                 daylightSavingTime: false,
                 sleep: {
                     h: 0,
-                    m: 0
+                    m: 0,
                 },
                 wakeup: {
                     h: 0,
-                    m: 0
+                    m: 0,
                 },
                 hostname: '',
                 useAuth: false,
                 authUsername: '',
-                authPassword: ''
+                authPassword: '',
             },
 
             wifi: {
@@ -73,19 +71,19 @@ export default class App extends React.Component {
                 sub: '',
                 gw: '',
                 dns: '',
-                captivePortal: false
+                captivePortal: false,
             },
 
             info: {
                 version: '',
-                mac: ''
+                mac: '',
             },
 
-            networks: []
+            networks: [],
         }
     }
 
-    async componentDidMount() {
+    async componentDidMount () {
         document.addEventListener('scroll', this.onScroll.bind(this))
 
         await this.wifiGet()
@@ -101,11 +99,11 @@ export default class App extends React.Component {
     //
     //
 
-    async wifiGet() {
+    async wifiGet () {
         await Api.wifiGet().then((result) => {
             this.setState({
                 isLoading: false,
-                wifi: result.payload
+                wifi: result.payload,
             })
         })
     }
@@ -114,31 +112,31 @@ export default class App extends React.Component {
         if (this.state.static) {
             await Api.wifiSetStatic(this.state.data).then((result) => {
                 this.setState({
-                    isLoading: false
+                    isLoading: false,
                 })
             })
         } else {
             await Api.wifiSet(this.state.data).then((result) => {
                 this.setState({
-                    isLoading: false
+                    isLoading: false,
                 })
             })
         }
     }
 
-    async wifiScan() {
+    async wifiScan () {
         await Api.wifiScan().then((result) => {
             this.setState({
                 isLoading: false,
-                networks: result.payload.networks
+                networks: result.payload.networks,
             })
         })
     }
 
-    async wifiForget() {
+    async wifiForget () {
         await Api.wifiForget().then((result) => {
             this.setState({
-                isLoading: true
+                isLoading: true,
             })
         })
     }
@@ -147,16 +145,16 @@ export default class App extends React.Component {
     //
     //
 
-    async configGet() {
+    async configGet () {
         await Api.configGet().then(result => {
             this.setState({
                 isLoading: false,
-                data: result.payload
+                data: result.payload,
             })
         })
     }
 
-    async configSet() {
+    async configSet () {
         let returnVal = []
 
         Object.keys(this.state.data).map((key) => {
@@ -164,21 +162,17 @@ export default class App extends React.Component {
                 returnVal['foregroundRed'] = this.state.data[key].r
                 returnVal['foregroundGreen'] = this.state.data[key].g
                 returnVal['foregroundBlue'] = this.state.data[key].b
-            }
-            else if (key === 'background') {
+            } else if (key === 'background') {
                 returnVal['backgroundRed'] = this.state.data[key].r
                 returnVal['backgroundGreen'] = this.state.data[key].g
                 returnVal['backgroundBlue'] = this.state.data[key].b
-            }
-            else if (key === 'sleep') {
+            } else if (key === 'sleep') {
                 returnVal['sleepHour'] = this.state.data[key].h
                 returnVal['sleepMinute'] = this.state.data[key].m
-            }
-            else if (key === 'wakeup') {
+            } else if (key === 'wakeup') {
                 returnVal['wakeupHour'] = this.state.data[key].h
                 returnVal['wakeupMinute'] = this.state.data[key].m
-            }
-            else {
+            } else {
                 returnVal[key] = this.state.data[key]
             }
             return null
@@ -186,7 +180,7 @@ export default class App extends React.Component {
 
         await Api.configSet(returnVal).then(async (result) => {
             this.setState({
-                isLoading: false
+                isLoading: false,
             })
             await this.configGet()
         })
@@ -196,39 +190,39 @@ export default class App extends React.Component {
     //
     //
 
-    async systemInfo() {
+    async systemInfo () {
         await Api.systemInfo().then((result) => {
             this.setState({
                 isLoading: false,
-                info: { ...result.payload }
+                info: { ...result.payload },
             })
         })
     }
 
-    async systemRestart() {
+    async systemRestart () {
         await Api.systemRestart().then((result) => {
             this.setState({
-                isLoading: true
+                isLoading: true,
             })
         })
     }
 
     // ...
 
-    async handleChange(event) {
+    async handleChange (event) {
         let fieldName = event.target.name ? event.target.name : event.target.id
         let fieldValue = null
         switch (event.target.type) {
             default:
                 fieldValue = event.target.value
                 break
-            case "file":
+            case 'file':
                 fieldValue = event.target.files[0]
                 break
-            case "checkbox":
+            case 'checkbox':
                 fieldValue = !!event.target.checked
                 break
-            case "radio":
+            case 'radio':
                 fieldValue = event.target.value
                 break
         }
@@ -236,57 +230,57 @@ export default class App extends React.Component {
         if (fieldName === 'foreground' || fieldName === 'background') {
             fieldValue = Color.hex2rgb(fieldValue)
             this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
+                data: { ...this.state.data, [fieldName]: fieldValue },
             })
         } else if (fieldName === 'sleep' || fieldName === 'wakeup') {
             fieldValue = Utility.separateHourAndMinute(fieldValue)
             this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
+                data: { ...this.state.data, [fieldName]: fieldValue },
             })
         } else {
             this.setState({
-                data: { ...this.state.data, [fieldName]: fieldValue }
+                data: { ...this.state.data, [fieldName]: fieldValue },
             })
         }
     }
 
-    async handleSubmit(event) {
+    async handleSubmit (event) {
         event.preventDefault()
         this.setState({
-            isLoading: true
+            isLoading: true,
         })
         await this.configSet()
     }
 
-    async handleWifiScan(event) {
+    async handleWifiScan (event) {
         event.preventDefault()
         this.setState({
-            isLoading: true
+            isLoading: true,
         })
         await this.wifiScan()
     }
 
-    async handleWifiForget(event) {
+    async handleWifiForget (event) {
         event.preventDefault()
         this.setState({
-            isLoading: false
+            isLoading: false,
         })
         await this.wifiForget()
     }
 
-    toggleExpertMode() {
+    toggleExpertMode () {
         this.setState({
-            showExpertMode: !this.state.showExpertMode
+            showExpertMode: !this.state.showExpertMode,
         })
     }
 
-    onScroll() {
+    onScroll () {
         this.setState({
-            showScrollToTop: (document.documentElement.scrollTop > 300)
+            showScrollToTop: (document.documentElement.scrollTop > 300),
         })
     }
 
-    render() {
+    render () {
         return (
             <div id="top" className="container w-full flex flex-wrap mx-auto">
                 <BrowserRouter>
@@ -296,31 +290,31 @@ export default class App extends React.Component {
                                 {this.state.wifi.captivePortal ? (
                                     <>
                                         <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
-                                            <Captive data={this.state.data} networks={this.state.networks} onWifiScan={this.handleWifiScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.wifiSet.bind(this)} />
+                                            <Captive data={this.state.data} networks={this.state.networks} onWifiScan={this.handleWifiScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.wifiSet.bind(this)}/>
                                         </div>
                                     </>
                                 ) : (
                                     <>
                                         <div className="w-full lg:w-1/5 px-6">
-                                            <Sidebar showExpertMode={this.state.showExpertMode} onToggleExpertMode={this.toggleExpertMode.bind(this)} />
+                                            <Sidebar showExpertMode={this.state.showExpertMode} onToggleExpertMode={this.toggleExpertMode.bind(this)}/>
                                         </div>
                                         <div className="w-full lg:w-3/5 pb-12 mt-16 lg:mt-36">
-                                            <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                            <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                            <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                            <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
                                             {this.state.showExpertMode && (
-                                                <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                                <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
                                             )}
-                                            <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                            <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
                                             {this.state.showExpertMode && (
                                                 <>
-                                                    <Network data={this.state.data} wifi={this.state.wifi} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onWifiForget={this.handleWifiForget.bind(this)} />
-                                                    <Accessibility data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
-                                                    <Security data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} />
+                                                    <Network data={this.state.data} wifi={this.state.wifi} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onWifiForget={this.handleWifiForget.bind(this)}/>
+                                                    <Accessibility data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                                    <Security data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
                                                     {/*}
-                                                    <Firmware />
+                                                    <Firmware/>
                                                     {*/}
-                                                    <System info={this.state.info} onSystemRestart={this.systemRestart.bind(this)} />
-                                                    <Licences />
+                                                    <System info={this.state.info} onSystemRestart={this.systemRestart.bind(this)}/>
+                                                    <Licences/>
                                                 </>
                                             )}
                                         </div>

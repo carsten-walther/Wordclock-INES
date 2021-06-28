@@ -28,7 +28,7 @@ export default class Backdrop extends React.Component {
     render () {
         return ReactDOM.createPortal(
             this.props.children,
-            this.el
+            this.el,
         )
     }
 }

@@ -4,9 +4,11 @@ export default class System extends React.Component {
     render () {
         return (
             <div id="system" className="card">
-                <h6 className="card-header">Software & Hardware</h6>
+                <h6 className="card-header">
+                    Software & Hardware
+                </h6>
                 <table className="table-auto w-full">
-                <tbody>
+                    <tbody>
                     <tr className="bg-gray-100">
                         <th>Firmware Version</th>
                         <td>{this.props.info.version}</td>
@@ -18,12 +20,10 @@ export default class System extends React.Component {
                     <tr className="bg-gray-100">
                         <th>Restart WordClock</th>
                         <td>
-                            <button type="button" className="form-btn-red text-sm py-1 px-2" onClick={this.props.onSystemRestart.bind(this)}>
-                                Restart
-                            </button>
+                            <button type="button" className="form-btn-red " onClick={this.props.onSystemRestart.bind(this)}>Restart</button>
                         </td>
                     </tr>
-                </tbody>
+                    </tbody>
                 </table>
             </div>
         )

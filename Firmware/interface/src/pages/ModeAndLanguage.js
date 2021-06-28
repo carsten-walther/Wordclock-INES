@@ -7,8 +7,7 @@ export default class Dashboard extends React.Component {
         return (
             <div id="mode-and-language" className="card">
                 <h2 className="card-header">
-                    Mode & Language
-                    <button type="button" className="float-right form-btn-red text-sm py-1 px-2" onClick={this.props.onSubmit.bind(this)}>Save</button>
+                    Mode & Language <button type="button" className="float-right form-btn-green " onClick={this.props.onSubmit.bind(this)}>Save</button>
                 </h2>
                 <div className="card-body">
                     <div className="md:flex mb-6">
@@ -46,7 +45,7 @@ export default class Dashboard extends React.Component {
                                     <option key={3} value="3">Sächsisch</option>
                                 </select>
                                 <div className="form-input-chevron">
-                                    <ChevronDown className="h-5 w-5 float-right" />
+                                    <ChevronDown className="h-5 w-5 float-right"/>
                                 </div>
                             </div>
                             <p className="help-text">Set the desired language/dialect of the word clock.</p>

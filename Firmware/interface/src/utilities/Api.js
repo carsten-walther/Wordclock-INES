@@ -14,8 +14,8 @@ export default class Api {
      *
      * @returns {Promise<*>}
      */
-    static async wifiGet() {
-        return await fetch(this.baseUrl + "api/wifi/get")
+    static async wifiGet () {
+        return await fetch(this.baseUrl + 'api/wifi/get')
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -33,10 +33,10 @@ export default class Api {
 
         let init = {
             method: 'POST',
-            body: formData
+            body: formData,
         }
 
-        return await fetch(this.baseUrl + "api/wifi/set", init)
+        return await fetch(this.baseUrl + 'api/wifi/set', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -54,12 +54,12 @@ export default class Api {
 
         let init = {
             method: 'POST',
-            body: formData
+            body: formData,
         }
 
-        return await fetch(this.baseUrl + "api/wifi/setStatic", init)
-          .then(response => response.json())
-          .then(result => result, error => error)
+        return await fetch(this.baseUrl + 'api/wifi/setStatic', init)
+            .then(response => response.json())
+            .then(result => result, error => error)
     }
 
     /**
@@ -68,7 +68,7 @@ export default class Api {
      * @returns {Promise<*>}
      */
     static async wifiScan () {
-        return await fetch(this.baseUrl + "api/wifi/scan")
+        return await fetch(this.baseUrl + 'api/wifi/scan')
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -80,10 +80,10 @@ export default class Api {
      */
     static async wifiForget () {
         let init = {
-            method: 'POST'
+            method: 'POST',
         }
 
-        return await fetch(this.baseUrl + "api/wifi/forget", init)
+        return await fetch(this.baseUrl + 'api/wifi/forget', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -97,8 +97,8 @@ export default class Api {
      *
      * @returns {Promise<*>}
      */
-    static async filesGet() {
-        return await fetch(this.baseUrl + "api/files/get")
+    static async filesGet () {
+        return await fetch(this.baseUrl + 'api/files/get')
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -116,10 +116,10 @@ export default class Api {
 
         let init = {
             method: 'POST',
-            body: formData
+            body: formData,
         }
 
-        return await fetch(this.baseUrl + "api/files/remove", init)
+        return await fetch(this.baseUrl + 'api/files/remove', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -139,10 +139,10 @@ export default class Api {
 
         let init = {
             method: 'POST',
-            body: formData
+            body: formData,
         }
 
-        return await fetch(this.baseUrl + "api/files/upload", init)
+        return await fetch(this.baseUrl + 'api/files/upload', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -158,10 +158,10 @@ export default class Api {
      */
     static async systemRestart () {
         let init = {
-            method: 'POST'
+            method: 'POST',
         }
 
-        return await fetch(this.baseUrl + "api/system/restart", init)
+        return await fetch(this.baseUrl + 'api/system/restart', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -173,10 +173,10 @@ export default class Api {
      */
     static async systemUpdate () {
         let init = {
-            method: 'POST'
+            method: 'POST',
         }
 
-        return await fetch(this.baseUrl + "api/system/update", init)
+        return await fetch(this.baseUrl + 'api/system/update', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -187,7 +187,7 @@ export default class Api {
      * @returns {Promise<*>}
      */
     static async systemUpdateStatus () {
-        return await fetch(this.baseUrl + "api/system/update-status")
+        return await fetch(this.baseUrl + 'api/system/update-status')
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -198,7 +198,7 @@ export default class Api {
      * @returns {Promise<*>}
      */
     static async systemInfo () {
-        return await fetch(this.baseUrl + "api/system/info")
+        return await fetch(this.baseUrl + 'api/system/info')
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -212,8 +212,8 @@ export default class Api {
      *
      * @returns {Promise<*>}
      */
-    static async configGet() {
-        return await fetch(this.baseUrl + "api/config/get")
+    static async configGet () {
+        return await fetch(this.baseUrl + 'api/config/get')
             .then(response => response.json())
             .then(result => result, error => error)
     }
@@ -231,10 +231,10 @@ export default class Api {
 
         let init = {
             method: 'POST',
-            body: formData
+            body: formData,
         }
 
-        return await fetch(this.baseUrl + "api/config/set", init)
+        return await fetch(this.baseUrl + 'api/config/set', init)
             .then(response => response.json())
             .then(result => result, error => error)
     }

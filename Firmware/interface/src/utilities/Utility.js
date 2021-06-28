@@ -9,7 +9,7 @@ export default class Utility {
      * @param date
      * @returns {string}
      */
-    static formatTime(date) {
+    static formatTime (date) {
         let d = new Date(date)
         let hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours()
         let minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
@@ -23,8 +23,8 @@ export default class Utility {
      * @param full
      * @returns {string}
      */
-    static formatDate(date, full) {
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    static formatDate (date, full) {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         let d = new Date(date)
         if (full) {
             return d.getUTCDate() + '. ' + monthNames[d.getMonth()] + ' ' + d.getUTCFullYear()
@@ -40,7 +40,7 @@ export default class Utility {
      * @param minute
      * @returns {string}
      */
-    static combineHourAndMinute(hour, minute) {
+    static combineHourAndMinute (hour, minute) {
         let h = ''
         if (hour < 10) {
             h = '0' + hour
@@ -62,11 +62,11 @@ export default class Utility {
      * @param timeString
      * @returns {{h, m}}
      */
-    static separateHourAndMinute(timeString) {
+    static separateHourAndMinute (timeString) {
         let timeArray = timeString.split(':').map(Number)
         return {
             h: timeArray[0],
-            m: timeArray[1]
+            m: timeArray[1],
         }
     }
 
