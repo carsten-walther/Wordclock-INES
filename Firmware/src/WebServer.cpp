@@ -17,7 +17,7 @@ WebServer webServer;
 
 void WebServer::begin()
 {
-    // to enable testing and debugging of the interface.old
+    // to enable testing and debugging of the interface
     DefaultHeaders::Instance().addHeader(PSTR("Access-Control-Allow-Origin"), PSTR("*"));
 
     // start the SPI Flash File System (LittleFS)
@@ -34,41 +34,44 @@ void WebServer::begin()
 
     server.begin();
 
-    // init SSDP
-    SSDP.setSchemaURL("description.xml");
-    SSDP.setHTTPPort(SERVER_PORT);
-    SSDP.setName(configurationManager.data.hostname);
-    SSDP.setSerialNumber(ESP.getChipId());
-    SSDP.setURL("/");
-    SSDP.setModelName(AP_SSID);
-    SSDP.setModelNumber(VERSION);
-    SSDP.setModelURL("https://github.com/carsten-walther/wordclock");
-    SSDP.setManufacturer("Carsten Walther");
-    SSDP.setManufacturerURL("https://www.carstenwalther.de");
-    SSDP.setDeviceType("upnp:rootdevice");
-
-    if (SSDP.begin())
+    if (!wiFiManager.isCaptivePortal())
     {
-        Serial.println(PSTR("> ssdp started"));
+        // init SSDP
+        SSDP.setSchemaURL("description.xml");
+        SSDP.setHTTPPort(SERVER_PORT);
+        SSDP.setName(configurationManager.data.hostname);
+        SSDP.setSerialNumber(ESP.getChipId());
+        SSDP.setURL("/");
+        SSDP.setModelName(AP_SSID);
+        SSDP.setModelNumber(VERSION);
+        SSDP.setModelURL("https://github.com/carsten-walther/wordclock");
+        SSDP.setManufacturer("Carsten Walther");
+        SSDP.setManufacturerURL("https://www.carstenwalther.de");
+        SSDP.setDeviceType("upnp:rootdevice");
+
+        if (SSDP.begin())
+        {
+            Serial.println(PSTR("> ssdp started"));
+        }
     }
 }
 
 void WebServer::loop()
 {
-    // update MDNS service
-    MDNS.update();
+    if (!wiFiManager.isCaptivePortal())
+    {
+        // update MDNS service
+        MDNS.update();
+    }
 }
 
 void WebServer::bindAll()
 {
+    // handle not found and captive portal
+    server.onNotFound(handleNotFound);
+
     // serve static
-    if (wiFiManager.isCaptivePortal())
-    {
-        server
-            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
-            .setDefaultFile("index.html");
-    }
-    else
+    if (!wiFiManager.isCaptivePortal())
     {
         if (configurationManager.data.useAuth)
         {
@@ -83,13 +86,10 @@ void WebServer::bindAll()
                 .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
                 .setDefaultFile("index.html");
         }
+
+        // handle SSDP
+        server.on(PSTR("/description.xml"), HTTP_GET, handleSimpleServiceDiscoveryProtocol);
     }
-
-    // handle not found and captive portal
-    server.onNotFound(handleNotFound);
-
-    // handle SSDP
-    server.on(PSTR("/description.xml"), HTTP_GET, handleSimpleServiceDiscoveryProtocol);
 
     //
     // WIFI
@@ -452,6 +452,16 @@ void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename
 
 void WebServer::handleNotFound(AsyncWebServerRequest *request)
 {
+    Serial.print(PSTR("> requested URL: "));
+    Serial.println(request->url().c_str());
+
+    if (wiFiManager.isCaptivePortal())
+    {
+        AsyncWebServerResponse *response = request->beginResponse(302);
+        response->addHeader("Location", "/index.html");
+        request->send(response);
+    }
+
     request->send(404, "text/html", "<h1>Not found</h1><p>The requested URL " + String(request->url().c_str()) + " was not found on this server.</p>");
 }
 

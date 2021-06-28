@@ -105,9 +105,14 @@ void loop()
             taskA.previous = millis();
 
             //do task
-            Serial.println(TimeSync::getTimestamp());
+            time_t now = time(nullptr);
+            Serial.print(PSTR("> current time is "));
+            Serial.print(asctime(localtime(&now)));
 
             // ...
+
+
+
         }
     }
 }

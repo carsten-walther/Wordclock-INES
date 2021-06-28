@@ -25,17 +25,6 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
     sub = IPAddress(configurationManager.internal.sub);
     dns = IPAddress(configurationManager.internal.dns);
 
-    // start the multicast domain name server
-    if (MDNS.begin(configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST))
-    {
-        MDNS.addService("http", "tcp", SERVER_PORT);
-        
-        Serial.print(PSTR("> mdns started at with domain "));
-        Serial.print((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
-        Serial.print(PSTR(" on port "));
-        Serial.println(SERVER_PORT);
-    }
-
     if (ip.isSet() || gw.isSet() || sub.isSet() || dns.isSet())
     {
         Serial.println(PSTR("> using static IP"));
@@ -57,6 +46,17 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
         Serial.println(PSTR("> connected to stored WiFi details"));
         Serial.print(PSTR("> ip: "));
         Serial.println(WiFi.localIP());
+
+        // start the multicast domain name server
+        if (MDNS.begin(configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST))
+        {
+            MDNS.addService("http", "tcp", SERVER_PORT);
+            
+            Serial.print(PSTR("> mdns started at with domain "));
+            Serial.print((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
+            Serial.print(PSTR(" on port "));
+            Serial.println(SERVER_PORT);
+        }
     }
     else
     {
@@ -111,6 +111,11 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
 {
     delay(1000);
 
+    Serial.print(PSTR("> new newSSID: "));
+    Serial.println(newSSID);
+    Serial.print(PSTR("> newPass: "));
+    Serial.println(newPass);
+
     // set static IP or zeros if undefined
     WiFi.config(ip, gw, sub, dns);
 
@@ -131,8 +136,8 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
 
         if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
         {
-
             Serial.println(PSTR("> new connection unsuccessful"));
+
             if (!inCaptivePortal)
             {
                 WiFi.begin(oldSSID, oldPSK, 0, NULL, true);
@@ -169,24 +174,21 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
 void WiFiManager::startCaptivePortal(char const *apName)
 {
     WiFi.persistent(false);
-    // disconnect sta, start ap
-
-    // this alone is not enough to stop the autoconnecter
     WiFi.disconnect();
     WiFi.mode(WIFI_AP);
     WiFi.persistent(true);
 
     WiFi.softAP(apName);
 
-    dnsServer = new DNSServer();
-
     // Setup the DNS server redirecting all the domains to the apIP
+    dnsServer = new DNSServer();
     dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
-    dnsServer->start(53, "*", WiFi.softAPIP());
+    dnsServer->start(53, PSTR("*"), WiFi.softAPIP());
 
     Serial.println(PSTR("> opened a captive portal"));
     Serial.print(PSTR("> ip: "));
     Serial.println(WiFi.softAPIP());
+
     inCaptivePortal = true;
 }
 
