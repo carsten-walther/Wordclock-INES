@@ -22,7 +22,6 @@ private:
     bool reconnect = false;
     bool inCaptivePortal = false;
     char const *captivePortalName;
-    unsigned long timeout = 60000;
     
     void startCaptivePortal(char const *apName);
     void stopCaptivePortal();
@@ -30,7 +29,7 @@ private:
     void storeToEEPROM();
 
 public:
-    void begin(char const *apName, unsigned long newTimeout = 60000);
+    void begin(char const *apName);
     void loop();
     void forget();
     bool isCaptivePortal();

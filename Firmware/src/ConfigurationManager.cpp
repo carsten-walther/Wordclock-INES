@@ -28,7 +28,7 @@ bool ConfigurationManager::begin(int numBytes)
     // reset configuration data if checksum mismatch
     if (checksumData != checksum(reinterpret_cast<uint8_t *>(&data), sizeof(data)) || storedVersion != version)
     {
-        Serial.println(PSTR("> config data checksum mismatch"));
+        DEBUG_PRINTLN(PSTR("> config data checksum mismatch"));
         reset();
         returnValue = false;
     }
@@ -36,7 +36,7 @@ bool ConfigurationManager::begin(int numBytes)
     // reset internal data if checksum mismatch
     if (checksumInternal != checksum(reinterpret_cast<uint8_t *>(&internal), sizeof(internal)))
     {
-        Serial.println(PSTR("> internal data checksum mismatch"));
+        DEBUG_PRINTLN(PSTR("> internal data checksum mismatch"));
         internal = internalData();
         requestSave = true;
         returnValue = false;

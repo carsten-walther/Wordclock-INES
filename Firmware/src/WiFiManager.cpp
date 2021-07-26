@@ -12,10 +12,9 @@
 
 WiFiManager wiFiManager;
 
-void WiFiManager::begin(char const *apName, unsigned long newTimeout)
+void WiFiManager::begin(char const *apName)
 {
     captivePortalName = apName;
-    timeout = newTimeout;
 
     WiFi.mode(WIFI_STA);
 
@@ -27,7 +26,7 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
 
     if (ip.isSet() || gw.isSet() || sub.isSet() || dns.isSet())
     {
-        Serial.println(PSTR("> using static IP"));
+        DEBUG_PRINTLN(PSTR("> using static IP"));
         WiFi.config(ip, gw, sub, dns);
     }
 
@@ -37,25 +36,36 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
         ETS_UART_INTR_DISABLE();
         wifi_station_disconnect();
         ETS_UART_INTR_ENABLE();
+
         WiFi.begin();
+        delay(2000);
+
+        DEBUG_PRINTLN(PSTR("> trying to connect to stored WiFi details"));
+        DEBUG_PRINT("> connecting ");
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            delay(500);
+            DEBUG_PRINT(".");
+        }
+        DEBUG_PRINTLN();
     }
 
-    if (WiFi.waitForConnectResult(timeout) == WL_CONNECTED)
+    if (WiFi.status() == WL_CONNECTED)
     {
         // connected
-        Serial.println(PSTR("> connected to stored WiFi details"));
-        Serial.print(PSTR("> ip: "));
-        Serial.println(WiFi.localIP());
+        DEBUG_PRINTLN(PSTR("> connected to stored WiFi details"));
+        DEBUG_PRINT(PSTR("> ip: "));
+        DEBUG_PRINTLN(WiFi.localIP());
 
         // start the multicast domain name server
         if (MDNS.begin(configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST))
         {
             MDNS.addService("http", "tcp", SERVER_PORT);
             
-            Serial.print(PSTR("> mdns started at with domain "));
-            Serial.print((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
-            Serial.print(PSTR(" on port "));
-            Serial.println(SERVER_PORT);
+            DEBUG_PRINT(PSTR("> mdns started at with domain "));
+            DEBUG_PRINT((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
+            DEBUG_PRINT(PSTR(" on port "));
+            DEBUG_PRINTLN(SERVER_PORT);
         }
     }
     else
@@ -80,7 +90,7 @@ void WiFiManager::forget()
     // make EEPROM empty
     storeToEEPROM();
 
-    Serial.println(PSTR("> requested to forget wifi, started captive portal"));
+    DEBUG_PRINTLN(PSTR("> requested to forget wifi, started captive portal"));
 }
 
 void WiFiManager::setNewWifi(String newSSID, String newPass)
@@ -111,10 +121,10 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
 {
     delay(1000);
 
-    Serial.print(PSTR("> new newSSID: "));
-    Serial.println(newSSID);
-    Serial.print(PSTR("> newPass: "));
-    Serial.println(newPass);
+    DEBUG_PRINT(PSTR("> new SSID: "));
+    DEBUG_PRINTLN(newSSID);
+    DEBUG_PRINT(PSTR("> new Pass: "));
+    DEBUG_PRINTLN(newPass);
 
     // set static IP or zeros if undefined
     WiFi.config(ip, gw, sub, dns);
@@ -131,26 +141,44 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
         String oldSSID = WiFi.SSID();
         String oldPSK = WiFi.psk();
 
-        WiFi.begin(newSSID.c_str(), newPass.c_str(), 0, NULL, true);
+        WiFi.begin(String(newSSID), String(newPass), 0, NULL, true);
         delay(2000);
 
-        if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
+        DEBUG_PRINT("> connecting ");
+        while (WiFi.status() != WL_CONNECTED)
         {
-            Serial.println(PSTR("> new connection unsuccessful"));
+            delay(500);
+            DEBUG_PRINT(".");
+        }
+        DEBUG_PRINTLN();
+
+        if (WiFi.status() != WL_CONNECTED)
+        {
+            DEBUG_PRINTLN(PSTR("> new connection unsuccessful"));
 
             if (!inCaptivePortal)
             {
                 WiFi.begin(oldSSID, oldPSK, 0, NULL, true);
-                if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
+                delay(2000);
+
+                DEBUG_PRINT("> connecting ");
+                while (WiFi.status() != WL_CONNECTED)
                 {
-                    Serial.println(PSTR("> reconnection failed too"));
+                    delay(500);
+                    DEBUG_PRINT(".");
+                }
+                DEBUG_PRINTLN();
+
+                if (WiFi.status() != WL_CONNECTED)
+                {
+                    DEBUG_PRINTLN(PSTR("> reconnection failed too"));
                     startCaptivePortal(captivePortalName);
                 }
                 else
                 {
-                    Serial.println(PSTR("> reconnection successful"));
-                    Serial.print(PSTR("> ip: "));
-                    Serial.println(WiFi.localIP());
+                    DEBUG_PRINTLN(PSTR("> reconnection successful"));
+                    DEBUG_PRINT(PSTR("> ip: "));
+                    DEBUG_PRINTLN(WiFi.localIP());
                 }
             }
         }
@@ -161,9 +189,9 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
                 stopCaptivePortal();
             }
 
-            Serial.println(PSTR("> new connection successful"));
-            Serial.print(PSTR("> ip: "));
-            Serial.println(WiFi.localIP());
+            DEBUG_PRINTLN(PSTR("> new connection successful"));
+            DEBUG_PRINT(PSTR("> ip: "));
+            DEBUG_PRINTLN(WiFi.localIP());
 
             // store IP address in EEProm
             storeToEEPROM();
@@ -185,9 +213,9 @@ void WiFiManager::startCaptivePortal(char const *apName)
     dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
     dnsServer->start(53, PSTR("*"), WiFi.softAPIP());
 
-    Serial.println(PSTR("> opened a captive portal"));
-    Serial.print(PSTR("> ip: "));
-    Serial.println(WiFi.softAPIP());
+    DEBUG_PRINTLN(PSTR("> opened a captive portal"));
+    DEBUG_PRINT(PSTR("> ip: "));
+    DEBUG_PRINTLN(WiFi.softAPIP());
 
     inCaptivePortal = true;
 }

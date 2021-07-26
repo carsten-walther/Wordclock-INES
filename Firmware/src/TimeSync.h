@@ -11,25 +11,15 @@ class TimeSync
 {
 public:
     void begin();
-
     void begin(const char *server1);
-
     void begin(const char *tz, const char *server1, const char *server2 = nullptr, const char *server3 = nullptr);
-
     static void config(int timezone_sec, int daylightOffset_sec);
-
     bool isSynced() const;
-
     int waitForSyncResult(unsigned long timeoutLength = 10000) const;
-
     static unsigned long getTimestamp();
-
     static int getHours();
-
     static int getMinutes();
-
     static int getSeconds();
-
     static int getSecondsSinceMidnight();
 
 private:

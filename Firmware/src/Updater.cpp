@@ -5,6 +5,7 @@
 #include <ESP8266httpUpdate.h>
 #include <LittleFS.h>
 
+#include "main.h"
 #include "Updater.h"
 
 Updater updater;
@@ -37,18 +38,18 @@ void Updater::flash(String filename)
 
     if (!file)
     {
-        Serial.println(PSTR("> failed to open file for reading"));
+        DEBUG_PRINTLN(PSTR("> failed to open file for reading"));
         answer = 0;
     }
     else
     {
-        Serial.println(PSTR("> starting update"));
+        DEBUG_PRINTLN(PSTR("> starting update"));
 
         size_t fileSize = file.size();
 
         if (!Update.begin(fileSize))
         {
-            Serial.println(PSTR("> not enough space for update"));
+            DEBUG_PRINTLN(PSTR("> not enough space for update"));
         }
         else
         {
@@ -56,13 +57,13 @@ void Updater::flash(String filename)
 
             if (Update.end())
             {
-                Serial.println(PSTR("> successful update"));
+                DEBUG_PRINTLN(PSTR("> successful update"));
                 answer = 1;
             }
             else
             {
 
-                Serial.println(PSTR("> error occurred: ") + String(Update.getError()));
+                DEBUG_PRINTLN(PSTR("> error occurred: ") + String(Update.getError()));
             }
         }
 

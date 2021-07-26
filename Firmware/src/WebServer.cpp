@@ -23,11 +23,11 @@ void WebServer::begin()
     // start the SPI Flash File System (LittleFS)
     if (LittleFS.begin() != false)
     {
-        Serial.println(PSTR("> filesystem initialized"));
+        DEBUG_PRINTLN(PSTR("> filesystem initialized"));
     }
     else
     {
-        Serial.println(PSTR("> filesystem init failed"));
+        DEBUG_PRINTLN(PSTR("> filesystem init failed"));
     }
 
     server.begin();
@@ -68,7 +68,7 @@ void WebServer::begin()
 
         if (SSDP.begin())
         {
-            Serial.println(PSTR("> ssdp started"));
+            DEBUG_PRINTLN(PSTR("> ssdp started"));
         }
 
         // handle SSDP
@@ -227,8 +227,8 @@ void WebServer::bindAll()
     {
         String filename = request->getParam("filename", true)->value().c_str();
 
-        Serial.print(PSTR("> deleting file "));
-        Serial.println(filename);
+        DEBUG_PRINT(PSTR("> deleting file "));
+        DEBUG_PRINTLN(filename);
 
         if (!filename.startsWith("/"))
         {
@@ -417,9 +417,9 @@ void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename
 {
     if (!index)
     {
-        Serial.println(PSTR("> starting file upload"));
-        Serial.print(PSTR("> file: "));
-        Serial.println(filename);
+        DEBUG_PRINTLN(PSTR("> starting file upload"));
+        DEBUG_PRINT(PSTR("> file: "));
+        DEBUG_PRINTLN(filename);
 
         // open the file on first call and store the file handle in the request object
         request->_tempFile = LittleFS.open(filename, "w");
@@ -436,7 +436,7 @@ void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename
         // close the file handle as the upload is now done
         request->_tempFile.close();
 
-        Serial.println(PSTR("> finished file upload"));
+        DEBUG_PRINTLN(PSTR("> finished file upload"));
 
         DynamicJsonDocument doc(512);
         doc["success"] = final;
@@ -449,8 +449,8 @@ void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename
 
 void WebServer::handleNotFound(AsyncWebServerRequest *request)
 {
-    Serial.print(PSTR("> requested URL: "));
-    Serial.println(request->url().c_str());
+    DEBUG_PRINT(PSTR("> requested URL: "));
+    DEBUG_PRINTLN(request->url().c_str());
 
     if (request->method() == HTTP_GET || request->method() == HTTP_POST)
     {
