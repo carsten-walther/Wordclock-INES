@@ -967,4 +967,6 @@ char* string2char(String str)
         char *p = const_cast<char*>(str.c_str());
         return p;
     }
+
+    return 0;
 }

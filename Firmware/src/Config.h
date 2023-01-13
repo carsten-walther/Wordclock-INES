@@ -10,8 +10,6 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#define USE_BASIC_AUTH
-
 //
 // Version =====================================================================
 //
@@ -24,7 +22,7 @@
 //
 
 // Should the debugging function be activated via Serial?
-//#define DEBUG
+#define DEBUG
 
 // Serial baud rate
 #define BAUD 115200
