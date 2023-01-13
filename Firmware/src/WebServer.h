@@ -5,7 +5,6 @@
 #ifndef WORDCLOCK_WEBSERVER_H
 #define WORDCLOCK_WEBSERVER_H
 
-#include <LittleFS.h>
 #include <StreamString.h>
 #include <ESPAsyncWebServer.h>
 

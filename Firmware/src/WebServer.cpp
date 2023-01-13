@@ -2,7 +2,6 @@
 // Created by Carsten Walther.
 //
 
-#include <LittleFS.h>
 #include <ArduinoJson.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266SSDP.h>
@@ -13,6 +12,31 @@
 #include "WiFiManager.h"
 #include "ConfigurationManager.h"
 
+#if defined USE_SPIFFS
+
+#include <FS.h>
+const char* fsName = "SPIFFS";
+FS fileSystem = SPIFFS;
+SPIFFSConfig fileSystemConfig = SPIFFSConfig();
+
+#elif defined USE_LITTLEFS
+
+#include <LittleFS.h>
+const char* fsName = "LittleFS";
+FS fileSystem = LittleFS;
+LittleFSConfig fileSystemConfig = LittleFSConfig();
+
+#elif defined USE_SDFS
+
+#include <SDFS.h>
+const char* fsName = "SDFS";
+FS fileSystem = SDFS;
+SDFSConfig fileSystemConfig = SDFSConfig();
+
+#else
+#error Please select a filesystem first by uncommenting one of the "#define USE_xxx" lines at the beginning of the sketch.
+#endif
+
 WebServer webServer;
 
 void WebServer::begin()
@@ -20,9 +44,11 @@ void WebServer::begin()
     // to enable testing and debugging of the interface
     DefaultHeaders::Instance().addHeader(PSTR("Access-Control-Allow-Origin"), PSTR("*"));
 
-    // start the SPI Flash File System (LittleFS)
-    if (LittleFS.begin() != false)
+    // start the SPI Flash File System
+    if (fileSystem.begin() != false)
     {
+        fileSystemConfig.setAutoFormat(false);
+        fileSystem.setConfig(fileSystemConfig);
         DEBUG_PRINTLN(PSTR("> filesystem initialized"));
     }
     else
@@ -35,14 +61,14 @@ void WebServer::begin()
     if (configurationManager.data.useAuth)
     {
         server
-            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
+            .serveStatic(PSTR("/"), fileSystem, PSTR("/"))
             .setDefaultFile("index.html")
             .setAuthentication(configurationManager.data.authUsername, configurationManager.data.authPassword);
     }
     else
     {
         server
-            .serveStatic(PSTR("/"), LittleFS, PSTR("/"))
+            .serveStatic(PSTR("/"), fileSystem, PSTR("/"))
             .setDefaultFile("index.html");
     }
 
@@ -199,7 +225,7 @@ void WebServer::bindAll()
 
         // get file listing
         int counter = 0;
-        Dir dir = LittleFS.openDir("/");
+        Dir dir = fileSystem.openDir("/");
 
         while (dir.next())
         {
@@ -212,7 +238,7 @@ void WebServer::bindAll()
 
         // get used and total data
         FSInfo fs_info;
-        LittleFS.info(fs_info);
+        fileSystem.info(fs_info);
 
         doc["payload"]["usedBytes"] = fs_info.usedBytes;
         doc["payload"]["totalBytes"] = fs_info.totalBytes;
@@ -235,11 +261,11 @@ void WebServer::bindAll()
             filename = "/" + filename;
         }
 
-        LittleFS.remove(filename);
+        fileSystem.remove(filename);
 
         DynamicJsonDocument doc(32);
 
-        doc["success"] = !LittleFS.exists(filename);
+        doc["success"] = !fileSystem.exists(filename);
 
         String JSON;
         serializeJson(doc, JSON);
@@ -422,7 +448,7 @@ void WebServer::handleFileUpload(AsyncWebServerRequest *request, String filename
         DEBUG_PRINTLN(filename);
 
         // open the file on first call and store the file handle in the request object
-        request->_tempFile = LittleFS.open(filename, "w");
+        request->_tempFile = fileSystem.open(filename, "w");
     }
 
     if (len)
@@ -454,7 +480,7 @@ void WebServer::handleNotFound(AsyncWebServerRequest *request)
 
     if (request->method() == HTTP_GET || request->method() == HTTP_POST)
     {
-        request->send(LittleFS, "index.html");
+        request->send(fileSystem, "index.html");
     }
     else if (request->method() == HTTP_OPTIONS)
     {

@@ -12,14 +12,14 @@
 //
 
 // Software Version
-#define VERSION "2.0.0 alpha"
+#define VERSION "2.0.0 beta"
 
 //
 // Debug/Serial Settings =======================================================
 //
 
 // Should the debugging function be activated via Serial?
-#define DEBUG
+// #define DEBUG
 
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
@@ -33,6 +33,14 @@
 
 // Serial baud rate
 #define BAUD 115200
+
+//
+// Select the FileSystem by uncommenting one of the lines below ================
+//
+
+#define USE_SPIFFS
+//#define USE_LITTLEFS
+//#define USE_SDFS
 
 //
 // Access Point settings =======================================================
