@@ -37,8 +37,9 @@ void setup()
     Serial.begin(115200);
     #endif
 
-    DEBUG_PRINTLN(PSTR(" "));
-    DEBUG_PRINTLN(PSTR("WordClock"));
+    DEBUG_PRINTLN(PSTR("\n"));
+    DEBUG_PRINT(PSTR("WordClock - "));
+    DEBUG_PRINTLN(VERSION);
     DEBUG_PRINTLN(PSTR("================================================================================"));
 
     DEBUG_PRINT(PSTR("> esp sdk version: "));
@@ -55,7 +56,7 @@ void setup()
     configurationManager.setConfigSaveCallback(saveCallback);
     
     DEBUG_PRINTLN(PSTR("> starting wifi manager"));
-    wiFiManager.begin(AP_SSID);
+    wiFiManager.begin(AP_SSID, 60000);
 
     DEBUG_PRINTLN(PSTR("> starting web server"));
     webServer.begin();

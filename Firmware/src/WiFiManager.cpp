@@ -12,11 +12,13 @@
 
 WiFiManager wiFiManager;
 
-void WiFiManager::begin(char const *apName)
+void WiFiManager::begin(char const *apName, unsigned long newTimeout)
 {
     captivePortalName = apName;
+    timeout = newTimeout;
 
     WiFi.mode(WIFI_STA);
+    WiFi.persistent(true);
 
     // set static IP if entered
     ip = IPAddress(configurationManager.internal.ip);
@@ -38,19 +40,11 @@ void WiFiManager::begin(char const *apName)
         ETS_UART_INTR_ENABLE();
 
         WiFi.begin();
-        delay(2000);
 
         DEBUG_PRINTLN(PSTR("> trying to connect to stored WiFi details"));
-        DEBUG_PRINT("> connecting ");
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            delay(500);
-            DEBUG_PRINT(".");
-        }
-        DEBUG_PRINTLN();
     }
 
-    if (WiFi.status() == WL_CONNECTED)
+    if (waitForConnectResult(timeout) == WL_CONNECTED)
     {
         // connected
         DEBUG_PRINTLN(PSTR("> connected to stored WiFi details"));
@@ -75,20 +69,51 @@ void WiFiManager::begin(char const *apName)
     }
 }
 
+// Upgraded default waitForConnectResult function to incorporate WL_NO_SSID_AVAIL, fixes issue #122
+int8_t WiFiManager::waitForConnectResult(unsigned long timeoutLength)
+{
+    //1 and 3 have STA enabled
+    if ((wifi_get_opmode() & 1) == 0)
+    {
+        return WL_DISCONNECTED;
+    }
+    
+    using esp8266::polledTimeout::oneShot;
+    // number of milliseconds to wait before returning timeout error
+    oneShot timeout(timeoutLength);
+
+    while (!timeout)
+    {
+        yield();
+        if (WiFi.status() != WL_DISCONNECTED && WiFi.status() != WL_NO_SSID_AVAIL)
+        {
+            return WiFi.status();
+        }
+    }
+
+    // -1 indicates timeout
+    return -1;
+}
+
 void WiFiManager::forget()
 {
     WiFi.disconnect();
-    
+
     startCaptivePortal(captivePortalName);
 
-    // remove IP address from EEPROM
+    //remove IP address from EEPROM
     ip = IPAddress();
     sub = IPAddress();
     gw = IPAddress();
     dns = IPAddress();
 
-    // make EEPROM empty
+    //make EEPROM empty
     storeToEEPROM();
+
+    if (_forgetwificallback != NULL)
+    {
+        _forgetwificallback();
+    } 
 
     DEBUG_PRINTLN(PSTR("> requested to forget wifi, started captive portal"));
 }
@@ -141,35 +166,18 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
         String oldSSID = WiFi.SSID();
         String oldPSK = WiFi.psk();
 
-        WiFi.begin(String(newSSID), String(newPass), 0, NULL, true);
+        WiFi.begin(newSSID.c_str(), newPass.c_str(), 0, NULL, true);
         delay(2000);
 
-        DEBUG_PRINT("> connecting ");
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            delay(500);
-            DEBUG_PRINT(".");
-        }
-        DEBUG_PRINTLN();
-
-        if (WiFi.status() != WL_CONNECTED)
+        if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
         {
             DEBUG_PRINTLN(PSTR("> new connection unsuccessful"));
 
             if (!inCaptivePortal)
             {
                 WiFi.begin(oldSSID, oldPSK, 0, NULL, true);
-                delay(2000);
 
-                DEBUG_PRINT("> connecting ");
-                while (WiFi.status() != WL_CONNECTED)
-                {
-                    delay(500);
-                    DEBUG_PRINT(".");
-                }
-                DEBUG_PRINTLN();
-
-                if (WiFi.status() != WL_CONNECTED)
+                if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
                 {
                     DEBUG_PRINTLN(PSTR("> reconnection failed too"));
                     startCaptivePortal(captivePortalName);
@@ -195,6 +203,11 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
 
             // store IP address in EEProm
             storeToEEPROM();
+
+            if (_newwificallback != NULL)
+            {
+                _newwificallback();
+            }
         }
     }
 }
@@ -211,7 +224,7 @@ void WiFiManager::startCaptivePortal(char const *apName)
     // Setup the DNS server redirecting all the domains to the apIP
     dnsServer = new DNSServer();
     dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
-    dnsServer->start(53, PSTR("*"), WiFi.softAPIP());
+    dnsServer->start(53, "*", WiFi.softAPIP());
 
     DEBUG_PRINTLN(PSTR("> opened a captive portal"));
     DEBUG_PRINT(PSTR("> ip: "));
@@ -230,20 +243,33 @@ void WiFiManager::stopCaptivePortal()
     inCaptivePortal = false;
 }
 
+void  WiFiManager::forgetWiFiFunctionCallback(std::function<void()> func)
+{
+    _forgetwificallback = func;
+}
+
+void WiFiManager::newWiFiFunctionCallback(std::function<void()> func)
+{
+    _newwificallback = func;
+}
+
 bool WiFiManager::isCaptivePortal()
 {
     return inCaptivePortal;
+}
+
+//return current SSID
+String WiFiManager::SSID()
+{    
+    return WiFi.SSID();
 }
 
 void WiFiManager::loop()
 {
     if (inCaptivePortal)
     {
-        if (dnsServer)
-        {
-            // captive portal loop
-            dnsServer->processNextRequest();
-        }
+        //captive portal loop
+        dnsServer->processNextRequest();
     }
 
     if (reconnect)
