@@ -4,11 +4,11 @@
 
 #include <ArduinoJson.h>
 #include <ESP8266mDNS.h>
-#include <ESP8266SSDP.h>
 
 #include "main.h"
 #include "Updater.h"
 #include "WebServer.h"
+#include "SSDPDevice.h"
 #include "WiFiManager.h"
 #include "ConfigurationManager.h"
 
@@ -73,31 +73,25 @@ void WebServer::begin()
     }
 
     // handle not found and captive portal
-    // server.onNotFound(handleNotFound);
+    server.onNotFound(handleNotFound);
 
     bindAll();
 
     if (!wiFiManager.isCaptivePortal())
     {
         // init SSDP
-        SSDP.setSchemaURL("description.xml");
-        SSDP.setHTTPPort(SERVER_PORT);
-        SSDP.setName(configurationManager.data.hostname);
-        SSDP.setSerialNumber(ESP.getChipId());
-        SSDP.setURL("/");
-        SSDP.setModelName(AP_SSID);
-        SSDP.setModelNumber(VERSION);
-        SSDP.setModelURL("https://github.com/carsten-walther/wordclock");
-        SSDP.setManufacturer("Carsten Walther");
-        SSDP.setManufacturerURL("https://www.carstenwalther.de");
-        SSDP.setDeviceType("upnp:rootdevice");
+		SSDPDevice.setSchemaURL("description.xml");
+        SSDPDevice.setHTTPPort(SERVER_PORT);
+        SSDPDevice.setName((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
+		SSDPDevice.setSerialNumber(ESP.getChipId());
+		SSDPDevice.setURL("/");
+		SSDPDevice.setModelName(AP_SSID);
+		SSDPDevice.setModelNumber(VERSION);
+        SSDPDevice.setModelURL("https://github.com/carsten-walther/wordclock");
+        SSDPDevice.setManufacturer("Carsten Walther");
+        SSDPDevice.setManufacturerURL("https://www.carstenwalther.de");
+        SSDPDevice.setDeviceType("urn:schemas-upnp-org:device:WordClock:1");
 
-        if (SSDP.begin())
-        {
-            DEBUG_PRINTLN(PSTR("> ssdp started"));
-        }
-
-        // handle SSDP
         server.on(PSTR("/description.xml"), HTTP_GET, handleSimpleServiceDiscoveryProtocol);
     }
 }
@@ -108,6 +102,8 @@ void WebServer::loop()
     {
         // update MDNS service
         MDNS.update();
+
+    	SSDPDevice.handleClient();
     }
 }
 
@@ -480,7 +476,10 @@ void WebServer::handleNotFound(AsyncWebServerRequest *request)
 
     if (request->method() == HTTP_GET || request->method() == HTTP_POST)
     {
-        request->send(fileSystem, "index.html");
+        if (!handleFileRead(request)) {
+            request->send(404, "text/html", "<h1>Not found</h1><p>The requested URL " + String(request->url().c_str()) + " was not found on this server.</p>");
+        }
+
     }
     else if (request->method() == HTTP_OPTIONS)
     {
@@ -494,54 +493,29 @@ void WebServer::handleNotFound(AsyncWebServerRequest *request)
 
 void WebServer::handleSimpleServiceDiscoveryProtocol(AsyncWebServerRequest *request)
 {
-    static const char* ssdpTemplate = 
-        "<?xml version=\"1.0\"?>"
-        "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
-            "<specVersion>"
-            "<major>1</major>"
-            "<minor>0</minor>"
-            "</specVersion>"
-            "<URLBase>http://%s/</URLBase>"
-            "<device>"
-                "<deviceType>%s</deviceType>"
-                "<friendlyName>%s</friendlyName>"
-                "<presentationURL>%s</presentationURL>"
-                "<serialNumber>%u</serialNumber>"
-                "<modelName>%s</modelName>"
-                "<modelNumber>%s</modelNumber>"
-                "<modelURL>%s</modelURL>"
-                "<manufacturer>%s</manufacturer>"
-                "<manufacturerURL>%s</manufacturerURL>"
-                "<UDN>uuid:b8b8f06a-8301-4675-ba8e-3c11b1%02x%02x%02x</UDN>"
-            "</device>"
-        "</root>\r\n"
-        "\r\n";
+    request->send(200, "text/xml", SSDPDevice.getSchema());
+}
 
-    StreamString output;
+bool WebServer::handleFileRead(AsyncWebServerRequest *request)
+{
+    String fileName = String(request->url().c_str()).substring(String(request->url().c_str()).lastIndexOf('/'));
+    
+    DEBUG_PRINT(PSTR("> requested fileName: "));
+    DEBUG_PRINTLN(fileName);
 
-    if (output.reserve(1024))
+    // If the file exists, either as a compressed archive, or normal
+    if (fileSystem.exists(fileName + ".gz") || fileSystem.exists(fileName))
     {
-        uint32_t chipId = ESP.getChipId();
-        output.printf(ssdpTemplate,
-            (configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"), // URLBase
-            "upnp:rootdevice",                              // deviceType
-            AP_SSID,                                        // friendlyName
-            "/",                                            // presentationURL
-            chipId,                                         // serialNumber
-            AP_SSID,                                        // modelName
-            VERSION,                                        // modelNumber
-            "https://github.com/carsten-walther/wordclock", // modelURL
-            "Carsten Walther",                              // manufacturer
-            "https://www.carstenwalther.de",                // manufacturerURL
-            (uint8_t) ((chipId >> 16) & 0xff),              // UDN
-            (uint8_t) ((chipId >>  8) & 0xff),              // UDN
-            (uint8_t)   chipId        & 0xff                // UDN
-        );
+        if (fileSystem.exists(fileName  + ".gz"))
+        {
+            // Use the compressed verion
+            fileName += ".gz";
+        }
 
-        request->send(200, "text/xml", (String)output);
+        request->send(fileSystem, fileName);
+
+        return true;
     }
-    else
-    {
-        request->send(500);
-    }
+    
+    return false;
 }

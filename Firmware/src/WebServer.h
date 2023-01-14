@@ -18,6 +18,7 @@ private:
     static void handleFileUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
     static void handleNotFound(AsyncWebServerRequest *request);
     static void handleSimpleServiceDiscoveryProtocol(AsyncWebServerRequest *request);
+    static bool handleFileRead(AsyncWebServerRequest *request);
 
 public:
     void begin();
