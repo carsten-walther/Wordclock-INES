@@ -82,15 +82,16 @@ void WebServer::begin()
         // init SSDP
 		SSDPDevice.setSchemaURL("description.xml");
         SSDPDevice.setHTTPPort(SERVER_PORT);
-        SSDPDevice.setName((configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
+        SSDPDevice.setName("Wordclock");
 		SSDPDevice.setSerialNumber(ESP.getChipId());
-		SSDPDevice.setURL("/");
-		SSDPDevice.setModelName(AP_SSID);
+        SSDPDevice.setModelDescription("Another word clock.");
+		SSDPDevice.setModelName("Wordclock");
 		SSDPDevice.setModelNumber(VERSION);
         SSDPDevice.setModelURL("https://github.com/carsten-walther/wordclock");
         SSDPDevice.setManufacturer("Carsten Walther");
         SSDPDevice.setManufacturerURL("https://www.carstenwalther.de");
-        SSDPDevice.setDeviceType("urn:schemas-upnp-org:device:WordClock:1");
+        SSDPDevice.setDeviceType("urn:schemas-upnp-org:device:Wordclock:1");
+        SSDPDevice.setURL(String("http://") + (configurationManager.data.hostname ? configurationManager.data.hostname : SERVER_HOST) + String(".local"));
 
         server.on(PSTR("/description.xml"), HTTP_GET, handleSimpleServiceDiscoveryProtocol);
     }

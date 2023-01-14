@@ -241,11 +241,13 @@ void SSDPDeviceClass::send(ssdp_send_parameters_t *parameters) {
 void SSDPDeviceClass::schema(WiFiClient client) {
 	uint32_t ip = WiFi.localIP();
 	client.printf(SSDP_SCHEMA_TEMPLATE,
-		LIP2STR(&ip), m_port, m_schemaURL,
+		LIP2STR(&ip), m_port, 
+		m_schemaURL,
 		m_deviceType,
 		m_friendlyName,
 		m_presentationURL,
 		m_serialNumber,
+		m_modelDescription,
 		m_modelName,
 		m_modelNumber,
 		m_modelURL,
@@ -260,11 +262,13 @@ String SSDPDeviceClass::getSchema() {
 
 	uint32_t ip = WiFi.localIP();
 	sprintf(buffer, SSDP_SCHEMA_TEMPLATE_RAW,
-		LIP2STR(&ip), m_port, m_schemaURL,
+		LIP2STR(&ip), m_port, 
+		m_schemaURL,
 		m_deviceType,
 		m_friendlyName,
 		m_presentationURL,
 		m_serialNumber,
+		m_modelDescription,
 		m_modelName,
 		m_modelNumber,
 		m_modelURL,
@@ -381,6 +385,10 @@ void SSDPDeviceClass::setSerialNumber(const char *serialNumber) {
 
 void SSDPDeviceClass::setSerialNumber(const uint32_t serialNumber) {
 	snprintf(m_serialNumber, sizeof(uint32_t) * 2 + 1, "%08X", serialNumber);
+}
+
+void SSDPDeviceClass::setModelDescription(const char *description) {
+	strlcpy(m_modelDescription, description, sizeof(m_modelDescription));
 }
 
 void SSDPDeviceClass::setModelName(const char *name) {

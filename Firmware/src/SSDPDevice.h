@@ -45,6 +45,7 @@ static const IPAddress SSDP_MULTICAST_ADDR(239, 255, 255, 250);
 #define SSDP_FRIENDLY_NAME_SIZE     64
 #define SSDP_SERIAL_NUMBER_SIZE     32
 #define SSDP_PRESENTATION_URL_SIZE  128
+#define SSDP_MODEL_DESCRIPTION_SIZE 128
 #define SSDP_MODEL_NAME_SIZE        64
 #define SSDP_MODEL_URL_SIZE         128
 #define SSDP_MODEL_VERSION_SIZE     32
@@ -92,6 +93,7 @@ static const char* PROGMEM SSDP_SCHEMA_TEMPLATE =
 			"<friendlyName>%s</friendlyName>"
 			"<presentationURL>%s</presentationURL>"
 			"<serialNumber>%s</serialNumber>"
+			"<modelDescription>%s</modelDescription>"
 			"<modelName>%s</modelName>"
 			"<modelNumber>%s</modelNumber>"
 			"<modelURL>%s</modelURL>"
@@ -99,22 +101,6 @@ static const char* PROGMEM SSDP_SCHEMA_TEMPLATE =
 			"<manufacturerURL>%s</manufacturerURL>"
 			"<UDN>uuid:%s</UDN>"
 		"</device>"
-//    "<iconList>"
-//      "<icon>"
-//        "<mimetype>image/png</mimetype>"
-//        "<height>48</height>"
-//        "<width>48</width>"
-//        "<depth>24</depth>"
-//        "<url>icon48.png</url>"
-//      "</icon>"
-//      "<icon>"
-//       "<mimetype>image/png</mimetype>"
-//       "<height>120</height>"
-//       "<width>120</width>"
-//       "<depth>24</depth>"
-//       "<url>icon120.png</url>"
-//      "</icon>"
-//    "</iconList>"
 	"</root>\r\n"
 	"\r\n";
 
@@ -131,6 +117,7 @@ static const char* PROGMEM SSDP_SCHEMA_TEMPLATE_RAW =
 			"<friendlyName>%s</friendlyName>"
 			"<presentationURL>%s</presentationURL>"
 			"<serialNumber>%s</serialNumber>"
+			"<modelDescription>%s</modelDescription>"
 			"<modelName>%s</modelName>"
 			"<modelNumber>%s</modelNumber>"
 			"<modelURL>%s</modelURL>"
@@ -193,6 +180,7 @@ private:
 	char m_presentationURL[SSDP_PRESENTATION_URL_SIZE];
 	char m_manufacturer[SSDP_MANUFACTURER_SIZE];
 	char m_manufacturerURL[SSDP_MANUFACTURER_URL_SIZE];
+	char m_modelDescription[SSDP_MODEL_DESCRIPTION_SIZE];
 	char m_modelName[SSDP_MODEL_NAME_SIZE];
 	char m_modelURL[SSDP_MODEL_URL_SIZE];
 	char m_modelNumber[SSDP_MODEL_VERSION_SIZE];
@@ -233,6 +221,8 @@ public:
 	void setSerialNumber(const String& serialNumber) { setSerialNumber(serialNumber.c_str()); }
 	void setSerialNumber(const char *serialNumber);
 	void setSerialNumber(const uint32_t serialNumber);
+	void setModelDescription(const String& description) { setModelDescription(description.c_str()); }
+	void setModelDescription(const char *description);
 	void setModelName(const String& name) { setModelName(name.c_str()); }
 	void setModelName(const char *name);
 	void setModelNumber(const String& num) { setModelNumber(num.c_str()); }
