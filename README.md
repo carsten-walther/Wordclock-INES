@@ -11,17 +11,9 @@ This clock shows the time in words.
 [![License](https://img.shields.io/github/license/carsten-walther/wordclock)](LICENSE.txt)
 [![GitHub All Releases](https://img.shields.io/github/downloads/carsten-walther/wordclock/total)](https://github.com/carsten-walther/wordclock/releases/latest)
 
-![Wordclock Plate Model INES](Documentation/img/Plate-INES-de.svg)
+| ![Wordclock Plate Model INES](Documentation/img/Plate-INES-de.svg) _Image: Wordclock Plate Model INES_ | ![Wordclock Plate Model NINA](Documentation/img/Plate-NINA-de.svg) _Image: Wordclock Plate Model NINA_ | ![Wordclock Plate Model MARIA](Documentation/img/Plate-MARIA-de.svg) _Image: Wordclock Plate Model MARIA_ |
+|:---:|:---:|:---:|
 
-_Image: Wordclock Plate Model INES_
-
-![Wordclock Plate Model NINA](Documentation/img/Plate-NINA-de.svg)
-
-_Image: Wordclock Plate Model NINA_
-
-![Wordclock Plate Model MARIA](Documentation/img/Plate-MARIA-de.svg)
-
-_Image: Wordclock Plate Model MARIA_
 
 A detailed [**build**](Documentation/BUILD.md) and [**operation**](Documentation/README.md) manual can be found in [**Documentation**](Documentation) folder.
 
