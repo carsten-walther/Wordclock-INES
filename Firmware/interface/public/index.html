@@ -1,9 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    
     <title>WordClock</title>
+
+    <meta name="application-name" content="WordClock">
+    <meta name="theme-color" content="#f8fafc" />
+    <meta name="description"content="Another word clock . This clock shows the time in words." />
+    <meta name="keywords" content="word, clock">
+
+    <script>
+        function getPreferredColorScheme() {
+            try {
+                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark')
+                    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0B1120')
+                    document.querySelector('meta[name="msapplication-TileColor"]').setAttribute('content', '#0B1120')
+                } else {
+                    document.documentElement.classList.remove('dark')
+                }
+            } catch (_) { }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
+            getPreferredColorScheme()
+        })
+
+        getPreferredColorScheme()
+    </script>
+
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>

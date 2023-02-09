@@ -10,7 +10,7 @@ export default class NavItem extends React.Component {
     render () {
         return (
             <>
-                <Link to={this.props.to} spy hashSpy smooth className="sidebar-navitem text-gray-700" activeClass="text-red-600">
+                <Link to={this.props.to} spy hashSpy smooth className="sidebar-navitem text-gray-700 dark:text-gray-50" activeClass="text-red-600 dark:text-red-500">
                     {this.props.title}
                 </Link>
             </>

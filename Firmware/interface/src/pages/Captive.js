@@ -19,6 +19,30 @@ export default class Captive extends React.Component {
         })
     }
 
+    calcSignalStrength (rssi) {
+        if (rssi > -55) { 
+            return 5
+        } else if (rssi < -55 & rssi > -65) {
+            return 4
+        } else if (rssi < -65 & rssi > -70) {
+            return 3
+        } else if (rssi < -70 & rssi > -78) {
+            return 2
+        } else if (rssi < -78 & rssi > -82) {
+            return 1
+        } else {
+            return 0;
+        }
+    }
+
+    calcEncryptionType (encryptionType) {
+        if (encryptionType > 0) {
+            return '🔐'
+        } else {
+            return '🔓'
+        }
+    }
+
     render () {
         return (
             <div className="card">
@@ -36,7 +60,7 @@ export default class Captive extends React.Component {
                                     <option value="">SSID</option>
                                     {this.props.networks && this.props.networks.map((network, index) => (
                                         <option value={network.ssid} key={index}>
-                                            {(network.encryptionType > 0) ? '🔒 ' : '🔓 '} {network.ssid} {(network.encryptionType > 0) ? '(closed)' : '(open)'}
+                                            {this.calcEncryptionType(network.encryptionType)} ({this.calcSignalStrength(network.rssi)} / {network.rssi}dBm) {network.ssid}
                                         </option>
                                     ))}
                                 </select>

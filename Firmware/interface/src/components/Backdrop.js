@@ -13,7 +13,9 @@ export default class Backdrop extends React.Component {
         this.el.classList.add('right-0')
         this.el.classList.add('bottom-0')
         this.el.classList.add('backdrop-filter')
-        this.el.classList.add('backdrop-blur')
+        this.el.classList.add('backdrop-blur-sm')
+        this.el.classList.add('backdrop-brightness-90')
+        this.el.classList.add('backdrop-grayscale')
         this.el.classList.add('z-50')
     }
 

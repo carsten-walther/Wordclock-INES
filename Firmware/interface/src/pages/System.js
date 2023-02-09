@@ -9,7 +9,7 @@ export default class System extends React.Component {
                 </h6>
                 <table className="table-auto w-full">
                     <tbody>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-gray-100 dark:bg-gray-500">
                         <th>Firmware Version</th>
                         <td>{this.props.info.version}</td>
                     </tr>
@@ -17,7 +17,7 @@ export default class System extends React.Component {
                         <th>MAC Address</th>
                         <td>{this.props.info.mac}</td>
                     </tr>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-gray-100 dark:bg-gray-500">
                         <th>Restart WordClock</th>
                         <td>
                             <button type="button" className="form-btn-red " onClick={this.props.onSystemRestart.bind(this)}>Restart</button>

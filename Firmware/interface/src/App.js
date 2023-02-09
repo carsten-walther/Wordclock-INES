@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-scroll'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import Captive from './pages/Captive'
 import ColorAndBrightness from './pages/ColorAndBrightness'
@@ -283,47 +283,43 @@ export default class App extends React.Component {
     render () {
         return (
             <div id="top" className="container w-full flex flex-wrap mx-auto">
-                <BrowserRouter>
-                    <Switch>
-                        <Route>
-                            <Route path="/" exact>
-                                {this.state.wifi.captivePortal ? (
-                                    <>
-                                        <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
-                                            <Captive data={this.state.data} networks={this.state.networks} onWifiScan={this.handleWifiScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.wifiSet.bind(this)}/>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="w-full lg:w-1/5 px-6">
-                                            <Sidebar showExpertMode={this.state.showExpertMode} onToggleExpertMode={this.toggleExpertMode.bind(this)}/>
-                                        </div>
-                                        <div className="w-full lg:w-3/5 pb-12 mt-16 lg:mt-36">
-                                            <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            {this.state.showExpertMode && (
-                                                <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            )}
-                                            <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                            {this.state.showExpertMode && (
-                                                <>
-                                                    <Network data={this.state.data} wifi={this.state.wifi} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onWifiForget={this.handleWifiForget.bind(this)}/>
-                                                    <Accessibility data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                                    <Security data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
-                                                    {/*}
-                                                    <Firmware/>
-                                                    {*/}
-                                                    <System info={this.state.info} onSystemRestart={this.systemRestart.bind(this)}/>
-                                                    <Licences/>
-                                                </>
-                                            )}
-                                        </div>
-                                    </>
-                                )}
-                            </Route>
-                        </Route>
-                    </Switch>
-                </BrowserRouter>
+                <Router>
+                    <Routes>
+                        <Route exact path="/" element={
+                            this.state.wifi.captivePortal ? (
+                                <div className="w-full lg:w-3/5 mx-auto pb-12 mt-16 lg:mt-36">
+                                    <Captive data={this.state.data} networks={this.state.networks} onWifiScan={this.handleWifiScan.bind(this)} onChange={this.handleChange.bind(this)} onSubmit={this.wifiSet.bind(this)}/>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="w-full lg:w-1/5 px-6">
+                                        <Sidebar showExpertMode={this.state.showExpertMode} onToggleExpertMode={this.toggleExpertMode.bind(this)}/>
+                                    </div>
+                                    <div className="w-full lg:w-3/5 pb-12 mt-16 lg:mt-36">
+                                        <ColorAndBrightness data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                        <ModeAndLanguage data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                        {this.state.showExpertMode && (
+                                            <TimeSettings data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                        )}
+                                        <OnOffTime data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                        {this.state.showExpertMode && (
+                                            <>
+                                                <Network data={this.state.data} wifi={this.state.wifi} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} onWifiForget={this.handleWifiForget.bind(this)}/>
+                                                <Accessibility data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                                <Security data={this.state.data} onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)}/>
+                                                {/*}
+                                                <Firmware/>
+                                                {*/}
+                                                <System info={this.state.info} onSystemRestart={this.systemRestart.bind(this)}/>
+                                                <Licences/>
+                                            </>
+                                        )}
+                                    </div>
+                                </>
+                            )
+                        } />
+                    </Routes>
+                </Router>
                 <Link to="top" smooth className={`link-to-top ${!this.state.showScrollToTop ? 'hidden' : ''}`}>
                     <ChevronUp className="h-5 w-5"/>
                 </Link>

@@ -6,25 +6,26 @@
 @layer components {
 
     body {
-        @apply bg-gray-50 text-gray-900;
+        @apply antialiased bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-200;
     }
+
     p {
         @apply mb-4;
     }
 
     .sidebar-list {
-        @apply list-none py-2 md:py-0;
+        @apply list-none py-2 md:py-0 bg-white dark:bg-gray-800 lg:bg-transparent dark:lg:bg-transparent flow-root lg:block;
 
         .sidebar-list-item {
-            @apply py-1 md:my-2 lg:border-r-2 border-transparent border-gray-700 lg:text-right;
+            @apply py-1 md:my-2 lg:border-r-2 border-transparent border-gray-200 dark:border-gray-500 lg:text-right;
 
             .sidebar-navitem {
-                @apply block pl-6 lg:pr-6 no-underline hover:text-red-600 cursor-pointer;
+                @apply block pl-6 lg:pr-6 no-underline hover:text-red-600 dark:hover:text-red-500 cursor-pointer;
             }
         }
 
         .sidebar-list-header {
-            @apply text-base font-bold py-2 lg:pt-4 lg:pb-2 text-gray-700 lg:text-right;
+            @apply text-base font-bold py-2 lg:pt-4 lg:pb-2 text-gray-700 dark:text-gray-300 lg:text-right;
         }
 
         .expert-toggle {
@@ -34,25 +35,25 @@
 
 
     .link-to-top {
-        @apply fixed bottom-4 right-4 rounded-full h-10 w-10 flex items-center justify-center shadow-lg z-50 bg-gray-700 text-white cursor-pointer;
+        @apply fixed bottom-4 right-4 rounded-full h-10 w-10 flex items-center justify-center shadow-lg z-50 bg-gray-700 dark:bg-gray-300 text-white dark:text-black cursor-pointer;
     }
 
 
     .card {
-        @apply mx-4 mb-12 rounded-lg shadow-lg bg-white;
+        @apply mx-4 mb-12 rounded-lg shadow-lg bg-white dark:bg-gray-600;
 
         .card-header {
-            @apply text-gray-700 text-xl px-6 py-4;
+            @apply text-gray-700 dark:text-gray-50 text-xl px-6 py-4;
         }
 
         .card-body {
-            @apply bg-gray-100 p-6 rounded-b-lg;
+            @apply bg-gray-100 dark:bg-gray-800 p-6 rounded-b-lg;
         }
     }
 
 
     .form-label {
-        @apply block text-gray-600 md:text-left mb-3 md:mb-0 pr-4;
+        @apply block text-gray-600 dark:text-white md:text-left mb-3 md:mb-0 pr-4;
     }
     .form-label-inline {
         @apply inline-flex items-center mr-6;
@@ -78,7 +79,7 @@
 
 
     .help-text {
-        @apply py-2 m-0 text-sm text-gray-400 italic;
+        @apply py-2 m-0 text-sm text-gray-400 dark:text-gray-200 italic;
     }
 
 

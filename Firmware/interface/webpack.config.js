@@ -12,12 +12,10 @@ module.exports = {
     target: 'web',
     devServer: {
         historyApiFallback: true,
-        contentBase: path.join(__dirname, 'public'),
         open: false,
         compress: true,
         hot: true,
         port: 3000,
-        watchContentBase: true
     },
     entry: {
         index: path.join(__dirname, 'src/index.js'),
