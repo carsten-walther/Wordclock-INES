@@ -19,7 +19,7 @@
 //
 
 // Should the debugging function be activated via Serial?
-// #define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
@@ -38,8 +38,8 @@
 // Select the FileSystem by uncommenting one of the lines below ================
 //
 
-#define USE_SPIFFS
-//#define USE_LITTLEFS
+//#define USE_SPIFFS
+#define USE_LITTLEFS
 //#define USE_SDFS
 
 //

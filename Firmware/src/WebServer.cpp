@@ -58,6 +58,13 @@ void WebServer::begin()
 
     server.begin();
 
+    server.addRewrite(new AsyncWebRewrite("/generate_204", "/index.html"));
+    server.addRewrite(new AsyncWebRewrite("/fwlink", "/index.html"));
+    server.addRewrite(new AsyncWebRewrite("/connecttest.txt", "/index.html"));
+    server.addRewrite(new AsyncWebRewrite("/hotspot-detect.html", "/index.html"));
+    server.addRewrite(new AsyncWebRewrite("/library/test/success.html", "/index.html"));
+    server.addRewrite(new AsyncWebRewrite("/kindle-wifi/wifistub.html", "/index.html"));
+
     if (configurationManager.data.useAuth)
     {
         server

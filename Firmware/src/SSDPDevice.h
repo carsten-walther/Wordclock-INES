@@ -52,30 +52,30 @@ static const IPAddress SSDP_MULTICAST_ADDR(239, 255, 255, 250);
 #define SSDP_MANUFACTURER_SIZE      64
 #define SSDP_MANUFACTURER_URL_SIZE  128
 
-static const char* PROGMEM SSDP_RESPONSE_TEMPLATE =
+const char SSDP_RESPONSE_TEMPLATE[] PROGMEM =
 	"HTTP/1.1 200 OK\r\n"
 	"EXT:\r\n";
 
-static const char* PROGMEM SSDP_NOTIFY_ALIVE_TEMPLATE =
+const char SSDP_NOTIFY_ALIVE_TEMPLATE[] PROGMEM =
 	"NOTIFY * HTTP/1.1\r\n"
 	"HOST: 239.255.255.250:1900\r\n"
 	"NTS: ssdp:alive\r\n";
 
-static const char* PROGMEM SSDP_NOTIFY_UPDATE_TEMPLATE =
+const char SSDP_NOTIFY_UPDATE_TEMPLATE[] PROGMEM =
 	"NOTIFY * HTTP/1.1\r\n"
 	"HOST: 239.255.255.250:1900\r\n"
 	"NTS: ssdp:update\r\n";
 
-static const char* PROGMEM SSDP_PACKET_TEMPLATE =
-	"%s" // _ssdp_response_template / _ssdp_notify_template
-	"CACHE-CONTROL: max-age=%u\r\n" // SSDP_INTERVAL
-	"SERVER: UPNP/1.1 %s/%s\r\n" // m_modelName, m_modelNumber
-	"USN: %s%s%s\r\n" // m_uuid
-	"%s: %s\r\n"  // "NT" or "ST", m_deviceType
+const char SSDP_PACKET_TEMPLATE[] PROGMEM =
+	"%s"									 // _ssdp_response_template / _ssdp_notify_template
+	"CACHE-CONTROL: max-age=%u\r\n"			 // SSDP_INTERVAL
+	"SERVER: UPNP/1.1 %s/%s\r\n"			 // m_modelName, m_modelNumber
+	"USN: %s%s%s\r\n"						 // m_uuid
+	"%s: %s\r\n"							 // "NT" or "ST", m_deviceType
 	"LOCATION: http://%u.%u.%u.%u:%u/%s\r\n" // WiFi.localIP(), m_port, m_schemaURL
 	"\r\n";
 
-static const char* PROGMEM SSDP_SCHEMA_TEMPLATE =
+const char SSDP_SCHEMA_TEMPLATE[] PROGMEM =
 	"HTTP/1.1 200 OK\r\n"
 	"Content-Type: text/xml\r\n"
 	"Connection: close\r\n"
@@ -83,64 +83,64 @@ static const char* PROGMEM SSDP_SCHEMA_TEMPLATE =
 	"\r\n"
 	"<?xml version=\"1.0\"?>"
 	"<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
-		"<specVersion>"
-			"<major>1</major>"
-			"<minor>0</minor>"
-		"</specVersion>"
-		"<URLBase>http://%u.%u.%u.%u:%u/%s</URLBase>" // WiFi.localIP(), _port
-		"<device>"
-			"<deviceType>%s</deviceType>"
-			"<friendlyName>%s</friendlyName>"
-			"<presentationURL>%s</presentationURL>"
-			"<serialNumber>%s</serialNumber>"
-			"<modelDescription>%s</modelDescription>"
-			"<modelName>%s</modelName>"
-			"<modelNumber>%s</modelNumber>"
-			"<modelURL>%s</modelURL>"
-			"<manufacturer>%s</manufacturer>"
-			"<manufacturerURL>%s</manufacturerURL>"
-			"<UDN>uuid:%s</UDN>"
-		"</device>"
+	"<specVersion>"
+	"<major>1</major>"
+	"<minor>0</minor>"
+	"</specVersion>"
+	"<URLBase>http://%u.%u.%u.%u:%u/%s</URLBase>" // WiFi.localIP(), _port
+	"<device>"
+	"<deviceType>%s</deviceType>"
+	"<friendlyName>%s</friendlyName>"
+	"<presentationURL>%s</presentationURL>"
+	"<serialNumber>%s</serialNumber>"
+	"<modelDescription>%s</modelDescription>"
+	"<modelName>%s</modelName>"
+	"<modelNumber>%s</modelNumber>"
+	"<modelURL>%s</modelURL>"
+	"<manufacturer>%s</manufacturer>"
+	"<manufacturerURL>%s</manufacturerURL>"
+	"<UDN>uuid:%s</UDN>"
+	"</device>"
 	"</root>\r\n"
 	"\r\n";
 
-static const char* PROGMEM SSDP_SCHEMA_TEMPLATE_RAW =
+const char SSDP_SCHEMA_TEMPLATE_RAW[] PROGMEM =
 	"<?xml version=\"1.0\"?>"
 	"<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
-		"<specVersion>"
-			"<major>1</major>"
-			"<minor>0</minor>"
-		"</specVersion>"
-		"<URLBase>http://%u.%u.%u.%u:%u/%s</URLBase>" // WiFi.localIP(), _port
-		"<device>"
-			"<deviceType>%s</deviceType>"
-			"<friendlyName>%s</friendlyName>"
-			"<presentationURL>%s</presentationURL>"
-			"<serialNumber>%s</serialNumber>"
-			"<modelDescription>%s</modelDescription>"
-			"<modelName>%s</modelName>"
-			"<modelNumber>%s</modelNumber>"
-			"<modelURL>%s</modelURL>"
-			"<manufacturer>%s</manufacturer>"
-			"<manufacturerURL>%s</manufacturerURL>"
-			"<UDN>uuid:%s</UDN>"
-		"</device>"
-		"<iconList>"
-			"<icon>"
-				"<mimetype>image/png</mimetype>"
-				"<height>48</height>"
-				"<width>48</width>"
-				"<depth>24</depth>"
-				"<url>icon48.png</url>"
-			"</icon>"
-			"<icon>"
-				"<mimetype>image/png</mimetype>"
-				"<height>120</height>"
-				"<width>120</width>"
-				"<depth>24</depth>"
-				"<url>icon120.png</url>"
-			"</icon>"
-		"</iconList>"
+	"<specVersion>"
+	"<major>1</major>"
+	"<minor>0</minor>"
+	"</specVersion>"
+	"<URLBase>http://%u.%u.%u.%u:%u/%s</URLBase>" // WiFi.localIP(), _port
+	"<device>"
+	"<deviceType>%s</deviceType>"
+	"<friendlyName>%s</friendlyName>"
+	"<presentationURL>%s</presentationURL>"
+	"<serialNumber>%s</serialNumber>"
+	"<modelDescription>%s</modelDescription>"
+	"<modelName>%s</modelName>"
+	"<modelNumber>%s</modelNumber>"
+	"<modelURL>%s</modelURL>"
+	"<manufacturer>%s</manufacturer>"
+	"<manufacturerURL>%s</manufacturerURL>"
+	"<UDN>uuid:%s</UDN>"
+	"</device>"
+	"<iconList>"
+	"<icon>"
+	"<mimetype>image/png</mimetype>"
+	"<height>48</height>"
+	"<width>48</width>"
+	"<depth>24</depth>"
+	"<url>icon48.png</url>"
+	"</icon>"
+	"<icon>"
+	"<mimetype>image/png</mimetype>"
+	"<height>120</height>"
+	"<width>120</width>"
+	"<depth>24</depth>"
+	"<url>icon120.png</url>"
+	"</icon>"
+	"</iconList>"
 	"</root>\r\n"
 	"\r\n";
 

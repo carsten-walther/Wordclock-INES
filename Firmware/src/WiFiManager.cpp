@@ -167,7 +167,7 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
         String oldPSK = WiFi.psk();
 
         WiFi.begin(newSSID.c_str(), newPass.c_str(), 0, NULL, true);
-        delay(2000);
+        delay(1000);
 
         if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
         {

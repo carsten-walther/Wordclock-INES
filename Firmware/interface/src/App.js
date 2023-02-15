@@ -71,7 +71,7 @@ export default class App extends React.Component {
                 sub: '',
                 gw: '',
                 dns: '',
-                captivePortal: false,
+                captivePortal: true,
             },
 
             info: {
