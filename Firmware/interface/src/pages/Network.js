@@ -34,7 +34,7 @@ export default class Network extends React.Component {
                     <hr className="my-6"/>
                     <div className="md:flex mb-6">
                         <div className="md:w-1/3">
-                            <label className="form-label" htmlFor="useStatic">Static settings</label>
+                            <label className="form-label" htmlFor="static">Static settings</label>
                         </div>
                         <div className="md:w-2/3">
                             <div>

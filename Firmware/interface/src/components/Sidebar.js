@@ -9,7 +9,7 @@ export default class Sidebar extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            menuOpen: false,
+            menuOpen: false
         }
     }
 
@@ -54,16 +54,14 @@ export default class Sidebar extends React.Component {
                         <li className="sidebar-list-header">
                             <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Settings</span>
                         </li>
-                        {this.props.showExpertMode && (
-                            <li className="sidebar-list-item">
-                                <NavItem to={'time-settings'} title="Time Settings"/>
-                            </li>
-                        )}
                         <li className="sidebar-list-item">
                             <NavItem to={'on-off-time'} title="On/Off Time"/>
                         </li>
                         {this.props.showExpertMode && (
                             <>
+                                <li className="sidebar-list-item">
+                                    <NavItem to={'time-settings'} title="Time Settings"/>
+                                </li>
                                 <li className="sidebar-list-item">
                                     <NavItem to={'network'} title="Network"/>
                                 </li>
@@ -73,26 +71,24 @@ export default class Sidebar extends React.Component {
                                 <li className="sidebar-list-item">
                                     <NavItem to={'security'} title="Security"/>
                                 </li>
-                                {/*}
-                                <li className="sidebar-list-item">
-                                    <NavItem to={'firmware'} title="Firmware" />
-                                </li>
-                                {*/}
+                                {this.props.updaterEnabled && (
+                                    <li className="sidebar-list-item">
+                                        <NavItem to={'firmware'} title="Firmware" />
+                                    </li>
+                                )}
                             </>
                         )}
+                        <li className="sidebar-list-header">
+                            <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Info</span>
+                        </li>
                         {this.props.showExpertMode && (
-                            <>
-                                <li className="sidebar-list-header">
-                                    <span className="block pl-6 lg:pr-7 pb-1 md:pb-0 text-sm">Info</span>
-                                </li>
-                                <li className="sidebar-list-item">
-                                    <NavItem to={'system'} title="System"/>
-                                </li>
-                                <li className="sidebar-list-item">
-                                    <NavItem to={'licences'} title="Licences"/>
-                                </li>
-                            </>
+                            <li className="sidebar-list-item">
+                                <NavItem to={'system'} title="System"/>
+                            </li>
                         )}
+                        <li className="sidebar-list-item">
+                            <NavItem to={'licences'} title="Licences"/>
+                        </li>
                     </ul>
                 </div>
             </>

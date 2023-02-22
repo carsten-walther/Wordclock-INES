@@ -81,7 +81,16 @@ void setup()
         if (timeSync.isSynced())
         {
             DEBUG_PRINTLN(PSTR("> setting timezone and daylight saving time for time sync"));
-            TimeSync::config((int)TIMEZONES[configurationManager.data.timezone] * 3600, configurationManager.data.daylightSavingTime * 3600);
+            if (configurationManager.data.daylightSavingTime)
+            {
+                DEBUG_PRINTLN(PSTR("> using daylight saving time for time sync"));
+                TimeSync::config((int)TIMEZONES[configurationManager.data.timezone] * 3600, 3600);
+            }
+            else
+            {
+                DEBUG_PRINTLN(PSTR("> no daylight saving time usage for time sync"));
+                TimeSync::config((int)TIMEZONES[configurationManager.data.timezone] * 3600, 0);
+            }
 
             time_t now = time(nullptr);
             DEBUG_PRINT(PSTR("> current time is "));
@@ -95,6 +104,8 @@ void setup()
             DEBUG_PRINTLN(PSTR("> timeout while receiving the time"));
         }
     }
+    
+    display.showNothing();
 }
 
 void loop()
@@ -110,12 +121,32 @@ void loop()
         {
             taskA.previous = millis();
 
-            //do task
-            #ifdef DEBUG
-            time_t now = time(nullptr);
-            #endif
-            DEBUG_PRINT(PSTR("> current time is: "));
-            DEBUG_PRINT(asctime(localtime(&now)));
+            if (timeSync.isSynced())
+            {
+                if (configurationManager.data.daylightSavingTime)
+                {
+                    TimeSync::config((int)TIMEZONES[configurationManager.data.timezone] * 3600, 0);
+                }
+                else
+                {
+                    TimeSync::config((int)TIMEZONES[configurationManager.data.timezone] * 3600, -3600);
+                }
+                
+#ifdef DEBUG
+                time_t now = time(nullptr);
+
+                DEBUG_PRINT(PSTR("> current timezone: "));
+                DEBUG_PRINTLN((int)TIMEZONES[configurationManager.data.timezone]);
+
+                DEBUG_PRINT(PSTR("> daylight saving time: "));
+                DEBUG_PRINTLN(configurationManager.data.daylightSavingTime);
+
+                DEBUG_PRINT(PSTR("> current time is: "));
+                DEBUG_PRINT(asctime(localtime(&now)));
+#endif
+            }
+
+            // do task
 
             // Set default clockMode
             clockMode = CLOCKMODE_NORMAL;
@@ -163,5 +194,9 @@ void loop()
                     break;
             }
         }
+    }
+    else
+    {
+        display.showScanner();
     }
 }

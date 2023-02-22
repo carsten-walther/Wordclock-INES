@@ -35,13 +35,23 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
     if (WiFi.SSID() != "")
     {
         // trying to fix connection in progress hanging
-        ETS_UART_INTR_DISABLE();
-        wifi_station_disconnect();
-        ETS_UART_INTR_ENABLE();
+        //ETS_UART_INTR_DISABLE();
+        //wifi_station_disconnect();
+        //ETS_UART_INTR_ENABLE();
 
         WiFi.begin();
+        delay(2000);
 
         DEBUG_PRINTLN(PSTR("> trying to connect to stored WiFi details"));
+        DEBUG_PRINT(PSTR("> SSID: "));
+        DEBUG_PRINTLN(WiFi.SSID());
+        DEBUG_PRINT("> connecting ");
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            delay(500);
+            DEBUG_PRINT(".");
+        }
+        DEBUG_PRINTLN();
     }
 
     if (waitForConnectResult(timeout) == WL_CONNECTED)
@@ -64,6 +74,32 @@ void WiFiManager::begin(char const *apName, unsigned long newTimeout)
     }
     else
     {
+        DEBUG_PRINT(PSTR("> connection status: "));
+        switch (WiFi.status())
+        {
+        case WL_CONNECTED:
+            DEBUG_PRINTLN(PSTR("connected"));
+            break;
+        case WL_NO_SSID_AVAIL:
+            DEBUG_PRINTLN(PSTR("no ssid available"));
+            break;
+        case WL_CONNECT_FAILED:
+            DEBUG_PRINTLN(PSTR("connect failed"));
+            break;
+        case WL_WRONG_PASSWORD:
+            DEBUG_PRINTLN(PSTR("wrong password"));
+            break;
+        case WL_IDLE_STATUS:
+            DEBUG_PRINTLN(PSTR("idle status"));
+            break;
+        case WL_DISCONNECTED:
+            DEBUG_PRINTLN(PSTR("disconnected"));
+            break;
+        default:
+            DEBUG_PRINTLN(PSTR("unknown"));
+            break;
+        }
+
         // captive portal
         startCaptivePortal(captivePortalName);
     }
@@ -167,7 +203,7 @@ void WiFiManager::connectNewWifi(String newSSID, String newPass)
         String oldPSK = WiFi.psk();
 
         WiFi.begin(newSSID.c_str(), newPass.c_str(), 0, NULL, true);
-        delay(1000);
+        delay(2000);
 
         if (WiFi.waitForConnectResult(timeout) != WL_CONNECTED)
         {

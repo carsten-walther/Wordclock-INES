@@ -15,24 +15,16 @@
 #if defined USE_SPIFFS
 
 #include <FS.h>
-const char* fsName = "SPIFFS";
 FS fileSystem = SPIFFS;
 SPIFFSConfig fileSystemConfig = SPIFFSConfig();
-
 #elif defined USE_LITTLEFS
-
 #include <LittleFS.h>
-const char* fsName = "LittleFS";
 FS fileSystem = LittleFS;
 LittleFSConfig fileSystemConfig = LittleFSConfig();
-
 #elif defined USE_SDFS
-
 #include <SDFS.h>
-const char* fsName = "SDFS";
 FS fileSystem = SDFS;
 SDFSConfig fileSystemConfig = SDFSConfig();
-
 #else
 #error Please select a filesystem first by uncommenting one of the "#define USE_xxx" lines at the beginning of the sketch.
 #endif
@@ -294,18 +286,39 @@ void WebServer::bindAll()
         serializeJson(doc, JSON);
         request->send(200, PSTR("application/json"), JSON);
 
+        delay(1000);
         ESP.restart();
     });
 
     // info
     server.on(PSTR("/api/system/info"), HTTP_GET, [](AsyncWebServerRequest *request)
     {
-        DynamicJsonDocument doc(128);
+        DynamicJsonDocument doc(1024);
 
         doc["success"] = true;
 
         doc["payload"]["version"] = VERSION;
         doc["payload"]["mac"] = wiFiManager.getMacAddress();
+        doc["payload"]["bootMode"] = ESP.getBootMode();
+        doc["payload"]["bootVersion"] = ESP.getBootVersion();
+        doc["payload"]["sdkVersion"] = ESP.getSdkVersion();
+        doc["payload"]["chipId"] = ESP.getChipId();
+        doc["payload"]["flashChipSize"] = ESP.getFlashChipSize();
+        doc["payload"]["flashChipRealSize"] = ESP.getFlashChipRealSize();
+        doc["payload"]["flashChipSizeByChipId"] = ESP.getFlashChipSizeByChipId();
+        doc["payload"]["flashChipId"] = ESP.getFlashChipId();
+        doc["payload"]["freeHeap"] = ESP.getFreeHeap();
+        doc["payload"]["freeSketchSpace"] = ESP.getFreeSketchSpace();
+#ifdef USE_OTA
+        doc["payload"]["otaEnabled"] = true;
+#else
+        doc["payload"]["otaEnabled"] = false;
+#endif
+#ifdef USE_UPDATER
+        doc["payload"]["updaterEnabled"] = true;
+#else
+        doc["payload"]["updaterEnabled"] = false;
+#endif
 
         String JSON;
         serializeJson(doc, JSON);

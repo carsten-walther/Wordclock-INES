@@ -138,7 +138,7 @@ export default class TimeSettings extends React.Component {
                                     <input type="checkbox" name="daylightSavingTime" id="daylightSavingTime" className="toggle-checkbox" checked={this.props.data.daylightSavingTime} onChange={this.props.onChange.bind(this)}/>
                                     <label htmlFor="daylightSavingTime" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"/>
                                 </div>
-                                <label htmlFor="static" className="inline-flex items-center"><span className="ml-2">Daylight Saving Time</span></label>
+                                <label htmlFor="daylightSavingTime" className="inline-flex items-center"><span className="ml-2">Daylight Saving Time</span></label>
                             </div>
                             <p className="help-text">Indicate if your location switches between daylight saving and standard time.</p>
                         </div>
